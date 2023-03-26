@@ -9,14 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.server.standard.ServerEndpointExporter;
-
 @RestController
 @SpringBootApplication
-@Configuration
-@EnableWebSocket
+
 public class Application {
 
   public static void main(String[] args) {
@@ -39,10 +34,5 @@ public class Application {
       }
     };
   }
-
-    @Bean
-    public ServerEndpointExporter serverEndpoint() {
-        return new ServerEndpointExporter();
-    }
 
 }
