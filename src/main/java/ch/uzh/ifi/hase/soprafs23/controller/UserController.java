@@ -138,10 +138,6 @@ public class UserController {
             userExist.setUsername(userInput.getUsername());
         }
 
-        if (userInput.getBirthday() != null) {
-            userExist.setBirthday(userInput.getBirthday());
-        }
-
         if (userInput.getPassword() != null) {
             userExist.setPassword(userInput.getPassword());
         }

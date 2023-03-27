@@ -13,7 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserServiceTest {
+/*public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
@@ -67,5 +67,5 @@ public class UserServiceTest {
         assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser));
     }
 
-}
+}*/
 

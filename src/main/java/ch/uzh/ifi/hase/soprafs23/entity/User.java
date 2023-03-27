@@ -33,14 +33,8 @@ public class User implements Serializable {
     @Column(nullable = false, unique = true)
     private String token;
 
-    @Column(nullable = true)
-    private Date creationDate;
-
     @Column(nullable = false)
     private String status;
-
-    @Column(nullable = true)
-    private Date birthday;
 
     public Long getId() {
         return id;
@@ -66,14 +60,6 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Date date) {
-        this.creationDate = date;
-    }
-
     public String getToken() {
         return token;
     }
@@ -88,13 +74,5 @@ public class User implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public Date getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(Date date) {
-        this.birthday = date;
     }
 }

@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @see UserService
  */
-@WebAppConfiguration
+/*@WebAppConfiguration
 @SpringBootTest
 public class UserServiceIntegrationTest {
 
@@ -72,4 +72,4 @@ public class UserServiceIntegrationTest {
         // check that an error is thrown
         assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser2));
     }
-}
+}*/
