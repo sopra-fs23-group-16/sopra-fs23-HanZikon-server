@@ -2,12 +2,14 @@ package ch.uzh.ifi.hase.soprafs23.websocket;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Player;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Room;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
+@CrossOrigin(origins = "*")
 @ServerEndpoint("/websocket")
 @Component
 public class WsocketController {
