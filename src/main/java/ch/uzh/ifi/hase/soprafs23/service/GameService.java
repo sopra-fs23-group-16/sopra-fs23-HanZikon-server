@@ -9,7 +9,6 @@ public class GameService {
     public Player createPlayer(PlayerDTO playerDTO){
         return new Player(playerDTO);
     }
-
     public Room createRoom(Player owner,GameParamDTO gameParam){
         return new Room(owner,gameParam);
     }
