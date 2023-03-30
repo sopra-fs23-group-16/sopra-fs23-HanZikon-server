@@ -1,21 +1,16 @@
 package ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO;
-
-import com.opencsv.bean.CsvBindByPosition;
-
-import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MultipleChoiceDTO implements QuestionDTO{
 
     private int id;
     private String oracleURL;
-    private String choices;
+    private List<String> choices;
     private int answerIndex;
 
     private String level;
 
-    public MultipleChoiceDTO(int id, String oraclePicture, String choices, int answerIndex, String level) {
+    public MultipleChoiceDTO(int id, String oraclePicture, List<String> choices, int answerIndex, String level) {
         this.id = id;
         this.oracleURL = oraclePicture;
         this.choices = choices;
@@ -39,11 +34,11 @@ public class MultipleChoiceDTO implements QuestionDTO{
         this.oracleURL = oraclePicture;
     }
 
-    public String getChoices() {
+    public List<String> getChoices() {
         return choices;
     }
 
-    public void setChoices(String choices) {
+    public void setChoices(List<String> choices) {
         this.choices = choices;
     }
 

@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.questionGenerator.question.entity;
 
+import com.opencsv.bean.CsvBindAndSplitByPosition;
 import com.opencsv.bean.CsvBindByPosition;
 
 import javax.persistence.*;
@@ -18,9 +19,9 @@ public class MultipleChoice implements Question {
     @Column
     private String oracleURL;
 
-    @CsvBindByPosition(position = 2)
-    @Column
-    private String choices; //Store four candidate chinese characters in a String, without separation
+    @CsvBindAndSplitByPosition(position = 2, elementType = String.class, splitOn = ";")
+    @ElementCollection
+    private List<String> choices; //Store four candidate chinese characters in a String, without separation
 
     @CsvBindByPosition(position = 3)
     @Column
@@ -30,7 +31,7 @@ public class MultipleChoice implements Question {
     @Column
     private String level; // Level of the game, from 1-10?
 
-    public MultipleChoice(int id, String oracleURL, String choices, int answerIndex, String level) {
+    public MultipleChoice(int id, String oracleURL, List<String> choices, int answerIndex, String level) {
         this.id = id;
         this.oracleURL = oracleURL;
         this.choices = choices;
@@ -54,11 +55,11 @@ public class MultipleChoice implements Question {
         this.oracleURL = oraclePicture;
     }
 
-    public String getChoices() {
+    public List<String> getChoices() {
         return choices;
     }
 
-    public void setChoices(String choices) {
+    public void setChoices(List<String> choices) {
         this.choices = choices;
     }
 
