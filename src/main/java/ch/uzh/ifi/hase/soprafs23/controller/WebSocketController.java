@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameParamDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerDTO;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -16,8 +17,8 @@ public class WebSocketController {
         this.gameService = new GameService();
     }
 
-    @MessageMapping("/game/create")
-    @ResponseBody
+    @MessageMapping("multi/create") //client.send("/app/muilti/create",{}，JSON)
+    @SendTo("topic/multi/player/{playerID}") //client.subscribe("topic/multi/player/{playerID}")
     public int createRoom(PlayerDTO ownerDTO, GameParamDTO gameParam) throws Exception {
         // client should retrieve username first
         Player owner = gameService.createPlayer(ownerDTO);
