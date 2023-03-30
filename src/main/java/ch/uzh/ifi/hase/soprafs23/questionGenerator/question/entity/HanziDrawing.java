@@ -5,6 +5,8 @@ import com.opencsv.bean.CsvBindByPosition;
 
 import javax.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "Drawing")
 public class HanziDrawing implements Question{
@@ -18,10 +20,9 @@ public class HanziDrawing implements Question{
     @Column
     String character;
 
-    @CsvBindAndSplitByPosition(position = 1, elementType = Evolution.class, splitOn = ";")
-    @Embedded
-    @Column
-    Evolution evolution;
+    @CsvBindAndSplitByPosition(position = 1, elementType = String.class, splitOn = ";")
+    @ElementCollection
+    List<String> evolution;
 
     @CsvBindByPosition(position = 2)
     @Column
@@ -31,13 +32,13 @@ public class HanziDrawing implements Question{
     @Column
     String meaning;
 
-    @CsvBindByPosition(position = 3)
+    @CsvBindByPosition(position = 4)
     @Column
     String level;
 
     public HanziDrawing() {}
 
-    public HanziDrawing(int id, String character, Evolution evolution, String pinyin, String meaning, String level) {
+    public HanziDrawing(int id, String character, List<String> evolution, String pinyin, String meaning, String level) {
         this.id = id;
         this.character = character;
         this.evolution = evolution;
@@ -63,11 +64,11 @@ public class HanziDrawing implements Question{
         this.character = character;
     }
 
-    public Evolution getEvolution() {
+    public List<String> getEvolution() {
         return evolution;
     }
 
-    public void setEvolution(Evolution evolution) {
+    public void setEvolution(List<String> evolution) {
         this.evolution = evolution;
     }
 

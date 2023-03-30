@@ -1,9 +1,11 @@
 package ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO;
 
+import java.util.List;
+
 public class HanziDrawingDTO implements QuestionDTO {
     int id;
     String character;
-    EvolutionDTO evolution;
+    List<String> evolution;
     String pinyin;
     String meaning;
     String level;
@@ -26,11 +28,11 @@ public class HanziDrawingDTO implements QuestionDTO {
         this.character = character;
     }
 
-    public EvolutionDTO getEvolution() {
+    public List<String> getEvolution() {
         return evolution;
     }
 
-    public void setEvolution(EvolutionDTO evolution) {
+    public void setEvolution(List<String> evolution) {
         this.evolution = evolution;
     }
 

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Component
@@ -15,7 +17,7 @@ public class CSVLoader {
 
     final CSVService service;
 
-    public CSVLoader(CSVService service) throws FileNotFoundException {
+    public CSVLoader(CSVService service) throws IOException {
         this.service = service;
         loadMultiChoiceOntoDatabase();
         loadHanziDrawingOntoDatabase();
@@ -32,11 +34,12 @@ public class CSVLoader {
         service.saveChoiceQuestion(beans);
     }
 
-    private void loadHanziDrawingOntoDatabase() throws FileNotFoundException {
+    private void loadHanziDrawingOntoDatabase() throws IOException {
         String fileName = ".\\drawing.csv";
 
-        List<HanziDrawing> beans = new CsvToBeanBuilder(new FileReader(fileName))
+        List<HanziDrawing> beans = new CsvToBeanBuilder(new FileReader(fileName, StandardCharsets.UTF_8))
                 .withType(HanziDrawing.class)
+                .withSeparator(',')
                 .build()
                 .parse();
 
