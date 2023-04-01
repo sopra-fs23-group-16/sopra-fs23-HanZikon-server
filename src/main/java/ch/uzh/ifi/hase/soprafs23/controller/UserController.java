@@ -45,19 +45,13 @@ public class UserController {
     @GetMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<UserGetDTO> getUserById(@PathVariable long userId) {
-        // fetch all users in the internal representation
-        List<User> users = userService.getUsers();
-        List<UserGetDTO> userGetDTOs = new ArrayList<>();
+    public UserGetDTO getUserById(@PathVariable long userId) {
 
-        String baseErrorMessage = "The %s provided does not exist!";
-        for (User user : users) {
-            if (userId == (user.getId())) {
-                userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
-                return userGetDTOs;
-            }
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage, "ID"));
+        User userExist = userService.getUserById(userId);
+        UserGetDTO userGetDTO = new UserGetDTO();
+
+        userGetDTO = DTOMapper.INSTANCE.convertEntityToUserGetDTO(userExist);
+        return userGetDTO;
     }
 
     @GetMapping("/logout/{userId}")
