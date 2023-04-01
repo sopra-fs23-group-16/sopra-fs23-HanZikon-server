@@ -2,14 +2,25 @@ package ch.uzh.ifi.hase.soprafs23.MultipleMode;
 
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameParamDTO;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Room {
+
     private static int instanceID = 1;
 
     private int roomID;
     private Player owner;
+
+    private int roomNumber;
+
+    private String password;
+
+    private String invitationLink;
+
+    private GameParam gameParam;
 
     /**
      * client can subscribe '/room/{roomID}'
@@ -26,6 +37,22 @@ public class Room {
 
     public int getRoomID() {
         return roomID;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
+    public GameParam getGameParam() {
+        return gameParam;
+    }
+
+    public void setGameParam(GameParam gameParam) {
+        this.gameParam = gameParam;
     }
 
 }
