@@ -3,3 +3,10 @@
 
 runtime: java17
 instance_class: F2
+
+handlers:
+  - url: /websocket/*
+    script: auto
+    secure: always
+    http_headers:
+      Access-Control-Allow-Origin: "*"
