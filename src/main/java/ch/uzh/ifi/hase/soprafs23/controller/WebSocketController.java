@@ -27,7 +27,8 @@ public class WebSocketController {
         this.gameService = new GameService();
     }
 
-    @MessageMapping("multi/create") //client.send("/app/muilti/create",{}，JSON)
+    @MessageMapping("multi/create")
+    //client.send("/app/muilti/create",{}，JSON)
     //@SendTo("topic/multi/player/{playerID}") //client.subscribe("topic/multi/player/{playerID}")
     public void createRoom(@RequestBody PlayerDTO ownerDTO, GameParamDTO gameParam) throws Exception {
         // client should retrieve username first
