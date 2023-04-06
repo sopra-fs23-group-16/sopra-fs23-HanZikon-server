@@ -12,6 +12,8 @@ public class Room {
     private static int instanceID = 1;
 
     private int roomID;
+
+    private final String roomCode;
     private Player owner;
 
     private int roomNumber;
@@ -28,9 +30,10 @@ public class Room {
      */
     private List<Player> players = new CopyOnWriteArrayList<>(); //concurrent
 
-    public Room(Player owner, GameParamDTO gameParam){
+    public Room(String roomCode, Player owner, GameParamDTO gameParam){
         // do something with the gameParam
         this.roomID = instanceID++;
+        this.roomCode = roomCode;
         this.owner = owner;
         this.players.add(owner);
     }
@@ -53,6 +56,10 @@ public class Room {
 
     public void setGameParam(GameParam gameParam) {
         this.gameParam = gameParam;
+    }
+
+    public String getRoomCode(){
+        return this.roomCode;
     }
 
 }
