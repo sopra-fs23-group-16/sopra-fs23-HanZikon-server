@@ -2,41 +2,42 @@ package ch.uzh.ifi.hase.soprafs23.controller;
 
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Game;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Player;
+import ch.uzh.ifi.hase.soprafs23.MultipleMode.Room;
+import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
+import ch.uzh.ifi.hase.soprafs23.service.UserService;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameParamDTO;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.ArrayList;
 
 @Controller
 public class WebSocketController {
+    @Autowired
+    private final UserService userService;
     private final GameService gameService;
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    public WebSocketController(){
+    public WebSocketController(UserService userService){
+        this.userService = userService;
         this.gameService = new GameService();
     }
 
-    @MessageMapping("multi/create")
-    //client.send("/app/muilti/create",{}，JSON)
-    //@SendTo("topic/multi/player/{playerID}") //client.subscribe("topic/multi/player/{playerID}")
-    public void createRoom(@RequestBody PlayerDTO ownerDTO, GameParamDTO gameParam) throws Exception {
-        // client should retrieve username first
-        Player owner = gameService.createPlayer(ownerDTO);
-        int playerID = owner.getPlayerID();
-        int roomID = gameService.createRoom(owner,gameParam).getRoomID();
-        String destination = "topic/multi/player/" + playerID;
-        simpMessagingTemplate.convertAndSend(destination, roomID);
+    @MessageMapping("multi/create/{userID}") //client.send("/app/muilti/create/userID",{}，JSON)
+    @SendTo("topic/multi/create/{userID}") //client.subscribe("topic/multi/create/{userID}")
+    public String createRoom(@PathVariable int userID, @RequestBody GameParamDTO gameParam) throws Exception {
+        // client is a registered user
+        User gamer = userService.getUserById(userID);
+        Player owner = gameService.createPlayer(gamer);
+        Room newRoom = gameService.createRoom(owner,gameParam);
+        return newRoom.getRoomCode();
     }
 
     /**

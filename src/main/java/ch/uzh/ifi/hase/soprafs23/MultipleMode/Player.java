@@ -1,15 +1,16 @@
 package ch.uzh.ifi.hase.soprafs23.MultipleMode;
 
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerDTO;
+import ch.uzh.ifi.hase.soprafs23.entity.User;
 
 public class Player {
     // assign
     private static int instanceID = 1;
 
     private int playerID;
+
     private String playerName;
 
-    private int userID;
+    private Long userID;
 
     private boolean isReady;
 
@@ -17,9 +18,10 @@ public class Player {
 
     private ScoreBoard scoreBoard;
 
-    public Player(PlayerDTO playerDTO){
+    public Player(User gamer){
         this.playerID = instanceID++;
-        this.playerName = playerDTO.getUserName();
+        this.userID = gamer.getId();
+        this.playerName = gamer.getUsername();
     }
 
     public String getPlayerName() {
@@ -30,11 +32,11 @@ public class Player {
         return playerID;
     }
 
-    public int getUserID() {
+    public Long getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(Long userID) {
         this.userID = userID;
     }
 

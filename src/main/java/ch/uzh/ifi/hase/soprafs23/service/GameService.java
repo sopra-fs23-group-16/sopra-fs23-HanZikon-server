@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs23.MultipleMode.Game;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.GameParam;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Player;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Room;
+import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.RoomRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
@@ -12,21 +13,19 @@ import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 public class GameService {
 
     public GameService() {
     }
 
-    public Player createPlayer(PlayerDTO playerDTO){
-        return new Player(playerDTO);
+    public Player createPlayer(User gamer){
+        return new Player(gamer);
     }
     public Room createRoom(Player owner,GameParamDTO gameParam){
-        Room newRoom = new Room(owner,gameParam);
+        String roomCode = generateRoomCode();
+        Room newRoom = new Room(roomCode,owner,gameParam);
         RoomRepository.addRoom(newRoom.getRoomID(), newRoom);
         return newRoom;
     }
@@ -45,6 +44,19 @@ public class GameService {
         }
 
         return new Game(players,roomID);
+    }
+
+    private String generateRoomCode(){
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        int length = 6;
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int idx = random.nextInt(characters.length());
+            char randomChar = characters.charAt(idx);
+            sb.append(randomChar);
+        }
+        return sb.toString();
     }
 
     private List<Player> findRoomPlayersByRoomID(int roomID){
