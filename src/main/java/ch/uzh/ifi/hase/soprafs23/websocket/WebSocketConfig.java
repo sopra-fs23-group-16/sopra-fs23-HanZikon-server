@@ -19,7 +19,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         config.enableSimpleBroker("/topic")
                 .setTaskScheduler(heartBeatScheduler());
         //clients can send to
-        config.setApplicationDestinationPrefixes("/app");
+        config.setApplicationDestinationPrefixes("/app","/topic");
     }
 
     @Override
