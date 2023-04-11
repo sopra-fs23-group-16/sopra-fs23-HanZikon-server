@@ -1,15 +1,11 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Game;
-import ch.uzh.ifi.hase.soprafs23.MultipleMode.GameParam;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Player;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
-import ch.uzh.ifi.hase.soprafs23.repository.RoomRepository;
-import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameParamDTO;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -17,16 +13,20 @@ import java.util.*;
 
 public class GameService {
 
+    private RoomManager roomManager;
+
     public GameService() {
+        this.roomManager = new RoomManager();
     }
 
     public Player createPlayer(User gamer){
         return new Player(gamer);
     }
+
     public Room createRoom(Player owner,GameParamDTO gameParam){
         String roomCode = generateRoomCode();
         Room newRoom = new Room(roomCode,owner,gameParam);
-        RoomRepository.addRoom(newRoom.getRoomID(), newRoom);
+        this.roomManager.addRoom(newRoom);
         return newRoom;
     }
 
@@ -59,8 +59,12 @@ public class GameService {
         return sb.toString();
     }
 
+    public Room findRoomByID(int roomID){
+        return this.roomManager.findByRoomID(roomID);
+    }
+
     private List<Player> findRoomPlayersByRoomID(int roomID){
-        Room findRoom = RoomRepository.findByRoomId(roomID);
+        Room findRoom = this.roomManager.findByRoomID(roomID);
         List<Player> roomPlayers = findRoom.getPlayers();
         if (roomPlayers == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This room does not have players!");
@@ -75,7 +79,7 @@ public class GameService {
      * @return
      */
     public boolean checkALlReady(int roomID){
-        Room findRoom = RoomRepository.findByRoomId(roomID);
+        Room findRoom = this.roomManager.findByRoomID(roomID);
         int setPlayersNum = findRoom.getGameParam().getNumPlayers();
         List<Player> roomPlayers = findRoom.getPlayers();
         if(roomPlayers.size() != setPlayersNum){

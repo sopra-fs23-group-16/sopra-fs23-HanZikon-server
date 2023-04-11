@@ -17,7 +17,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -50,6 +49,7 @@ public class WebSocketController {
         return "Hello, owner!";
     }
 
+
     @MessageMapping("/multi/create/{userID}") //client.send("/app/muilti/create/userID",{}，JSON)
     //@SendTo("topic/multi/create/{userID}") //client.subscribe("topic/multi/create/{userID}")
     public void createRoom(@DestinationVariable int userID, GameParamDTO gameParam) throws Exception {
@@ -63,29 +63,44 @@ public class WebSocketController {
         log.info("msg sent");
     }
 
+    @MessageMapping("/multi/rooms/{roomID}/info") //client.send("/multi/rooms/"+roomID+"/info",{}，JSON)
+    //@SendTo("topic/multi/rooms/{roomID}/info") //client.subscribe("topic/multi/rooms/"+roomID+"/info")
+    public void getRoomByID(@DestinationVariable int roomID) throws Exception {
+        log.info("request to get room info: " + roomID);
+        Room foundRoom = this.gameService.findRoomByID(roomID);
+        log.info("room found: " + foundRoom.getRoomID());
+        this.simpMessagingTemplate.convertAndSend("topic/multi/rooms/"+roomID+"/info",foundRoom);
+        /**need to be corrected as user private channel*/
+        log.info("msg sent");
+    }
+
     @MessageMapping("/multi/rooms/{roomID}/join")
     public void joinRoom(@DestinationVariable int roomID, PlayerDTO playerDTO) throws Exception {
         log.info("request to join Room: " + roomID);
+        Room foundRoom = this.gameService.findRoomByID(roomID);
         // check if client is registered
-        // check if userID exists!!
         User gamer;
-        if (1 == 1) {
+        if (this.userService.checkIfUserIDExists(playerDTO.getUserID())) {
             gamer = userService.getUserById(playerDTO.getUserID());
-        }
-        else {
+        } else {
             gamer = new User();
             gamer.setId(playerDTO.getUserID());
             gamer.setUsername(playerDTO.getUserName());
         }
         Player player = gameService.createPlayer(gamer);
+        foundRoom.addPlayer(player);
         log.info("joined to the room: " + roomID);
+        this.simpMessagingTemplate.convertAndSend("topic/multi/rooms/"+roomID+"/join",player);
     }
 
     @MessageMapping("multi/rooms/{roomID}/drop")
     public void dropRoom(@DestinationVariable int roomID, PlayerDTO playerDTO) throws Exception {
         log.info("request to drop Room: " + roomID);
-        // find the player by userID
-
+        Room foundRoom = this.gameService.findRoomByID(roomID);
+        Player player = foundRoom.findPlayerByUserID(playerDTO.getUserID());
+        foundRoom.removePlayer(player);
+        log.info("dropped from the room: " + roomID);
+        this.simpMessagingTemplate.convertAndSend("topic/multi/rooms/"+roomID+"/drop",player);
     }
 
     /**
