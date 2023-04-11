@@ -74,10 +74,10 @@ public class WebSocketController {
         log.info("msg sent");
     }
 
-    @MessageMapping("/multi/rooms/{roomID}/join")
-    public void joinRoom(@DestinationVariable int roomID, PlayerDTO playerDTO) throws Exception {
-        log.info("request to join Room: " + roomID);
-        Room foundRoom = this.gameService.findRoomByID(roomID);
+    @MessageMapping("/multi/rooms/{roomCode}/join")
+    public void joinRoom(@DestinationVariable String roomCode, PlayerDTO playerDTO) throws Exception {
+        log.info("request to join Room: " + roomCode);
+        Room foundRoom = this.gameService.findRoomByCode(roomCode);
         // check if client is registered
         User gamer;
         if (this.userService.checkIfUserIDExists(playerDTO.getUserID())) {
@@ -89,8 +89,8 @@ public class WebSocketController {
         }
         Player player = gameService.createPlayer(gamer);
         foundRoom.addPlayer(player);
-        log.info("joined to the room: " + roomID);
-        this.simpMessagingTemplate.convertAndSend("topic/multi/rooms/"+roomID+"/join",player);
+        log.info("joined to the room: " + foundRoom.getRoomID());
+        this.simpMessagingTemplate.convertAndSend("topic/multi/rooms/"+foundRoom.getRoomID()+"/join",player);
     }
 
     @MessageMapping("multi/rooms/{roomID}/drop")

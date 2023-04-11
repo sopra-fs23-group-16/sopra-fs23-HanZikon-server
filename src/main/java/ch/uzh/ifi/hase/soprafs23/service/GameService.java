@@ -63,6 +63,8 @@ public class GameService {
         return this.roomManager.findByRoomID(roomID);
     }
 
+    public Room findRoomByCode(String roomCode) { return this.roomManager.findByRoomCode(roomCode); };
+
     private List<Player> findRoomPlayersByRoomID(int roomID){
         Room findRoom = this.roomManager.findByRoomID(roomID);
         List<Player> roomPlayers = findRoom.getPlayers();
