@@ -57,6 +57,16 @@ public class UserService {
      * @throws ResponseStatusException
      * @see User
      */
+
+    public boolean checkIfUserIDExists(long userID) {
+        User existedUser = userRepository.findById(userID);
+        if (existedUser != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private void checkIfUserExists(User newUser) {
         User existedUser = userRepository.findByUsername(newUser.getUsername());
 

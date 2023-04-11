@@ -14,13 +14,13 @@ public class Player {
 
     private boolean isReady;
 
-    private boolean isWriting;
+    private boolean isWriting;  //upon submission: false
 
     private ScoreBoard scoreBoard;
 
     public Player(User gamer){
         this.playerID = instanceID++;
-        this.userID = gamer.getId();
+        this.userID = gamer.getId();//registered user: userID(1,2,3,……); unregistered user: userID(0001,0002,0003,……)
         this.playerName = gamer.getUsername();
     }
 

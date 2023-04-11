@@ -1,11 +1,12 @@
 package ch.uzh.ifi.hase.soprafs23.MultipleMode;
 
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameParamDTO;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Room {
 
@@ -28,14 +29,14 @@ public class Room {
      * client can subscribe '/room/{roomID}'
      * then room needs not manage players
      */
-    private List<Player> players = new CopyOnWriteArrayList<>(); //concurrent
+    private ConcurrentHashMap<Long,Player> players = new ConcurrentHashMap<>();
 
     public Room(String roomCode, Player owner, GameParamDTO gameParam){
         // do something with the gameParam
         this.roomID = instanceID++;
         this.roomCode = roomCode;
         this.owner = owner;
-        this.players.add(owner);
+        this.addPlayer(owner);
     }
 
     public int getRoomID() {
@@ -43,11 +44,23 @@ public class Room {
     }
 
     public List<Player> getPlayers() {
-        return players;
+        return new ArrayList<>(this.players.values());
     }
 
-    public void setPlayers(List<Player> players) {
-        this.players = players;
+    public Player findPlayerByUserID(Long userID){
+        Player player = this.players.get(userID);
+        if (player == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This player does not exist!");
+        }
+        return player;
+    }
+
+    public void addPlayer(Player player) {
+        this.players.put(player.getUserID(),player);
+    }
+
+    public void removePlayer(Player player){
+        this.players.remove(player.getUserID(),player);
     }
 
     public GameParam getGameParam() {
