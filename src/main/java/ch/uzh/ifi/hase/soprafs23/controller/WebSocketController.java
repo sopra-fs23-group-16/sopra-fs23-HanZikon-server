@@ -49,6 +49,13 @@ public class WebSocketController {
 //        return "Hello, owner!";
 //    }
 
+//    @SubscribeMapping("multi/rooms/{roomCode}/join")
+//    //"/topic/greeting",
+//    public String join() throws Exception {
+//        log.info("joining subscribed");
+//        return "Hello, player!";
+//    }
+
 
     @MessageMapping("/multi/create/{userID}") //client.send("/app/muilti/create/userID",{}，JSON)
     //@SendTo("topic/multi/create/{userID}") //client.subscribe("topic/multi/create/{userID}")
@@ -69,7 +76,7 @@ public class WebSocketController {
         log.info("request to get room info: " + roomID);
         Room foundRoom = this.gameService.findRoomByID(roomID);
         log.info("room found: " + foundRoom.getRoomID());
-        this.simpMessagingTemplate.convertAndSend("topic/multi/rooms/"+roomID+"/info",foundRoom);
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/info",foundRoom);
         /**need to be corrected as user private channel*/
         log.info("msg sent");
     }
@@ -89,10 +96,11 @@ public class WebSocketController {
         }
         Player player = gameService.createPlayer(gamer);
         foundRoom.addPlayer(player);
-        log.info("joined to the room: " + foundRoom.getRoomID());
-        this.simpMessagingTemplate.convertAndSend("topic/multi/rooms/"+roomCode+"/join",foundRoom);
+        log.info(player.getPlayerName()+" joined the room: " + foundRoom.getRoomID());
+        log.info("room contains " + foundRoom.getPlayers().size() + " players.");
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomCode+"/join",foundRoom);
         /**need to be corrected as user private channel*/
-        this.simpMessagingTemplate.convertAndSend("topic/multi/rooms/"+foundRoom.getRoomID()+"/join",player);
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+foundRoom.getRoomID()+"/join",player);
     }
 
     @MessageMapping("multi/rooms/{roomID}/drop")
@@ -102,7 +110,7 @@ public class WebSocketController {
         Player player = foundRoom.findPlayerByUserID(playerDTO.getUserID());
         foundRoom.removePlayer(player);
         log.info("dropped from the room: " + roomID);
-        this.simpMessagingTemplate.convertAndSend("topic/multi/rooms/"+roomID+"/drop",player);
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/drop",player);
     }
 
     /**
