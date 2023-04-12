@@ -90,7 +90,8 @@ public class WebSocketController {
         Player player = gameService.createPlayer(gamer);
         foundRoom.addPlayer(player);
         log.info("joined to the room: " + foundRoom.getRoomID());
-        this.simpMessagingTemplate.convertAndSend("topic/multi/rooms/"+roomCode+"/join",foundRoom.getRoomID());
+        this.simpMessagingTemplate.convertAndSend("topic/multi/rooms/"+roomCode+"/join",foundRoom);
+        /**need to be corrected as user private channel*/
         this.simpMessagingTemplate.convertAndSend("topic/multi/rooms/"+foundRoom.getRoomID()+"/join",player);
     }
 
