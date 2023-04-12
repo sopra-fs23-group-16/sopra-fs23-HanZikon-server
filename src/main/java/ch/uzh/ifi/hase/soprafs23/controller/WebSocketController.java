@@ -35,19 +35,19 @@ public class WebSocketController {
         this.gameService = new GameService();
     }
 
-    @SubscribeMapping({ "/greeting"})
-    //"/topic/greeting",
-    public String greet() throws Exception {
-        log.info("greeting subscribed");
-        return "Hello, client!";
-    }
-
-    @SubscribeMapping("/multi/create/{userId}")
-    //"/topic/greeting",
-    public String create() throws Exception {
-        log.info("creating subscribed");
-        return "Hello, owner!";
-    }
+//    @SubscribeMapping({ "/greeting"})
+//    //"/topic/greeting",
+//    public String greet() throws Exception {
+//        log.info("greeting subscribed");
+//        return "Hello, client!";
+//    }
+//
+//    @SubscribeMapping("/multi/create/{userId}")
+//    //"/topic/greeting",
+//    public String create() throws Exception {
+//        log.info("creating subscribed");
+//        return "Hello, owner!";
+//    }
 
 
     @MessageMapping("/multi/create/{userID}") //client.send("/app/muilti/create/userID",{}，JSON)
