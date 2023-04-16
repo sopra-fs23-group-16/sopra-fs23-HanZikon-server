@@ -100,17 +100,17 @@ public class WebSocketController {
         log.info("room contains " + foundRoom.getPlayers().size() + " players.");
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomCode+"/join",foundRoom);
         /**need to be corrected as user private channel*/
-        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+foundRoom.getRoomID()+"/join",player);
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+foundRoom.getRoomID()+"/info",foundRoom);
     }
 
-    @MessageMapping("multi/rooms/{roomID}/drop")
+    @MessageMapping("/multi/rooms/{roomID}/drop")
     public void dropRoom(@DestinationVariable int roomID, PlayerDTO playerDTO) throws Exception {
         log.info("request to drop Room: " + roomID);
         Room foundRoom = this.gameService.findRoomByID(roomID);
         Player player = foundRoom.findPlayerByUserID(playerDTO.getUserID());
         foundRoom.removePlayer(player);
         log.info("dropped from the room: " + roomID);
-        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/drop",player);
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+foundRoom.getRoomID()+"/info",foundRoom);
     }
 
     /**
