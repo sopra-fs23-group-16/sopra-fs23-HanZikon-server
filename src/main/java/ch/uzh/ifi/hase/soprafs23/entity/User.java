@@ -15,7 +15,7 @@ import java.util.Date;
  * the primary key
  */
 @Entity
-@Table(name = "\"User\"")
+@Table(name = "User")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
