@@ -19,6 +19,6 @@ public class QuestionPacker {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public List<QuestionDTO> inquiryUser(@RequestBody GameParam gameParam){
-        return service.fetchQuestionSet(Integer.toString(gameParam.gameLevel),gameParam.questionType.toString(),gameParam.numOfQuestion);
+        return service.fetchQuestionSet(Integer.toString(gameParam.gameLevel),gameParam.questionType.toString(),10);
     }
 }

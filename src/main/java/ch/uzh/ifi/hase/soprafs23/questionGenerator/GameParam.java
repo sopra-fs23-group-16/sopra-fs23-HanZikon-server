@@ -6,11 +6,11 @@ public class GameParam {
     TypeOfQuestion questionType;
     int numOfQuestion;
 
-    public GameParam(int participantNumber, int gameLevel, TypeOfQuestion questionType,int numOfQuestion) {
+    public GameParam(int participantNumber, int gameLevel, TypeOfQuestion questionType) {
         this.participantNumber = participantNumber;
         this.gameLevel = gameLevel;
         this.questionType = questionType;
-        this.numOfQuestion = numOfQuestion;
+        this.numOfQuestion = 10;
     }
 
     public int getParticipantNumber() {

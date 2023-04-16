@@ -35,7 +35,7 @@ public class CSVLoader {
     }
 
     private void loadHanziDrawingOntoDatabase() throws IOException {
-        String fileName = ".\\drawing.csv";
+        String fileName = ".\\HanziDrawingDataset0414.csv";
 
         List<HanziDrawing> beans = new CsvToBeanBuilder(new FileReader(fileName, StandardCharsets.UTF_8))
                 .withType(HanziDrawing.class)
