@@ -78,6 +78,7 @@ public class CSVService {
 
 
 
+    // a recursive method to correspond different modes to certain actions
     public List<QuestionDTO> fetchQuestionSet(String level, String mode, int numQuestion) {
         if(mode == "Mixed"){
             List<QuestionDTO> result = new ArrayList<>();
@@ -91,6 +92,7 @@ public class CSVService {
         }
     }
 
+    // find all the questions of the given Level
     private List<Integer> findAllIdMatches(String level,String typeOfQuestion){
         if(typeOfQuestion.equals("HanziDrawing")){
             return getIdFromQuestions(hanziDrawingRepository.findAllByLevel(level));
@@ -102,6 +104,7 @@ public class CSVService {
         return null;
     }
 
+    // get all the IDs from the questions that meet the criteria
     private List<Integer> getIdFromQuestions(List<Question> questionList){
         List<Integer> idList = new ArrayList<>();
         for(Question question:questionList){
@@ -111,6 +114,7 @@ public class CSVService {
         return idList;
     }
 
+    // the random selection process to return the required questionPack
     private List<QuestionDTO> randomSelect(String typeOfQuestion, List<Integer> idSet, int num){
         List<QuestionDTO> result = new ArrayList<>();
         List<Integer> selectedIdSet = new ArrayList<>();

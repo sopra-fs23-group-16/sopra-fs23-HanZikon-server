@@ -20,6 +20,7 @@ public class HanziDrawing implements Question{
     @Column
     String character;
 
+    // evolution store a list of URLs, some fields could be n.a. denoting not applicable
     @CsvBindAndSplitByPosition(position = 1, elementType = String.class, splitOn = ";")
     @ElementCollection
     List<String> evolution;

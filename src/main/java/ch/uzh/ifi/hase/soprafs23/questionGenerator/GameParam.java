@@ -2,15 +2,16 @@ package ch.uzh.ifi.hase.soprafs23.questionGenerator;
 
 public class GameParam {
     int participantNumber;
+
+    // game difficulty level from 1-5
     int gameLevel;
     TypeOfQuestion questionType;
-    int numOfQuestion;
+
 
     public GameParam(int participantNumber, int gameLevel, TypeOfQuestion questionType) {
         this.participantNumber = participantNumber;
         this.gameLevel = gameLevel;
         this.questionType = questionType;
-        this.numOfQuestion = 10;
     }
 
     public int getParticipantNumber() {
@@ -35,13 +36,5 @@ public class GameParam {
 
     public void setQuestionType(TypeOfQuestion questionType) {
         this.questionType = questionType;
-    }
-
-    public int getNumOfQuestion() {
-        return numOfQuestion;
-    }
-
-    public void setNumOfQuestion(int numOfQuestion) {
-        this.numOfQuestion = numOfQuestion;
     }
 }

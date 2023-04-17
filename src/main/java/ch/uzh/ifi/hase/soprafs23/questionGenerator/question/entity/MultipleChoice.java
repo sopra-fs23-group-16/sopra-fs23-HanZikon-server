@@ -21,7 +21,7 @@ public class MultipleChoice implements Question {
 
     @CsvBindAndSplitByPosition(position = 2, elementType = String.class, splitOn = ";")
     @ElementCollection
-    private List<String> choices; //Store four candidate chinese characters in a String, without separation
+    private List<String> choices; //Store four candidate chinese characters in the List
 
     @CsvBindByPosition(position = 3)
     @Column

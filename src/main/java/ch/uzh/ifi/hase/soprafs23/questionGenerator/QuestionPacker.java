@@ -15,6 +15,7 @@ public class QuestionPacker {
         this.service = service;
     }
 
+    // direct interface with frontend to retrieve a package of questions of certain parameter
     @PostMapping("/questionPackRequest")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
