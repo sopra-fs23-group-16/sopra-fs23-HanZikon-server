@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Room {
 
@@ -29,7 +29,7 @@ public class Room {
      * client can subscribe '/room/{roomID}'
      * then room needs not manage players
      */
-    private ConcurrentHashMap<Long,Player> players = new ConcurrentHashMap<>();
+    private LinkedHashMap<Long,Player> players = new LinkedHashMap<>();
 
     public Room(String roomCode, Player owner, GameParamDTO gameParam){
         // do something with the gameParam
