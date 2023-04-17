@@ -65,6 +65,10 @@ public class WebSocketController {
         User gamer = userService.getUserById(userID);
         Player owner = gameService.createPlayer(gamer);
         Room newRoom = gameService.createRoom(owner, gameParam);
+
+        //questionPack
+        //Room.setQuestionPack()
+
         log.info("new room created: " + newRoom.getRoomCode());
         this.simpMessagingTemplate.convertAndSend("/topic/multi/create/"+userID,newRoom);
         log.info("msg sent");
