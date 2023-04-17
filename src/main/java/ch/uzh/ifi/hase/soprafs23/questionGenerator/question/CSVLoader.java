@@ -23,10 +23,10 @@ public class CSVLoader {
         loadHanziDrawingOntoDatabase();
     }
 
-    public void loadMultiChoiceOntoDatabase() throws FileNotFoundException {
+    public void loadMultiChoiceOntoDatabase() throws IOException {
         String fileName = ".\\multiple_choice.csv";
 
-        List<MultipleChoice> beans = new CsvToBeanBuilder(new FileReader(fileName))
+        List<MultipleChoice> beans = new CsvToBeanBuilder(new FileReader(fileName,StandardCharsets.UTF_8))
                 .withType(MultipleChoice.class)
                 .build()
                 .parse();
@@ -35,7 +35,7 @@ public class CSVLoader {
     }
 
     private void loadHanziDrawingOntoDatabase() throws IOException {
-        String fileName = ".\\HanziDrawingDataset0414.csv";
+        String fileName = ".\\HanziDrawingDataset.csv";
 
         List<HanziDrawing> beans = new CsvToBeanBuilder(new FileReader(fileName, StandardCharsets.UTF_8))
                 .withType(HanziDrawing.class)
