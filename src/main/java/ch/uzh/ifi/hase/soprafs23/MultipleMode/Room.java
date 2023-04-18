@@ -17,12 +17,6 @@ public class Room {
     private final String roomCode;
     private Player owner;
 
-    private int roomNumber;
-
-    private String password;
-
-    private String invitationLink;
-
     private GameParam gameParam;
 
     /**
@@ -73,6 +67,10 @@ public class Room {
 
     public String getRoomCode(){
         return this.roomCode;
+    }
+
+    public Player getOwner() {
+        return owner;
     }
 
 }
