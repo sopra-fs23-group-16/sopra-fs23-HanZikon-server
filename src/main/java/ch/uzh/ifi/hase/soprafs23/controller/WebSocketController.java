@@ -115,7 +115,7 @@ public class WebSocketController {
         Player player = foundRoom.findPlayerByUserID(playerDTO.getUserID());
         foundRoom.removePlayer(player);
         log.info("dropped from the room: " + roomID);
-        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+foundRoom.getRoomID()+"/info",foundRoom);
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+foundRoom.getRoomID()+"/drop",foundRoom);
     }
 
     /**
