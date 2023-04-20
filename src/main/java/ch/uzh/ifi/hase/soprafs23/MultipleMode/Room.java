@@ -13,17 +13,14 @@ public class Room {
     private static int instanceID = 1;
 
     private int roomID;
-
     private final String roomCode;
     private Player owner;
-
-    private GameParam gameParam;
-
+    private LinkedHashMap<Long,Player> players = new LinkedHashMap<>();
+    private GameParamDTO gameParam;
     /**
      * client can subscribe '/room/{roomID}'
      * then room needs not manage players
      */
-    private LinkedHashMap<Long,Player> players = new LinkedHashMap<>();
 
     public Room(String roomCode, Player owner, GameParamDTO gameParam){
         // do something with the gameParam
@@ -31,10 +28,15 @@ public class Room {
         this.roomCode = roomCode;
         this.owner = owner;
         this.addPlayer(owner);
+        this.gameParam = gameParam;
     }
 
     public int getRoomID() {
         return roomID;
+    }
+
+    public LinkedHashMap<Long,Player> getPlayersHashmap(){
+        return this.players;
     }
 
     public List<Player> getPlayers() {
@@ -57,11 +59,11 @@ public class Room {
         this.players.remove(player.getUserID(),player);
     }
 
-    public GameParam getGameParam() {
+    public GameParamDTO getGameParam() {
         return gameParam;
     }
 
-    public void setGameParam(GameParam gameParam) {
+    public void setGameParam(GameParamDTO gameParam) {
         this.gameParam = gameParam;
     }
 

@@ -1,8 +1,19 @@
 package ch.uzh.ifi.hase.soprafs23.websocket.dto;
 
 public class GameParamDTO {
-    private int level;
+    private int gameLevel;
     private int numPlayers;
-    //can be enum
-    private int questionType;
+    private String questionType;
+
+    public int getNumPlayers() {
+        return this.numPlayers;
+    }
+
+    public int getGameLevel() {
+        return gameLevel;
+    }
+
+    public String getQuestionType() {
+        return questionType;
+    }
 }
