@@ -22,6 +22,10 @@ public class Player {
         this.playerID = instanceID++;
         this.userID = gamer.getId();//registered user: userID(1,2,3,……); unregistered user: userID(0001,0002,0003,……)
         this.playerName = gamer.getUsername();
+        /**
+         * default isReady = false
+         */
+        this.isReady = true;
     }
 
     public String getPlayerName() {
