@@ -5,31 +5,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Room {
 
     private static int instanceID = 1;
 
     private int roomID;
-
     private final String roomCode;
     private Player owner;
-
-    private int roomNumber;
-
-    private String password;
-
-    private String invitationLink;
-
-    private GameParam gameParam;
-
+    private LinkedHashMap<Long,Player> players = new LinkedHashMap<>();
+    private GameParamDTO gameParam;
     /**
      * client can subscribe '/room/{roomID}'
      * then room needs not manage players
      */
-    private ConcurrentHashMap<Long,Player> players = new ConcurrentHashMap<>();
 
     public Room(String roomCode, Player owner, GameParamDTO gameParam){
         // do something with the gameParam
@@ -37,10 +28,15 @@ public class Room {
         this.roomCode = roomCode;
         this.owner = owner;
         this.addPlayer(owner);
+        this.gameParam = gameParam;
     }
 
     public int getRoomID() {
         return roomID;
+    }
+
+    public LinkedHashMap<Long,Player> getPlayersHashmap(){
+        return this.players;
     }
 
     public List<Player> getPlayers() {
@@ -63,16 +59,20 @@ public class Room {
         this.players.remove(player.getUserID(),player);
     }
 
-    public GameParam getGameParam() {
+    public GameParamDTO getGameParam() {
         return gameParam;
     }
 
-    public void setGameParam(GameParam gameParam) {
+    public void setGameParam(GameParamDTO gameParam) {
         this.gameParam = gameParam;
     }
 
     public String getRoomCode(){
         return this.roomCode;
+    }
+
+    public Player getOwner() {
+        return owner;
     }
 
 }

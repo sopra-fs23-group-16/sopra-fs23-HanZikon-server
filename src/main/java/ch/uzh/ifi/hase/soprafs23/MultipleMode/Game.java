@@ -2,33 +2,23 @@ package ch.uzh.ifi.hase.soprafs23.MultipleMode;
 
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerDTO;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Game {
-
     private int roomID;
+    private LinkedHashMap<Long,Player> players;
 
-    private List<Player> players;
-
+    public Game(Room room){
+        this.roomID = room.getRoomID();
+        this.players = room.getPlayersHashmap();
+    }
     public int getRoomID() {
         return roomID;
     }
-
-    public void setRoomID(int roomID) {
-        this.roomID = roomID;
-    }
-
     public List<Player> getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(List<Player> players) {
-        this.players = players;
-    }
-
-    public Game(List<Player> players, int roomID){
-        this.roomID = roomID;
-        this.players = players;
+        return new ArrayList<>(this.players.values());
     }
 
 }

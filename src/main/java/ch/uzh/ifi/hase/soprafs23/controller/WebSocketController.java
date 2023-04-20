@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs23.MultipleMode.Game;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Player;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
+import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO.QuestionDTO;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.UserService;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameDTO;
@@ -18,6 +19,8 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 public class WebSocketController {
@@ -118,16 +121,15 @@ public class WebSocketController {
      * 1. Owner start the game, even not all players are ready;
      * 2. The server broadcast to clients when all players isReady=true;
      *
-     * @param gameDTO
-     * @return true/ false
      * @throws Exception
      */
-    @MessageMapping("multi/create/game")
-    @SendTo("topic/multi/game/start")
-    public Game createGame(GameDTO gameDTO) throws Exception {
-        Game game = gameService.createGame(gameDTO.getPlayers(), gameDTO.getRoomID());
-
-        return game;
+    @MessageMapping("/multi/games/{roomID}/start")
+//  @SendTo("topic/multi/game/start")
+    public void createGame(@DestinationVariable int roomID) throws Exception {
+        log.info("request to create game: " + roomID);
+        List<QuestionDTO> questionList = gameService.createGame(roomID);
+        log.info("new game created");
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/games/"+roomID+"/questions",questionList);
     }
 
 }
