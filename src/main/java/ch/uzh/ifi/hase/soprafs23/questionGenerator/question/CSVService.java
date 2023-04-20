@@ -24,8 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CSVService {
 
-    ChoiceQuestionRepository multipleChoiceRepository;
-    DrawingQuestionRepository hanziDrawingRepository;
+    static ChoiceQuestionRepository multipleChoiceRepository;
+    static DrawingQuestionRepository hanziDrawingRepository;
 
 
     @Autowired
@@ -79,7 +79,7 @@ public class CSVService {
 
 
     // a recursive method to correspond different modes to certain actions
-    public List<QuestionDTO> fetchQuestionSet(String level, String mode, int numQuestion) {
+    public static List<QuestionDTO> fetchQuestionSet(String level, String mode, int numQuestion) {
         if(mode == "Mixed"){
             List<QuestionDTO> result = new ArrayList<>();
             result.addAll(fetchQuestionSet(level,"HanziDrawing",numQuestion/2));
@@ -93,7 +93,7 @@ public class CSVService {
     }
 
     // find all the questions of the given Level
-    private List<Integer> findAllIdMatches(String level,String typeOfQuestion){
+    private static List<Integer> findAllIdMatches(String level, String typeOfQuestion){
         if(typeOfQuestion.equals("HanziDrawing")){
             return getIdFromQuestions(hanziDrawingRepository.findAllByLevel(level));
         }
@@ -105,7 +105,7 @@ public class CSVService {
     }
 
     // get all the IDs from the questions that meet the criteria
-    private List<Integer> getIdFromQuestions(List<Question> questionList){
+    private static List<Integer> getIdFromQuestions(List<Question> questionList){
         List<Integer> idList = new ArrayList<>();
         for(Question question:questionList){
             idList.add(question.getId());
@@ -115,7 +115,7 @@ public class CSVService {
     }
 
     // the random selection process to return the required questionPack
-    private List<QuestionDTO> randomSelect(String typeOfQuestion, List<Integer> idSet, int num){
+    private static List<QuestionDTO> randomSelect(String typeOfQuestion, List<Integer> idSet, int num){
         List<QuestionDTO> result = new ArrayList<>();
         List<Integer> selectedIdSet = new ArrayList<>();
 

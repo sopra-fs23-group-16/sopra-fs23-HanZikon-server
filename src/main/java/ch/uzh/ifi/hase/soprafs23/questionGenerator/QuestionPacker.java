@@ -10,13 +10,13 @@ import java.util.List;
 
 @RestController
 public class QuestionPacker {
-    CSVService service;
+    static CSVService service;
 
     public QuestionPacker(CSVService service) {
         this.service = service;
     }
 
-    public List<QuestionDTO> getQuestionList(GameParamDTO gameParam){
+    public static List<QuestionDTO> getQuestionList(GameParamDTO gameParam){
         return service.fetchQuestionSet(Integer.toString(gameParam.getGameLevel()),gameParam.getQuestionType(),10);
     }
 
