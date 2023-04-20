@@ -51,6 +51,10 @@ public class Room {
         return player;
     }
 
+    public boolean checkIsFull(){
+        return this.players.size() == this.gameParam.getNumPlayers();
+    }
+
     public void addPlayer(Player player) {
         this.players.put(player.getUserID(),player);
     }

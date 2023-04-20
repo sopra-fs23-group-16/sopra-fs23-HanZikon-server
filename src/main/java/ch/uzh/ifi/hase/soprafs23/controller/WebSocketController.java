@@ -98,7 +98,9 @@ public class WebSocketController {
             gamer.setUsername(playerDTO.getUserName());
         }
         Player player = gameService.createPlayer(gamer);
-        foundRoom.addPlayer(player);
+        if(!foundRoom.checkIsFull()) {
+            foundRoom.addPlayer(player);
+        }
         log.info(player.getPlayerName()+" joined the room: " + foundRoom.getRoomID());
         log.info("room contains " + foundRoom.getPlayers().size() + " players.");
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomCode+"/join",foundRoom);
