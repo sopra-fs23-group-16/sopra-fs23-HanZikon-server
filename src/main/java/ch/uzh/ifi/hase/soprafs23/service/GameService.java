@@ -4,7 +4,8 @@ import ch.uzh.ifi.hase.soprafs23.MultipleMode.Game;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Player;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
-import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
+import ch.uzh.ifi.hase.soprafs23.questionGenerator.QuestionPacker;
+import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO.QuestionDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameParamDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,9 +15,11 @@ import java.util.*;
 public class GameService {
 
     private RoomManager roomManager;
+    private GameManager gameManager;
 
     public GameService() {
         this.roomManager = new RoomManager();
+        this.gameManager = new GameManager();
     }
 
     public Player createPlayer(User gamer){
@@ -33,17 +36,16 @@ public class GameService {
     /**
      * When all room players are ready, start the game
      * Or accept the game owner control to start the game
-     * @param players
      * @param roomID
      * @return
      */
-    public Game createGame(List<Player> players, int roomID){
+    public List<QuestionDTO> createGame(int roomID){
+        Room foundRoom = findRoomByID(roomID);
+        Game newGame = new Game(foundRoom);
+        this.gameManager.addGame(newGame);
+        List<QuestionDTO> questionList = QuestionPacker.getQuestionList(foundRoom.getGameParam());
+        return questionList;
 
-        if(checkALlReady(roomID) == true){
-            return new Game(findRoomPlayersByRoomID(roomID),roomID);
-        }
-
-        return new Game(players,roomID);
     }
 
     private String generateRoomCode(){
@@ -97,7 +99,7 @@ public class GameService {
     }
 
     private List<Player> findGamePlayersByRoomID(int roomID){
-        Game findGame = GameRepository.findByRoomId(roomID);
+        Game findGame = this.gameManager.findByRoomID(roomID);
         List<Player> gamePlayers = findGame.getPlayers();
         if (gamePlayers == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No players in this game!");
