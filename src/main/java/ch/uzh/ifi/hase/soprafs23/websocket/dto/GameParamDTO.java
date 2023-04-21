@@ -1,7 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.websocket.dto;
 
 public class GameParamDTO {
-    private int gameLevel;
+    private int level;
     private int numPlayers;
     private String questionType;
 
@@ -9,8 +9,8 @@ public class GameParamDTO {
         return this.numPlayers;
     }
 
-    public int getGameLevel() {
-        return gameLevel;
+    public int getLevel() {
+        return level;
     }
 
     public String getQuestionType() {
