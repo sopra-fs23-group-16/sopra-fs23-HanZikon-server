@@ -80,10 +80,11 @@ public class CSVService {
 
     // a recursive method to correspond different modes to certain actions
     public List<QuestionDTO> fetchQuestionSet(String level, String mode, int numQuestion) {
-        if(mode == "Mixed"){
+        if(mode.equals("Mixed")){
             List<QuestionDTO> result = new ArrayList<>();
             result.addAll(fetchQuestionSet(level,"HanziDrawing",numQuestion/2));
             result.addAll(fetchQuestionSet(level,"MultipleChoice",numQuestion/2));
+            Collections.shuffle(result);
             return result;
         }
         else{
@@ -127,10 +128,10 @@ public class CSVService {
             selectedIdSet = idSet;
         }
         for(int i:selectedIdSet){
-            if(typeOfQuestion == "HanziDrawing"){
+            if(typeOfQuestion.equals("HanziDrawing")){
                 result.add(HanziDrawDTOMapper.DTOMapper.INSTANCE.convertEntityToDTO(hanziDrawingRepository.findById(i).orElse(null)));
             }
-            else if (typeOfQuestion == "MultipleChoice") {
+            else if (typeOfQuestion.equals("MultipleChoice")) {
                 result.add(MultiChoiceDTOMapper.DTOMapper.INSTANCE.convertEntityToDTO(multipleChoiceRepository.findById(i).orElse(null)));
             }
         }
