@@ -9,9 +9,7 @@ import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.CSVService;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO.QuestionDTO;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.UserService;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameDTO;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameParamDTO;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerDTO;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @RestController
@@ -137,6 +136,82 @@ public class WebSocketController {
         List<QuestionDTO> questionList = gameService.createGame(roomID,new QuestionPacker(csvService));
         log.info("new game created");
         this.simpMessagingTemplate.convertAndSend("/topic/multi/games/"+roomID+"/questions",questionList);
+    }
+
+    /**
+     * It is used for update status when the player get ready: Set player isReady=true;
+     *
+     * @throws Exception
+     */
+    @MessageMapping("/multi/rooms/{roomID}/players/ready")
+    public void isPlayerReady(@DestinationVariable int roomID, PlayerStatusDTO playerStatusDTO) {
+        log.info("Room {}: Player {} is changing the status.", roomID, playerStatusDTO.getUserID());
+        Player updatedPlayer = this.gameService.isPlayerReady(roomID, playerStatusDTO);
+
+        Room updatedRoom = this.gameService.findRoomByID(roomID);
+        log.info("Updated room after player is ready: " + updatedRoom.getRoomID());
+
+        boolean allReadyIndicator = this.gameService.checkALlReady(roomID);
+        if(allReadyIndicator == true){
+            log.info("Room {}: All players are ready!", roomID);
+            this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/info",updatedRoom);
+        }
+
+    }
+
+    /**
+     * It is used for update status when players play the game
+     * start the game: Set isWriting=true;
+     * submit a question: set isWriting=false;
+     * When all players finished, reset isWriting=true, next question
+     *
+     * @throws Exception
+     */
+    @MessageMapping("/multi/rooms/{roomID}/players/gaming")
+    public void isPlayerWriting(@DestinationVariable int roomID, PlayerStatusDTO playerStatusDTO) {
+        log.info("Room {}: Player {} is changing the status.", roomID, playerStatusDTO.getUserID());
+        Player updatedPlayer = this.gameService.isPlayerWriting(roomID, playerStatusDTO);
+
+        Room updatedRoom = this.gameService.findRoomByID(roomID);
+        log.info("Updated room after player is ready: " + updatedRoom.getRoomID());
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/info",updatedRoom);
+
+        // When this question ends, reset the isWriting = ture
+        boolean finishIndicator = this.gameService.checkALlFinish(roomID);
+        if(finishIndicator == true){
+            this.gameService.nextQuestion(roomID);
+
+            log.info("Room {}: All players finish! " + roomID);
+            this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/info",updatedRoom);
+        }
+
+    }
+
+    /**
+     * Accumulate player scoreBoard (includes system score and votedScore) after each question (1 round includes 10 questions) and share ranking
+     * After each round, save the game record of each player(user) into DB
+     *
+     *  playerDTO.userId, playerId are required for searching
+     *
+     * @return true/ false
+     * @throws Exception
+     */
+    @MessageMapping("/multi/rooms/{roomID}/players/scoreBoard")
+    public void updatePlayerScoreBoard(@DestinationVariable int roomID, PlayerScoreBoardDTO playerScoreBoardDTO) {
+        log.info("Room {}: Player score {} is changing.", roomID, playerScoreBoardDTO);
+        this.gameService.updatePlayerScore(roomID, playerScoreBoardDTO);
+
+        Room updatedRoom = this.gameService.findRoomByID(roomID);
+        log.info("Updated room with player score {} : " + updatedRoom);
+        // this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/info",updatedRoom);
+
+        // When this round ends, update DB and broadcast ranking information
+        boolean finishIndicator = this.gameService.checkALlFinish(roomID);
+        if(finishIndicator == true){
+            LinkedHashMap<Integer, Player> playerRank =  this.gameService.calculateRanking(roomID);
+            this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/games/record", playerRank);
+        }
+
     }
 
 }

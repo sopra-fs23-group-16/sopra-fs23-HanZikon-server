@@ -21,4 +21,8 @@ public class Game {
         return new ArrayList<>(this.players.values());
     }
 
+    public void refreshPlayers(Room room){
+        this.players = room.getPlayersHashmap();
+    }
+
 }

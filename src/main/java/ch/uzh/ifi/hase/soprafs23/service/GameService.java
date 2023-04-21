@@ -7,6 +7,10 @@ import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.QuestionPacker;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO.QuestionDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameParamDTO;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerScoreBoardDTO;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerStatusDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,6 +20,10 @@ public class GameService {
 
     private RoomManager roomManager;
     private GameManager gameManager;
+
+    GameRecordService gameRecordService;
+
+    Logger log = LoggerFactory.getLogger(GameService.class);
 
     public GameService() {
         this.roomManager = new RoomManager();
@@ -125,16 +133,140 @@ public class GameService {
         return true;
     }
 
+
+    /**
+     * Check whether all players finish writing, reset all players isWriting= true
+     * @param roomID
+     * @return
+     */
+    public void nextQuestion(int roomID){
+        Room findRoom = this.roomManager.findByRoomID(roomID);
+
+        List<Player> gamePlayers = findGamePlayersByRoomID(roomID);
+        for(int i=0; i<gamePlayers.size(); i++){
+            Player roomPlayer = gamePlayers.get(i);
+            roomPlayer.setWriting(true);
+            findRoom.updatePlayer(roomPlayer);
+        }
+    }
+
+    /**
+     * 1. Update the player status isReady= true get ready for game (each round)
+     * @param roomID
+     * @param playerDTO
+     * @return
+     */
+    public Player isPlayerReady(int roomID, PlayerStatusDTO playerDTO){
+        Room findRoom = this.roomManager.findByRoomID(roomID);
+
+        Player updatePlayer = findRoom.findPlayerByUserID(playerDTO.getUserID());
+
+        if(playerDTO.isReady() != null){
+            updatePlayer.setReady(playerDTO.isReady());
+        }
+
+        // Used to update the corresponded room
+        findRoom.updatePlayer(updatePlayer);
+
+        return updatePlayer;
+    }
+
+    /**
+     * 1. Update the player status isWriting in the room
+     * @param roomID
+     * @param playerDTO
+     * @return
+     */
+    public Player isPlayerWriting(int roomID, PlayerStatusDTO playerDTO){
+        Room findRoom = this.roomManager.findByRoomID(roomID);
+
+        Player updatePlayer = findRoom.findPlayerByUserID(playerDTO.getUserID());
+
+        if(playerDTO.isWriting() != null){
+            updatePlayer.setWriting(playerDTO.isWriting());
+        }
+
+        // Used to update the corresponded room
+        findRoom.updatePlayer(updatePlayer);
+
+        return updatePlayer;
+    }
+
+    /**
+     * 1. Accumulate the player score according to scoreBoard passed
+     * @param roomID
+     * @param playerScoreBoardDTO
+     * @return
+     */
+    public void updatePlayerScore(int roomID, PlayerScoreBoardDTO playerScoreBoardDTO){
+        Room findRoom = this.roomManager.findByRoomID(roomID);
+        Game findGame = this.gameManager.findByRoomID(roomID);
+
+        Player updatePlayer = findRoom.findPlayerByUserID(playerScoreBoardDTO.getUserID());
+
+        if(playerScoreBoardDTO.getScoreBoard() != null && updatePlayer.isWriting() == false){
+            int existingAccumulatedSystemScores = updatePlayer.getScoreBoard().getSystemScore();
+            int existingAccumulatedVotedScores = updatePlayer.getScoreBoard().getVotedScore();
+            updatePlayer.getScoreBoard().setSystemScore(existingAccumulatedSystemScores + playerScoreBoardDTO.getScoreBoard().getSystemScore());
+            updatePlayer.getScoreBoard().setVotedScore(existingAccumulatedVotedScores + playerScoreBoardDTO.getScoreBoard().getVotedScore());
+        } else {
+            log.info("Room {}: Player {} has accumulated the score board this round.", roomID, playerScoreBoardDTO.getUserID());
+        }
+
+        // update the corresponded room
+        findRoom.updatePlayer(updatePlayer);
+        // refresh the game instance players, ranking score based on game players
+        findGame.refreshPlayers(findRoom);
+
+    }
+
+    /**
+     * Calculate the ranking returned to client, and save record to DB
+     * @param roomID
+     * @return
+     */
     public LinkedHashMap<Integer, Player> calculateRanking(int roomID){
         LinkedHashMap<Integer, Player> playerRanking = new LinkedHashMap<>();
-        List<Player> roomPlayers = findGamePlayersByRoomID(roomID);
-        for(int i=0; i<roomPlayers.size(); i++){
-            Player player = roomPlayers.get(i);
+        List<Player> gamePlayers = findGamePlayersByRoomID(roomID);
+        for(int i=0; i<gamePlayers.size(); i++){
+            Player player = gamePlayers.get(i);
             int score = player.getScoreBoard().getWeightedScore();
             playerRanking.put(score, player);
         }
 
+        gameRecordService.saveGameRecords(playerRanking);
+
         return playerRanking;
+    }
+
+    /**
+     * When start the next game round, reset all players isReady= false, and reset player's score board
+     *
+     * @param roomID
+     * @return
+     */
+    public void nextRound(int roomID){
+        Room findRoom = this.roomManager.findByRoomID(roomID);
+        Game findGame = this.gameManager.findByRoomID(roomID);
+
+        List<Player> roomPlayers = findRoom.getPlayers();
+        for(int i=0; i<roomPlayers.size(); i++){
+            roomPlayers.get(i).setReady(false);
+            roomPlayers.get(i).getScoreBoard().setVotedScore(0);
+            roomPlayers.get(i).getScoreBoard().setSystemScore(0);
+            findRoom.updatePlayer(roomPlayers.get(i));
+        }
+        log.info("Reset Room {} for next round: {}  ", roomID, findRoom);
+
+        findGame.refreshPlayers(findRoom);
+        log.info("Reset Game {} for next round: {}  ", roomID, findGame);
+    }
+
+    private void endGame(int roomID) {
+        Room findRoom = this.roomManager.findByRoomID(roomID);
+        Game findGame = this.gameManager.findByRoomID(roomID);
+        this.roomManager.removeRoom(findRoom);
+        this.gameManager.removeGame(findGame);
     }
 
 

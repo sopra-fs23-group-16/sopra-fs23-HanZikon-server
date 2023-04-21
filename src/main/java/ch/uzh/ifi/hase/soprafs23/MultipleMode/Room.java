@@ -63,6 +63,11 @@ public class Room {
         this.players.remove(player.getUserID(),player);
     }
 
+    public void updatePlayer(Player player){
+        this.players.remove(player.getUserID(),player);
+        this.players.put(player.getUserID(),player);
+    }
+
     public GameParamDTO getGameParam() {
         return gameParam;
     }
