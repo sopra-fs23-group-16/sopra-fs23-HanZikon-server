@@ -27,7 +27,7 @@ public class MultipleChoice implements Question {
     @Column
     private int answerIndex; // Store the index of the correct answers
 
-    @CsvBindByPosition(position = 3)
+    @CsvBindByPosition(position = 4)
     @Column
     private String level; // Level of the game, from 1-10?
 

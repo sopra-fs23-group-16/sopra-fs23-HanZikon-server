@@ -24,8 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CSVService {
 
-    static ChoiceQuestionRepository multipleChoiceRepository;
-    static DrawingQuestionRepository hanziDrawingRepository;
+    ChoiceQuestionRepository multipleChoiceRepository;
+    DrawingQuestionRepository hanziDrawingRepository;
 
 
     @Autowired
@@ -79,11 +79,12 @@ public class CSVService {
 
 
     // a recursive method to correspond different modes to certain actions
-    public static List<QuestionDTO> fetchQuestionSet(String level, String mode, int numQuestion) {
-        if(mode == "Mixed"){
+    public List<QuestionDTO> fetchQuestionSet(String level, String mode, int numQuestion) {
+        if(mode.equals("Mixed")){
             List<QuestionDTO> result = new ArrayList<>();
             result.addAll(fetchQuestionSet(level,"HanziDrawing",numQuestion/2));
             result.addAll(fetchQuestionSet(level,"MultipleChoice",numQuestion/2));
+            Collections.shuffle(result);
             return result;
         }
         else{
@@ -93,7 +94,7 @@ public class CSVService {
     }
 
     // find all the questions of the given Level
-    private static List<Integer> findAllIdMatches(String level, String typeOfQuestion){
+    private List<Integer> findAllIdMatches(String level,String typeOfQuestion){
         if(typeOfQuestion.equals("HanziDrawing")){
             return getIdFromQuestions(hanziDrawingRepository.findAllByLevel(level));
         }
@@ -105,7 +106,7 @@ public class CSVService {
     }
 
     // get all the IDs from the questions that meet the criteria
-    private static List<Integer> getIdFromQuestions(List<Question> questionList){
+    private List<Integer> getIdFromQuestions(List<Question> questionList){
         List<Integer> idList = new ArrayList<>();
         for(Question question:questionList){
             idList.add(question.getId());
@@ -115,7 +116,7 @@ public class CSVService {
     }
 
     // the random selection process to return the required questionPack
-    private static List<QuestionDTO> randomSelect(String typeOfQuestion, List<Integer> idSet, int num){
+    private List<QuestionDTO> randomSelect(String typeOfQuestion, List<Integer> idSet, int num){
         List<QuestionDTO> result = new ArrayList<>();
         List<Integer> selectedIdSet = new ArrayList<>();
 
@@ -127,10 +128,10 @@ public class CSVService {
             selectedIdSet = idSet;
         }
         for(int i:selectedIdSet){
-            if(typeOfQuestion == "HanziDrawing"){
+            if(typeOfQuestion.equals("HanziDrawing")){
                 result.add(HanziDrawDTOMapper.DTOMapper.INSTANCE.convertEntityToDTO(hanziDrawingRepository.findById(i).orElse(null)));
             }
-            else if (typeOfQuestion == "MultipleChoice") {
+            else if (typeOfQuestion.equals("MultipleChoice")) {
                 result.add(MultiChoiceDTOMapper.DTOMapper.INSTANCE.convertEntityToDTO(multipleChoiceRepository.findById(i).orElse(null)));
             }
         }
