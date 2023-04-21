@@ -43,7 +43,8 @@ public class GameService {
         Room foundRoom = findRoomByID(roomID);
         Game newGame = new Game(foundRoom);
         this.gameManager.addGame(newGame);
-        List<QuestionDTO> questionList = QuestionPacker.getQuestionList(foundRoom.getGameParam());
+//        List<QuestionDTO> questionList = QuestionPacker.getQuestionList(foundRoom.getGameParam());
+        List<QuestionDTO> questionList = new ArrayList<>();
         return questionList;
 
     }
