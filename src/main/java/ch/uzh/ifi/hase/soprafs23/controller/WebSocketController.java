@@ -4,8 +4,6 @@ import ch.uzh.ifi.hase.soprafs23.MultipleMode.Game;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Player;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
-import ch.uzh.ifi.hase.soprafs23.questionGenerator.QuestionPacker;
-import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.CSVService;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO.QuestionDTO;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.UserService;
@@ -33,9 +31,6 @@ public class WebSocketController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-
-    @Autowired
-    private CSVService csvService;
 
     public WebSocketController(UserService userService, SimpMessagingTemplate simpMessagingTemplate) {
         this.userService = userService;
@@ -103,9 +98,7 @@ public class WebSocketController {
             gamer.setUsername(playerDTO.getUserName());
         }
         Player player = gameService.createPlayer(gamer);
-        if(!foundRoom.checkIsFull()) {
-            foundRoom.addPlayer(player);
-        }
+        foundRoom.addPlayer(player);
         log.info(player.getPlayerName()+" joined the room: " + foundRoom.getRoomID());
         log.info("room contains " + foundRoom.getPlayers().size() + " players.");
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomCode+"/join",foundRoom);
@@ -120,7 +113,7 @@ public class WebSocketController {
         Player player = foundRoom.findPlayerByUserID(playerDTO.getUserID());
         foundRoom.removePlayer(player);
         log.info("dropped from the room: " + roomID);
-        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+foundRoom.getRoomID()+"/drop",foundRoom);
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+foundRoom.getRoomID()+"/info",foundRoom);
     }
 
     /**
@@ -134,7 +127,7 @@ public class WebSocketController {
 //  @SendTo("topic/multi/game/start")
     public void createGame(@DestinationVariable int roomID) throws Exception {
         log.info("request to create game: " + roomID);
-        List<QuestionDTO> questionList = gameService.createGame(roomID,new QuestionPacker(csvService));
+        List<QuestionDTO> questionList = gameService.createGame(roomID);
         log.info("new game created");
         this.simpMessagingTemplate.convertAndSend("/topic/multi/games/"+roomID+"/questions",questionList);
     }
