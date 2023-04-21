@@ -5,10 +5,10 @@ public class GameParam {
 
     // game difficulty level from 1-5
     int gameLevel;
-    TypeOfQuestion questionType;
+    String questionType;
 
 
-    public GameParam(int numPlayers, int gameLevel, TypeOfQuestion questionType) {
+    public GameParam(int numPlayers, int gameLevel, String questionType) {
         this.numPlayers = numPlayers;
         this.gameLevel = gameLevel;
         this.questionType = questionType;
@@ -30,11 +30,11 @@ public class GameParam {
         this.gameLevel = gameLevel;
     }
 
-    public TypeOfQuestion getQuestionType() {
+    public String getQuestionType() {
         return questionType;
     }
 
-    public void setQuestionType(TypeOfQuestion questionType) {
+    public void setQuestionType(String questionType) {
         this.questionType = questionType;
     }
 }
