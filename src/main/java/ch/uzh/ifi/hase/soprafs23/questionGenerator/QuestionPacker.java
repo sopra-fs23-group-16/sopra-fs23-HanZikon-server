@@ -22,9 +22,10 @@ public class QuestionPacker {
 
     // direct interface with frontend to retrieve a package of questions of certain parameter
     @PostMapping("/questionPackRequest")
+
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public List<QuestionDTO> inquiryUser(@RequestBody GameParam gameParam){
+    public List<QuestionDTO> getQuestionList(@RequestBody GameParam gameParam){
         return service.fetchQuestionSet(Integer.toString(gameParam.gameLevel),gameParam.questionType.toString(),10);
     }
 }

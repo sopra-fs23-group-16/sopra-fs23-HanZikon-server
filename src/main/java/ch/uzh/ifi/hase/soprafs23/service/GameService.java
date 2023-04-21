@@ -39,12 +39,13 @@ public class GameService {
      * @param roomID
      * @return
      */
-    public List<QuestionDTO> createGame(int roomID){
+    public List<QuestionDTO> createGame(int roomID,QuestionPacker questionPacker){
         Room foundRoom = findRoomByID(roomID);
         Game newGame = new Game(foundRoom);
         this.gameManager.addGame(newGame);
-//        List<QuestionDTO> questionList = QuestionPacker.getQuestionList(foundRoom.getGameParam());
-        List<QuestionDTO> questionList = new ArrayList<>();
+
+        List<QuestionDTO> questionList = questionPacker.getQuestionList(foundRoom.getGameParam());
+        //List<QuestionDTO> questionList = new ArrayList<>();
         return questionList;
 
     }
