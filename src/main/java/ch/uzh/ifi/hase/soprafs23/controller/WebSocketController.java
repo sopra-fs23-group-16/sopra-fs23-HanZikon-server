@@ -144,7 +144,7 @@ public class WebSocketController {
      * @throws Exception
      */
     @MessageMapping("/multi/rooms/{roomID}/players/ready")
-    public void isPlayerReady(@DestinationVariable int roomID, PlayerStatusDTO playerStatusDTO) {
+    public void updatePlayerReady(@DestinationVariable int roomID, PlayerStatusDTO playerStatusDTO) {
         log.info("Room {}: Player {} is changing the status.", roomID, playerStatusDTO.getUserID());
         Player updatedPlayer = this.gameService.isPlayerReady(roomID, playerStatusDTO);
 
@@ -154,8 +154,8 @@ public class WebSocketController {
         boolean allReadyIndicator = this.gameService.checkALlReady(roomID);
         if(allReadyIndicator == true){
             log.info("Room {}: All players are ready!", roomID);
-            this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/info",updatedRoom);
         }
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/info",updatedRoom);
 
     }
 
@@ -168,7 +168,7 @@ public class WebSocketController {
      * @throws Exception
      */
     @MessageMapping("/multi/rooms/{roomID}/players/gaming")
-    public void isPlayerWriting(@DestinationVariable int roomID, PlayerStatusDTO playerStatusDTO) {
+    public void updatePlayerWriting(@DestinationVariable int roomID, PlayerStatusDTO playerStatusDTO) {
         log.info("Room {}: Player {} is changing the status.", roomID, playerStatusDTO.getUserID());
         Player updatedPlayer = this.gameService.isPlayerWriting(roomID, playerStatusDTO);
 
@@ -188,10 +188,10 @@ public class WebSocketController {
     }
 
     /**
-     * Accumulate player scoreBoard (includes system score and votedScore) after each question (1 round includes 10 questions) and share ranking
-     * After each round, save the game record of each player(user) into DB
+     * Accumulate player scoreBoard (includes system score and votedScore) after each question and share ranking
+     * After 1 pack (10 questions) finished, save the game record of each player(user) into DB
      *
-     *  playerDTO.userId, playerId are required for searching
+     *  playerDTO.userId are required for searching
      *
      * @return true/ false
      * @throws Exception
