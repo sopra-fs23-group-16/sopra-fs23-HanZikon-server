@@ -214,4 +214,22 @@ public class WebSocketController {
 
     }
 
+    /**
+     * Retrieve players score after each question and share ranking
+     * playerDTO.userId is required for searching
+     *
+     * @return true/ false
+     * @throws Exception
+     */
+    @MessageMapping("/multi/rooms/{roomID}/players/games/record")
+    public void getPlayerScoreBoard(@DestinationVariable int roomID) {
+
+        Room updatedRoom = this.gameService.findRoomByID(roomID);
+        log.info("Updated room with player score {} : " + updatedRoom);
+
+        LinkedHashMap<Integer, Player> playerRank =  this.gameService.calculateRanking(roomID);
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/games/record", playerRank);
+
+    }
+
 }
