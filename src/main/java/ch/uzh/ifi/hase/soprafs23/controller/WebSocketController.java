@@ -213,11 +213,10 @@ public class WebSocketController {
      * @return true/ false
      * @throws Exception
      */
-    @MessageMapping("/multi/rooms/{roomID}/players/games/record")
+    @MessageMapping("/multi/rooms/{roomID}/players/scores")
     public void getPlayerScoreBoard(@DestinationVariable int roomID) {
         LinkedHashMap<Integer, Player> playerRank =  this.gameService.calculateRanking(roomID);
-        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/games/record", playerRank);
-
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/scores", playerRank);
     }
 
 }
