@@ -27,6 +27,7 @@ public class Room {
         this.roomID = instanceID++;
         this.roomCode = roomCode;
         this.owner = owner;
+        this.owner.setReady(true);
         this.addPlayer(owner);
         this.gameParam = gameParam;
     }
