@@ -42,6 +42,17 @@ public class UserController {
         return userGetDTOs;
     }
 
+    @PostMapping("/users/localUser")
+    @ResponseBody
+    public UserGetDTO getLocalUser(@RequestBody UserPostDTO userPostDTO) {
+        User foundUser = userService.getUserByToken(userPostDTO.getToken());
+        // convert internal representation of user back to API
+        if(foundUser==null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found!");
+        }
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(foundUser);
+    }
+
     @GetMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

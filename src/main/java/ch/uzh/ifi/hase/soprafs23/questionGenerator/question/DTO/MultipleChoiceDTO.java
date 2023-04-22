@@ -9,6 +9,7 @@ public class MultipleChoiceDTO implements QuestionDTO{
     private int answerIndex;
 
     private String level;
+    private String questionType;
 
     public MultipleChoiceDTO(int id, String oraclePicture, List<String> choices, int answerIndex, String level) {
         this.id = id;
@@ -16,6 +17,7 @@ public class MultipleChoiceDTO implements QuestionDTO{
         this.choices = choices;
         this.answerIndex = answerIndex;
         this.level = level;
+        this.questionType = "MultipleChoice";
     }
 
     public int getId() {
@@ -55,10 +57,18 @@ public class MultipleChoiceDTO implements QuestionDTO{
     }
 
     public MultipleChoiceDTO() {
+        this.questionType = "MultipleChoice";
     }
 
     public void setLevel(String level) {
         this.level = level;
     }
 
+    public String getQuestionType() {
+        return questionType;
+    }
+
+    public void setQuestionType(String questionType) {
+        this.questionType = "MultipleChoice";
+    }
 }

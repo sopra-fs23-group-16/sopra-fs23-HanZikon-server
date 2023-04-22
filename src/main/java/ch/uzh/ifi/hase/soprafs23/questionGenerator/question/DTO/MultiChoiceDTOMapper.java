@@ -23,6 +23,7 @@ public interface MultiChoiceDTOMapper {
         @Mapping(source = "choices", target = "choices")
         @Mapping(source = "answerIndex", target = "answerIndex")
         @Mapping(source = "level", target = "level")
+        @Mapping(target = "questionType", ignore = true)
         MultipleChoiceDTO convertEntityToDTO(MultipleChoice multipleChoice);
     }
 }
