@@ -29,7 +29,13 @@ public class ScoreBoard {
 
     public int getWeightedScore() {
         int wightedScore = 0;
-        wightedScore = (int) ((systemScore* systemScorePercentage) + votedScore*(1-systemScorePercentage));
+        if ( this.systemScore == 0){
+            wightedScore = this.votedScore;
+        } else if (this.votedScore ==0 ){
+            wightedScore = this.systemScore;
+        } else if(this.systemScore != 0 && this.votedScore !=0) {
+            wightedScore = (int) ((systemScore* systemScorePercentage) + votedScore*(1-systemScorePercentage));
+        }
         return wightedScore;
     }
 
