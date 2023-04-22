@@ -146,7 +146,7 @@ public class WebSocketController {
     @MessageMapping("/multi/rooms/{roomID}/players/ready")
     public void updatePlayerReady(@DestinationVariable int roomID, PlayerStatusDTO playerStatusDTO) {
         log.info("Room {}: Player {} is changing the status.", roomID, playerStatusDTO.getUserID());
-        Player updatedPlayer = this.gameService.isPlayerReady(roomID, playerStatusDTO);
+        Player updatedPlayer = this.gameService.updatePlayerStatusReady(roomID, playerStatusDTO);
 
         Room updatedRoom = this.gameService.findRoomByID(roomID);
         log.info("Updated room after player is ready: " + updatedRoom.getRoomID());
@@ -170,7 +170,7 @@ public class WebSocketController {
     @MessageMapping("/multi/rooms/{roomID}/players/gaming")
     public void updatePlayerWriting(@DestinationVariable int roomID, PlayerStatusDTO playerStatusDTO) {
         log.info("Room {}: Player {} is changing the status.", roomID, playerStatusDTO.getUserID());
-        Player updatedPlayer = this.gameService.isPlayerWriting(roomID, playerStatusDTO);
+        Player updatedPlayer = this.gameService.updatePlayerStatusWriting(roomID, playerStatusDTO);
 
         Room updatedRoom = this.gameService.findRoomByID(roomID);
         log.info("Updated room after player is ready: " + updatedRoom.getRoomID());

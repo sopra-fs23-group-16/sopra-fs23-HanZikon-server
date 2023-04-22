@@ -54,6 +54,9 @@ public class GameService {
 
         List<QuestionDTO> questionList = questionPacker.getQuestionList(foundRoom.getGameParam());
         //List<QuestionDTO> questionList = new ArrayList<>();
+
+        updateRoomPlayersReady(newGame);
+
         return questionList;
 
     }
@@ -151,12 +154,27 @@ public class GameService {
     }
 
     /**
+     * Update all room players gaming status isWriting= ture, when room owner start game
+     * @param game
+     * @return
+     */
+    public void updateRoomPlayersReady(Game game){
+        List<Player> gamePlayers = game.getPlayers();
+        log.info("Game {}: Players status {} before gaming.", game.getRoomID(), gamePlayers.get(0).isWriting());
+        for(int i=0; i<gamePlayers.size(); i++){
+            Player player = gamePlayers.get(i);
+            player.setWriting(true);
+        }
+        log.info("Game {}: Players status {} after start game.", game.getRoomID(), gamePlayers.get(0).isWriting());
+    }
+
+    /**
      * 1. Update the player status isReady= true get ready for game (each round)
      * @param roomID
      * @param playerDTO
      * @return
      */
-    public Player isPlayerReady(int roomID, PlayerStatusDTO playerDTO){
+    public Player updatePlayerStatusReady(int roomID, PlayerStatusDTO playerDTO){
         Room findRoom = this.roomManager.findByRoomID(roomID);
 
         Player updatePlayer = findRoom.findPlayerByUserID(playerDTO.getUserID());
@@ -177,7 +195,7 @@ public class GameService {
      * @param playerDTO
      * @return
      */
-    public Player isPlayerWriting(int roomID, PlayerStatusDTO playerDTO){
+    public Player updatePlayerStatusWriting(int roomID, PlayerStatusDTO playerDTO){
         Room findRoom = this.roomManager.findByRoomID(roomID);
 
         Player updatePlayer = findRoom.findPlayerByUserID(playerDTO.getUserID());
