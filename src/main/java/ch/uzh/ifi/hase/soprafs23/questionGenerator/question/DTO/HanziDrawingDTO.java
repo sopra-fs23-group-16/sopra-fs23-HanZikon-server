@@ -9,7 +9,9 @@ public class HanziDrawingDTO implements QuestionDTO {
     String pinyin;
     String meaning;
     String level;
+    String questionType;
     public HanziDrawingDTO() {
+        this.questionType = "HanziDrawing";
     }
 
     public int getId() {
@@ -58,5 +60,13 @@ public class HanziDrawingDTO implements QuestionDTO {
 
     public void setLevel(String level) {
         this.level = level;
+    }
+
+    public String getQuestionType() {
+        return questionType;
+    }
+
+    public void setQuestionType(String questionType) {
+        this.questionType = "HanziDrawing";
     }
 }

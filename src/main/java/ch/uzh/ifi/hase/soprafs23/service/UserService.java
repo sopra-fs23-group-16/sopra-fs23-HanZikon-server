@@ -53,7 +53,6 @@ public class UserService {
      * This is a helper method that will check the uniqueness criteria of the username and the name
      * defined in the User entity. The method will do nothing if the input is unique and throw an error otherwise.
      *
-     * @param newUser
      * @throws ResponseStatusException
      * @see User
      */
@@ -76,6 +75,7 @@ public class UserService {
         }
     }
 
+
     public User getUserById(long userId) {
         User user = userRepository.findById(userId);
         if (user != null) {
@@ -83,6 +83,8 @@ public class UserService {
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This ID cannot be found.");
     }
+
+    public User getUserByToken(String token) {return userRepository.findByToken(token);}
 
     public void setStatus(long userId, String status) {
         List<User> users = getUsers();

@@ -8,6 +8,8 @@ public class UserPostDTO {
     private String password; // 'name'
     private String status;
 
+    private String token;
+
     public String getUsername() {
         return username;
     }
@@ -30,5 +32,13 @@ public class UserPostDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
