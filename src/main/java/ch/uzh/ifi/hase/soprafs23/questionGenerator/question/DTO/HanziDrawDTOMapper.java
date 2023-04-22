@@ -23,6 +23,7 @@ public interface HanziDrawDTOMapper {
         @Mapping(source = "pinyin", target = "pinyin")
         @Mapping(source = "meaning", target = "meaning")
         @Mapping(source = "level", target = "level")
+        @Mapping(target = "questionType",ignore = true)
         HanziDrawingDTO convertEntityToDTO(HanziDrawing hanziDrawing);
     }
 }
