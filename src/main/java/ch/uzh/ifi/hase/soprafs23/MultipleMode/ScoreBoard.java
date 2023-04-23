@@ -1,5 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.MultipleMode;
 
+import ch.uzh.ifi.hase.soprafs23.entity.User;
+
 import java.math.BigDecimal;
 
 public class ScoreBoard {
@@ -10,6 +12,11 @@ public class ScoreBoard {
     private int systemScore;
 
     private double systemScorePercentage = 0.5;
+
+    public ScoreBoard(){
+        this.votedScore = 0;
+        this.systemScore = 0;
+    }
 
     public int getVotedScore() {
         return votedScore;

@@ -239,20 +239,27 @@ public class GameService {
     }
 
     /**
-     * Calculate the ranking returned to client, and save record to DB
+     * Calculate the ranking returned to client
      * @param roomID
      * @return
      */
     public LinkedHashMap<Integer, Player> calculateRanking(int roomID){
         LinkedHashMap<Integer, Player> playerRanking = new LinkedHashMap<>();
         List<Player> gamePlayers = findGamePlayersByRoomID(roomID);
+        log.info("Room {} has {} players.", roomID, gamePlayers.size());
+
+        int score = 0;
         for(int i=0; i<gamePlayers.size(); i++){
             Player player = gamePlayers.get(i);
-            int score = player.getScoreBoard().getWeightedScore();
+            if(player.getScoreBoard() == null){
+                score = 0;
+            } else {
+                log.info("Player {} 's score is {} .", gamePlayers.get(i).getPlayerName(), player.getScoreBoard().getWeightedScore());
+                score = player.getScoreBoard().getWeightedScore();
+            }
+
             playerRanking.put(score, player);
         }
-
-        gameRecordService.saveGameRecords(playerRanking);
 
         return playerRanking;
     }

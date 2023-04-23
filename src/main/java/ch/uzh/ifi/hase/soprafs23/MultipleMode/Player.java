@@ -27,6 +27,7 @@ public class Player {
          */
         this.isReady = false;
         this.isWriting = true;
+        this.scoreBoard = new ScoreBoard();
     }
 
     public String getPlayerName() {
