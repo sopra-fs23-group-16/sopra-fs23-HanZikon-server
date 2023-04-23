@@ -222,7 +222,7 @@ public class GameService {
 
         Player updatePlayer = findRoom.findPlayerByUserID(playerScoreBoardDTO.getUserID());
 
-        if(playerScoreBoardDTO.getScoreBoard() != null && updatePlayer.isWriting() == false){
+        if(playerScoreBoardDTO.getScoreBoard() != null){
             int existingAccumulatedSystemScores = updatePlayer.getScoreBoard().getSystemScore();
             int existingAccumulatedVotedScores = updatePlayer.getScoreBoard().getVotedScore();
             updatePlayer.getScoreBoard().setSystemScore(existingAccumulatedSystemScores + playerScoreBoardDTO.getScoreBoard().getSystemScore());
