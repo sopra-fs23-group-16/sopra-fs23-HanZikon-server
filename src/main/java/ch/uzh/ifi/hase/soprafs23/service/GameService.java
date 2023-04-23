@@ -243,8 +243,8 @@ public class GameService {
      * @param roomID
      * @return
      */
-    public LinkedHashMap<Integer, Player> calculateRanking(int roomID){
-        LinkedHashMap<Integer, Player> playerRanking = new LinkedHashMap<>();
+    public LinkedHashMap<String, Integer> calculateRanking(int roomID){
+        LinkedHashMap<String, Integer> playerRanking = new LinkedHashMap<>();
         List<Player> gamePlayers = findGamePlayersByRoomID(roomID);
         log.info("Room {} has {} players.", roomID, gamePlayers.size());
 
@@ -258,7 +258,7 @@ public class GameService {
                 score = player.getScoreBoard().getWeightedScore();
             }
 
-            playerRanking.put(score, player);
+            playerRanking.put(player.getPlayerName(), score);
         }
 
         return playerRanking;

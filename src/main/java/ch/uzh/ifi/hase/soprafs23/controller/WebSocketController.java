@@ -217,7 +217,8 @@ public class WebSocketController {
     @MessageMapping("/multi/rooms/{roomID}/players/scores")
     public void getPlayerScoreBoard(@DestinationVariable int roomID) {
         log.info("Room {} is retrieving players score.", roomID);
-        LinkedHashMap<Integer, Player> playerRank =  this.gameService.calculateRanking(roomID);
+        LinkedHashMap<String, Integer> playerRank =  this.gameService.calculateRanking(roomID);
+        log.info("Room {} is retrieving players score.", roomID);
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/scores", playerRank);
     }
 
