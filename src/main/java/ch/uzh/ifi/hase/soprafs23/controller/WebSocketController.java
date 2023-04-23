@@ -198,11 +198,12 @@ public class WebSocketController {
      */
     @MessageMapping("/multi/rooms/{roomID}/players/scoreBoard")
     public void updatePlayerScoreBoard(@DestinationVariable int roomID, PlayerScoreBoardDTO playerScoreBoardDTO) {
-        log.info("Room {}: Player score {} is changing.", roomID, playerScoreBoardDTO);
+        log.info("Room {}: Player score {} is changing.", roomID, playerScoreBoardDTO.getScoreBoard().getSystemScore());
         this.gameService.updatePlayerScore(roomID, playerScoreBoardDTO);
 
         Room updatedRoom = this.gameService.findRoomByID(roomID);
         log.info("Updated room with player score {} : " + updatedRoom);
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/info",updatedRoom);
 
     }
 
@@ -215,7 +216,9 @@ public class WebSocketController {
      */
     @MessageMapping("/multi/rooms/{roomID}/players/scores")
     public void getPlayerScoreBoard(@DestinationVariable int roomID) {
-        LinkedHashMap<Integer, Player> playerRank =  this.gameService.calculateRanking(roomID);
+        log.info("Room {} is retrieving players score.", roomID);
+        LinkedHashMap<String, Integer> playerRank =  this.gameService.calculateRanking(roomID);
+        log.info("Room {} is retrieving players score.", roomID);
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/scores", playerRank);
     }
 

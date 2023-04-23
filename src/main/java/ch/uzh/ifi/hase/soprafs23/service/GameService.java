@@ -222,7 +222,7 @@ public class GameService {
 
         Player updatePlayer = findRoom.findPlayerByUserID(playerScoreBoardDTO.getUserID());
 
-        if(playerScoreBoardDTO.getScoreBoard() != null && updatePlayer.isWriting() == false){
+        if(playerScoreBoardDTO.getScoreBoard() != null){
             int existingAccumulatedSystemScores = updatePlayer.getScoreBoard().getSystemScore();
             int existingAccumulatedVotedScores = updatePlayer.getScoreBoard().getVotedScore();
             updatePlayer.getScoreBoard().setSystemScore(existingAccumulatedSystemScores + playerScoreBoardDTO.getScoreBoard().getSystemScore());
@@ -239,20 +239,27 @@ public class GameService {
     }
 
     /**
-     * Calculate the ranking returned to client, and save record to DB
+     * Calculate the ranking returned to client
      * @param roomID
      * @return
      */
-    public LinkedHashMap<Integer, Player> calculateRanking(int roomID){
-        LinkedHashMap<Integer, Player> playerRanking = new LinkedHashMap<>();
+    public LinkedHashMap<String, Integer> calculateRanking(int roomID){
+        LinkedHashMap<String, Integer> playerRanking = new LinkedHashMap<>();
         List<Player> gamePlayers = findGamePlayersByRoomID(roomID);
+        log.info("Room {} has {} players.", roomID, gamePlayers.size());
+
+        int score = 0;
         for(int i=0; i<gamePlayers.size(); i++){
             Player player = gamePlayers.get(i);
-            int score = player.getScoreBoard().getWeightedScore();
-            playerRanking.put(score, player);
-        }
+            if(player.getScoreBoard() == null){
+                score = 0;
+            } else {
+                log.info("Player {} 's score is {} .", gamePlayers.get(i).getPlayerName(), player.getScoreBoard().getWeightedScore());
+                score = player.getScoreBoard().getWeightedScore();
+            }
 
-        gameRecordService.saveGameRecords(playerRanking);
+            playerRanking.put(player.getPlayerName(), score);
+        }
 
         return playerRanking;
     }
