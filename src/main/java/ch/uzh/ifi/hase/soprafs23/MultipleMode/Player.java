@@ -25,7 +25,8 @@ public class Player {
         /**
          * default isReady = false
          */
-        this.isReady = true;
+        this.isReady = false;
+        this.isWriting = true;
     }
 
     public String getPlayerName() {
