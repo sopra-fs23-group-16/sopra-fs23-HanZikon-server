@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class WebSocketController {
@@ -217,8 +218,7 @@ public class WebSocketController {
     @MessageMapping("/multi/rooms/{roomID}/players/scores")
     public void getPlayerScoreBoard(@DestinationVariable int roomID) {
         log.info("Room {} is retrieving players score.", roomID);
-        LinkedHashMap<String, Integer> playerRank =  this.gameService.calculateRanking(roomID);
-        log.info("Room {} is retrieving players score.", roomID);
+        Map<String, Integer> playerRank =  this.gameService.calculateRanking(roomID);
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/scores", playerRank);
     }
 

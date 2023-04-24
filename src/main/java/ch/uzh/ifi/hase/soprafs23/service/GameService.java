@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs23.service;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Game;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Player;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Room;
+import ch.uzh.ifi.hase.soprafs23.entity.GameRecord;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.QuestionPacker;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO.QuestionDTO;
@@ -243,8 +244,8 @@ public class GameService {
      * @param roomID
      * @return
      */
-    public LinkedHashMap<String, Integer> calculateRanking(int roomID){
-        LinkedHashMap<String, Integer> playerRanking = new LinkedHashMap<>();
+    public Map<String, Integer> calculateRanking(int roomID){
+        LinkedHashMap<String, Integer> playerScores = new LinkedHashMap<>();
         List<Player> gamePlayers = findGamePlayersByRoomID(roomID);
         log.info("Room {} has {} players.", roomID, gamePlayers.size());
 
@@ -258,11 +259,29 @@ public class GameService {
                 score = player.getScoreBoard().getWeightedScore();
             }
 
-            playerRanking.put(player.getPlayerName(), score);
+            playerScores.put(player.getPlayerName(), score);
         }
 
+        Map<String, Integer> playerRanking = rankPlayers(playerScores);
         return playerRanking;
     }
+
+    public Map<String, Integer> rankPlayers(HashMap<String, Integer> playerScores) {
+        List<Map.Entry<String, Integer>> list = new LinkedList<>(playerScores.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                int cmp = o2.getValue().compareTo(o1.getValue());
+                return cmp != 0 ? cmp : o1.getKey().compareTo(o2.getKey());
+            }
+        });
+        LinkedHashMap<String, Integer> result = new LinkedHashMap<>();
+        for (Map.Entry<String, Integer> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
+    }
+
+
 
     /**
      * When start the next game round, reset all players isReady= false, and reset player's score board
