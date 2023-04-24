@@ -5,6 +5,12 @@ public class GameParamDTO {
     private int numPlayers;
     private String questionType;
 
+    public GameParamDTO(int level, int numPlayers, String questionType) {
+        this.level = level;
+        this.numPlayers = numPlayers;
+        this.questionType = questionType;
+    }
+
     public int getNumPlayers() {
         return this.numPlayers;
     }

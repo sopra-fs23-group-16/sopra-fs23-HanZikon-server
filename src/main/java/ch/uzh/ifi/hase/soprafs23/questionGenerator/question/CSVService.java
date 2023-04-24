@@ -27,6 +27,21 @@ public class CSVService {
     ChoiceQuestionRepository multipleChoiceRepository;
     DrawingQuestionRepository hanziDrawingRepository;
 
+    public ChoiceQuestionRepository getMultipleChoiceRepository() {
+        return multipleChoiceRepository;
+    }
+
+    public void setMultipleChoiceRepository(ChoiceQuestionRepository multipleChoiceRepository) {
+        this.multipleChoiceRepository = multipleChoiceRepository;
+    }
+
+    public DrawingQuestionRepository getHanziDrawingRepository() {
+        return hanziDrawingRepository;
+    }
+
+    public void setHanziDrawingRepository(DrawingQuestionRepository hanziDrawingRepository) {
+        this.hanziDrawingRepository = hanziDrawingRepository;
+    }
 
     @Autowired
     public CSVService(@Qualifier("choiceQuestionRepository") ChoiceQuestionRepository choiceQuestionRepository, @Qualifier("drawingQuestionRepository") DrawingQuestionRepository drawingQuestionRepository) {
@@ -65,7 +80,7 @@ public class CSVService {
         return questionsDTO;
     }
 
-    public List<HanziDrawingDTO> getHanziDrawings() throws FileNotFoundException {
+    public List<HanziDrawingDTO> getHanziDrawings(){
 
         List<HanziDrawing> data = hanziDrawingRepository.findAll();
         List<HanziDrawingDTO> questionsDTO = new ArrayList<>();
@@ -111,7 +126,6 @@ public class CSVService {
         for(Question question:questionList){
             idList.add(question.getId());
         }
-
         return idList;
     }
 
