@@ -4,6 +4,7 @@ import antlr.collections.List;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Game;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Player;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Room;
+import ch.uzh.ifi.hase.soprafs23.MultipleMode.ScoreBoard;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.QuestionPacker;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.CSVService;
@@ -12,6 +13,7 @@ import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.repository.ChoiceQue
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.repository.DrawingQuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameParamDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerDTO;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerScoreBoardDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerStatusDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class GameServiceIntegrationTest {
     Player testPlayer;
+    Player testPlayer2;
+    Player testPlayer3;
     GameService gameService;
 
     Room testRoom;
@@ -146,6 +150,71 @@ class GameServiceIntegrationTest {
 
         this.gameService.nextQuestion(this.testRoom.getRoomID());
         assertEquals(false,this.gameService.checkALlFinish(this.testRoom.getRoomID()));
+    }
+
+    @Test
+    void update_PlayerScore_withSuccess() {
+        this.testPlayer = mockTestPlayer("1","testOwner");
+        this.testRoom = this.gameService.createRoom(this.testPlayer,
+                new GameParamDTO(1,3,"Mixed"));
+
+        this.testRoom.addPlayer(mockTestPlayer("2","player1"));
+        this.testRoom.addPlayer(mockTestPlayer("3","player2"));
+
+        this.gameService.createGame(this.testRoom.getRoomID(),new QuestionPacker(service));
+
+        PlayerStatusDTO playerStatusDTO = new PlayerStatusDTO();
+        playerStatusDTO.setUserID(Long.parseLong("2"));
+        playerStatusDTO.setReady(true);
+        playerStatusDTO.setWriting(false);
+
+        ScoreBoard scoreBoard = new ScoreBoard();
+        scoreBoard.setSystemScore(10);
+        PlayerScoreBoardDTO playerScoreBoardDTO = new PlayerScoreBoardDTO();
+        playerScoreBoardDTO.setScoreBoard(scoreBoard);
+        playerScoreBoardDTO.setUserID(this.testPlayer.getUserID());
+
+        this.gameService.updatePlayerScore(this.testRoom.getRoomID(), playerScoreBoardDTO);
+
+        assertEquals(10,this.gameService.findRoomByID(this.testRoom.getRoomID()).findPlayerByUserID(this.testPlayer.getUserID()).getScoreBoard().getSystemScore());
+    }
+
+    @Test
+    void calculateRanking_withSuccess() {
+        this.testPlayer = mockTestPlayer("1","testOwner");
+        this.testRoom = this.gameService.createRoom(this.testPlayer,
+                new GameParamDTO(1,3,"Mixed"));
+
+        this.testPlayer2 = mockTestPlayer("2","player2");
+        this.testPlayer3 = mockTestPlayer("3","player3");
+
+        this.testRoom.addPlayer(testPlayer2);
+        this.testRoom.addPlayer(testPlayer3);
+
+        this.gameService.createGame(this.testRoom.getRoomID(),new QuestionPacker(service));
+
+        PlayerStatusDTO playerStatusDTO = new PlayerStatusDTO();
+        playerStatusDTO.setUserID(Long.parseLong("2"));
+        playerStatusDTO.setReady(true);
+        playerStatusDTO.setWriting(false);
+
+        ScoreBoard scoreBoard = new ScoreBoard();
+        scoreBoard.setSystemScore(10);
+        PlayerScoreBoardDTO playerScoreBoardDTO = new PlayerScoreBoardDTO();
+        playerScoreBoardDTO.setScoreBoard(scoreBoard);
+        playerScoreBoardDTO.setUserID(this.testPlayer.getUserID());
+
+        this.gameService.updatePlayerScore(this.testRoom.getRoomID(), playerScoreBoardDTO);
+
+        playerScoreBoardDTO.setUserID(this.testPlayer2.getUserID());
+        this.gameService.updatePlayerScore(this.testRoom.getRoomID(), playerScoreBoardDTO);
+
+        scoreBoard.setSystemScore(20);
+        playerScoreBoardDTO.setScoreBoard(scoreBoard);
+        playerScoreBoardDTO.setUserID(this.testPlayer3.getUserID());
+        this.gameService.updatePlayerScore(this.testRoom.getRoomID(), playerScoreBoardDTO);
+
+        assertEquals(testPlayer3.getPlayerName(),this.gameService.calculateRanking(this.testRoom.getRoomID()).entrySet().iterator().next().getKey());
     }
 
 }
