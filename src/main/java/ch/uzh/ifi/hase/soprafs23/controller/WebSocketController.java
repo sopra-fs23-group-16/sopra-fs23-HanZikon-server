@@ -94,13 +94,15 @@ public class WebSocketController {
         Room foundRoom = this.gameService.findRoomByCode(roomCode);
         // check if client is registered
         User gamer;
-        if (this.userService.checkIfUserIDExists(playerDTO.getUserID())) {
-            gamer = userService.getUserById(playerDTO.getUserID());
-        } else {
-            gamer = new User();
-            gamer.setId(playerDTO.getUserID());
-            gamer.setUsername(playerDTO.getUserName());
-        }
+//        if (
+//        this.userService.checkIfUserIDExists(playerDTO.getUserID());
+//        ){
+        gamer = userService.getUserById(playerDTO.getUserID());
+//        } else {
+//            gamer = new User();
+//            gamer.setId(playerDTO.getUserID());
+//            gamer.setUsername(playerDTO.getUserName());
+//        }
         Player player = gameService.createPlayer(gamer);
         if(!foundRoom.checkIsFull()) {
             foundRoom.addPlayer(player);
