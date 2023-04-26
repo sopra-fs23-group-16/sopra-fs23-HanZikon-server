@@ -19,14 +19,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Date;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -36,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * request without actually sending them over the network.
  * This tests if the UserController works.
  */
-/*@WebMvcTest(UserController.class)
+@WebMvcTest(UserController.class)
 public class UserControllerTest {
 
     @Autowired
@@ -83,7 +80,6 @@ public class UserControllerTest {
 
         UserPostDTO userPostDTO = new UserPostDTO();
         userPostDTO.setUsername("testUsername");
-        userPostDTO.setPassword("Test User");
 
         given(userService.createUser(Mockito.any())).willReturn(user);
 
@@ -138,8 +134,7 @@ public class UserControllerTest {
         user.setToken("1");
         user.setStatus(UserStatus.ONLINE.getStatus());
 
-        List<User> allUsers = Collections.singletonList(user);
-        given(userService.getUsers()).willReturn(allUsers);
+        given(userService.getUserById(user.getId())).willReturn(user);
 
         // when/then -> do the request + validate the result
         MockHttpServletRequestBuilder getRequest = get("/users/{userId}", 1L)
@@ -149,10 +144,10 @@ public class UserControllerTest {
         // then
         mockMvc.perform(getRequest)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id", is(user.getId().intValue())))
-                .andExpect(jsonPath("$[0].username", is(user.getUsername())))
-                .andExpect(jsonPath("$[0].password", is(user.getPassword())))
-                .andExpect(jsonPath("$[0].status", is(user.getStatus())));
+                .andExpect(jsonPath("$.id", is(user.getId().intValue())))
+                .andExpect(jsonPath("$.username", is(user.getUsername())))
+                .andExpect(jsonPath("$.password", is(user.getPassword())))
+                .andExpect(jsonPath("$.status", is(user.getStatus())));
     }
 
     @Test
@@ -165,16 +160,15 @@ public class UserControllerTest {
         user.setToken("1");
         user.setStatus(UserStatus.ONLINE.getStatus());
 
-        List<User> allUsers = Collections.singletonList(user);
-        given(userService.getUsers()).willReturn(allUsers);
+        given(userService.getUserById(user.getId())).willReturn(user);
 
         // when/then -> do the request + validate the result
-        MockHttpServletRequestBuilder getRequest = get("/users/{userId}", 2L)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(user.getId()));
+        MockHttpServletRequestBuilder getRequest = get("/users/{userId}", 3L)
+                .contentType(MediaType.APPLICATION_JSON);
 
         // then
-        mockMvc.perform(getRequest).andExpect(status().isNotFound());
+        mockMvc.perform(getRequest)
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -209,7 +203,6 @@ public class UserControllerTest {
         user.setId(1L);
         user.setUsername("testUsername");
         user.setPassword("Test User");
-        user.setBirthday(new Date());
         user.setToken("1");
         user.setStatus(UserStatus.ONLINE.getStatus());
 
@@ -228,7 +221,7 @@ public class UserControllerTest {
 
         // then
         mockMvc.perform(putRequest).andExpect(status().isNotFound());
-    }*/
+    }
 
     /**
      * Helper Method to convert userPostDTO into a JSON string such that the input
@@ -238,7 +231,7 @@ public class UserControllerTest {
      * @param object
      * @return string
      */
-/*    private String asJsonString(final Object object) {
+   private String asJsonString(final Object object) {
         try {
             return new ObjectMapper().writeValueAsString(object);
         } catch (JsonProcessingException e) {
@@ -246,4 +239,4 @@ public class UserControllerTest {
                     String.format("The request body could not be created.%s", e.toString()));
         }
     }
-}*/
+}

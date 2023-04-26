@@ -59,8 +59,11 @@ public class UserController {
     public UserGetDTO getUserById(@PathVariable long userId) {
 
         User userExist = userService.getUserById(userId);
-        UserGetDTO userGetDTO = new UserGetDTO();
+        if(userExist==null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"User not found!");
+        }
 
+        UserGetDTO userGetDTO = new UserGetDTO();
         userGetDTO = DTOMapper.INSTANCE.convertEntityToUserGetDTO(userExist);
         return userGetDTO;
     }

@@ -19,12 +19,4 @@ public class QuestionPacker {
         return service.fetchQuestionSet(Integer.toString(gameParam.getLevel()),gameParam.getQuestionType(),10);
     }
 
-    // direct interface with frontend to retrieve a package of questions of certain parameter
-    @PostMapping("/questionPackRequest")
-
-    @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
-    public List<QuestionDTO> getQuestionList(@RequestBody GameParam gameParam){
-        return service.fetchQuestionSet(Integer.toString(gameParam.gameLevel),gameParam.questionType.toString(),10);
-    }
 }

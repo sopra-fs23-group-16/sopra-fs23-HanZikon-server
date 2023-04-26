@@ -27,7 +27,6 @@ import java.util.Map;
 @RestController
 public class WebSocketController {
     Logger log = LoggerFactory.getLogger(WebSocketController.class);
-    @Autowired
     private final UserService userService;
     private final GameService gameService;
 
@@ -37,10 +36,10 @@ public class WebSocketController {
     @Autowired
     private CSVService csvService;
 
-    public WebSocketController(UserService userService, SimpMessagingTemplate simpMessagingTemplate) {
+    public WebSocketController(UserService userService, GameService gameService, SimpMessagingTemplate simpMessagingTemplate) {
         this.userService = userService;
+        this.gameService = gameService;
         this.simpMessagingTemplate = simpMessagingTemplate;
-        this.gameService = new GameService();
     }
 
 //    @SubscribeMapping({ "/greeting"})

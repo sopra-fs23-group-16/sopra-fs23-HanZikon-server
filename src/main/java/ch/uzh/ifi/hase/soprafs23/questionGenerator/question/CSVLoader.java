@@ -23,7 +23,7 @@ public class CSVLoader {
         loadHanziDrawingOntoDatabase();
     }
 
-    public void loadMultiChoiceOntoDatabase() throws IOException {
+    private void loadMultiChoiceOntoDatabase() throws IOException {
         String fileName = "multiple_choice.csv";
 
         List<MultipleChoice> beans = new CsvToBeanBuilder(new FileReader(fileName,StandardCharsets.UTF_8))

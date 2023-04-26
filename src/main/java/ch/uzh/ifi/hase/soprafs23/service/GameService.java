@@ -13,10 +13,14 @@ import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerStatusDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
+@Service
+@Transactional
 public class GameService {
 
     private RoomManager roomManager;
