@@ -69,6 +69,87 @@ public class UserControllerTest {
     }
 
     @Test
+    public void getUserByToken_valid_success() throws Exception {
+        // given
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setToken("testToken");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("testUser");
+        user.setPassword("password");
+        user.setToken("testToken");
+        user.setStatus(UserStatus.ONLINE.getStatus());
+
+        given(userService.getUserByToken("testToken")).willReturn(user);
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder postRequest = post("/users/localUser")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userPostDTO));
+        // then
+        mockMvc.perform(postRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(user.getId().intValue())))
+                .andExpect(jsonPath("$.username", is(user.getUsername())))
+                .andExpect(jsonPath("$.password", is(user.getPassword())))
+                .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
+    }
+
+    @Test
+    public void getUserByToken_notFound() throws Exception {
+        // given
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setToken("testToken");
+
+        given(userService.getUserByToken("testToken")).willReturn(null);
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder postRequest = post("/users/localUser")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userPostDTO));
+        // then
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getUserById_valid_success() throws Exception {
+        // given
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("testUser");
+        user.setPassword("password");
+        user.setStatus(UserStatus.ONLINE.getStatus());
+
+        given(userService.getUserById(1L)).willReturn(user);
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder postRequest = get("/users/"+user.getId())
+                .contentType(MediaType.APPLICATION_JSON);
+        // then
+        mockMvc.perform(postRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(user.getId().intValue())))
+                .andExpect(jsonPath("$.username", is(user.getUsername())))
+                .andExpect(jsonPath("$.password", is(user.getPassword())))
+                .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
+    }
+
+    @Test
+    public void getUserById_notFound() throws Exception {
+        // given
+        given(userService.getUserById(1L)).willReturn(null);
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder postRequest = get("/users/"+1)
+                .contentType(MediaType.APPLICATION_JSON);
+        // then
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void createUser_validInput_userCreated() throws Exception {
         // given
         User user = new User();
@@ -98,7 +179,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void createUser_invalidInput_userCreated() throws Exception {
+    public void createUser_invalidInput_conflict() throws Exception {
         // given
         User user = new User();
         user.setId(1L);
@@ -168,6 +249,81 @@ public class UserControllerTest {
 
         // then
         mockMvc.perform(getRequest)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void Login_validLogin_Created() throws Exception {
+        // given
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setUsername("username");
+        userPostDTO.setPassword("password");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setStatus(UserStatus.ONLINE.getStatus());
+
+        given(userService.getUsers()).willReturn(Collections.singletonList(user));
+
+        // when
+        MockHttpServletRequestBuilder postRequest = post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userPostDTO));
+
+        // then
+        mockMvc.perform(postRequest)
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void Login_inValidUsername_notFound() throws Exception {
+        // given
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setUsername("in_username");
+        userPostDTO.setPassword("password");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setStatus(UserStatus.ONLINE.getStatus());
+
+        given(userService.getUsers()).willReturn(Collections.singletonList(user));
+
+        // when
+        MockHttpServletRequestBuilder postRequest = post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userPostDTO));
+
+        // then
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void Login_inValidPassword_notFound() throws Exception {
+        // given
+        UserPostDTO userPostDTO = new UserPostDTO();
+        userPostDTO.setUsername("username");
+        userPostDTO.setPassword("in_password");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setStatus(UserStatus.ONLINE.getStatus());
+
+        given(userService.getUsers()).willReturn(Collections.singletonList(user));
+
+        // when
+        MockHttpServletRequestBuilder postRequest = post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(userPostDTO));
+
+        // then
+        mockMvc.perform(postRequest)
                 .andExpect(status().isNotFound());
     }
 
