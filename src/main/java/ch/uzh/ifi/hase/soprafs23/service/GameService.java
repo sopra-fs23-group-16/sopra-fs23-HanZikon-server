@@ -3,7 +3,6 @@ package ch.uzh.ifi.hase.soprafs23.service;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Game;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Player;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Room;
-import ch.uzh.ifi.hase.soprafs23.entity.GameRecord;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.QuestionPacker;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO.QuestionDTO;
@@ -25,8 +24,6 @@ public class GameService {
 
     private RoomManager roomManager;
     private GameManager gameManager;
-
-    GameRecordService gameRecordService;
 
     Logger log = LoggerFactory.getLogger(GameService.class);
 
