@@ -1,0 +1,191 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Room</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ch.uzh.ifi.hase.soprafs23.MultipleMode</a>
+</div>
+
+<h1>Coverage Summary for Class: Room (ch.uzh.ifi.hase.soprafs23.MultipleMode)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Room</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92.9%
+  </span>
+  <span class="absValue">
+    (13/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90%
+  </span>
+  <span class="absValue">
+    (27/30)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ch.uzh.ifi.hase.soprafs23.MultipleMode;
+&nbsp;
+&nbsp;import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameParamDTO;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.web.server.ResponseStatusException;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.LinkedHashMap;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;public class Room {
+&nbsp;
+<b class="fc">&nbsp;    private static int instanceID = 1;</b>
+&nbsp;
+&nbsp;    private int roomID;
+&nbsp;    private final String roomCode;
+&nbsp;    private Player owner;
+<b class="fc">&nbsp;    private LinkedHashMap&lt;Long,Player&gt; players = new LinkedHashMap&lt;&gt;();</b>
+&nbsp;    private GameParamDTO gameParam;
+&nbsp;    /**
+&nbsp;     * client can subscribe &#39;/room/{roomID}&#39;
+&nbsp;     * then room needs not manage players
+&nbsp;     */
+&nbsp;
+<b class="fc">&nbsp;    public Room(String roomCode, Player owner, GameParamDTO gameParam){</b>
+&nbsp;        // do something with the gameParam
+<b class="fc">&nbsp;        this.roomID = instanceID++;</b>
+<b class="fc">&nbsp;        this.roomCode = roomCode;</b>
+<b class="fc">&nbsp;        this.owner = owner;</b>
+<b class="fc">&nbsp;        this.owner.setReady(true);</b>
+<b class="fc">&nbsp;        this.addPlayer(owner);</b>
+<b class="fc">&nbsp;        this.gameParam = gameParam;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public int getRoomID() {
+<b class="fc">&nbsp;        return roomID;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public LinkedHashMap&lt;Long,Player&gt; getPlayersHashmap(){
+<b class="fc">&nbsp;        return this.players;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Player&gt; getPlayers() {
+<b class="fc">&nbsp;        return new ArrayList&lt;&gt;(this.players.values());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Player findPlayerByUserID(Long userID){
+<b class="fc">&nbsp;        Player player = this.players.get(userID);</b>
+<b class="fc">&nbsp;        if (player == null) {</b>
+<b class="nc">&nbsp;            throw new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;This player does not exist!&quot;);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return player;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean checkIsFull(){
+<b class="fc">&nbsp;        return this.players.size() == this.gameParam.getNumPlayers();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void addPlayer(Player player) {
+<b class="fc">&nbsp;        this.players.put(player.getUserID(),player);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public void removePlayer(Player player){
+<b class="fc">&nbsp;        this.players.remove(player.getUserID(),player);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public void updatePlayer(Player player){
+<b class="fc">&nbsp;        this.players.remove(player.getUserID(),player);</b>
+<b class="fc">&nbsp;        this.players.put(player.getUserID(),player);</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public GameParamDTO getGameParam() {
+<b class="fc">&nbsp;        return gameParam;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setGameParam(GameParamDTO gameParam) {
+<b class="nc">&nbsp;        this.gameParam = gameParam;</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public String getRoomCode(){
+<b class="fc">&nbsp;        return this.roomCode;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Player getOwner() {
+<b class="fc">&nbsp;        return owner;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-04-27 20:49</div>
+</div>
+</body>
+</html>

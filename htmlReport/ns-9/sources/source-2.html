@@ -1,0 +1,175 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > HanziDrawingDTO</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO</a>
+</div>
+
+<h1>Coverage Summary for Class: HanziDrawingDTO (ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">HanziDrawingDTO</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    93.3%
+  </span>
+  <span class="absValue">
+    (14/15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91.7%
+  </span>
+  <span class="absValue">
+    (22/24)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;public class HanziDrawingDTO implements QuestionDTO {
+&nbsp;    int id;
+&nbsp;    String character;
+&nbsp;    List&lt;String&gt; evolution;
+&nbsp;    String pinyin;
+&nbsp;    String meaning;
+&nbsp;    String level;
+&nbsp;    String questionType;
+<b class="fc">&nbsp;    public HanziDrawingDTO() {</b>
+<b class="fc">&nbsp;        this.questionType = &quot;HanziDrawing&quot;;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public int getId() {
+<b class="fc">&nbsp;        return id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setId(int id) {
+<b class="fc">&nbsp;        this.id = id;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public String getCharacter() {
+<b class="fc">&nbsp;        return character;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setCharacter(String character) {
+<b class="fc">&nbsp;        this.character = character;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public List&lt;String&gt; getEvolution() {
+<b class="fc">&nbsp;        return evolution;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setEvolution(List&lt;String&gt; evolution) {
+<b class="fc">&nbsp;        this.evolution = evolution;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public String getPinyin() {
+<b class="fc">&nbsp;        return pinyin;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setPinyin(String pinyin) {
+<b class="fc">&nbsp;        this.pinyin = pinyin;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public String getMeaning() {
+<b class="fc">&nbsp;        return meaning;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setMeaning(String meaning) {
+<b class="fc">&nbsp;        this.meaning = meaning;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public String getLevel() {
+<b class="fc">&nbsp;        return level;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setLevel(String level) {
+<b class="fc">&nbsp;        this.level = level;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public String getQuestionType() {
+<b class="fc">&nbsp;        return questionType;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setQuestionType(String questionType) {
+<b class="nc">&nbsp;        this.questionType = &quot;HanziDrawing&quot;;</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-04-27 20:49</div>
+</div>
+</body>
+</html>
