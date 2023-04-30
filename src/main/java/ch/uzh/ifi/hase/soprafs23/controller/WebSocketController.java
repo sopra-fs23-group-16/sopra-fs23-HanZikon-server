@@ -15,12 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.LinkedHashMap;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Map;
 
@@ -222,5 +220,27 @@ public class WebSocketController {
         Map<String, Integer> playerRank =  this.gameService.calculateRanking(roomID);
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/scores", playerRank);
     }
+
+    /**
+     * Process the imitation picture of each player
+     */
+    @MessageMapping("/multi/rooms/{roomID}/players/imitations")
+    public void updatePlayerImitation(@DestinationVariable int roomID, PlayerImitationDTO playerImitationDTO) {
+        log.info("Room {} is retrieving players score.", roomID);
+        this.gameService.updatePlayerImitation(roomID, playerImitationDTO);
+        Map<Long, ByteBuffer> playersImitations =  this.gameService.getPlayersImitations(roomID);
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/imitations", playersImitations);
+    }
+
+    /**
+     * API to broadcast the imitations of players
+     */
+    @MessageMapping("/multi/rooms/{roomID}/players/records")
+    public void getPlayersImitations(@DestinationVariable int roomID) {
+        log.info("Room {} is retrieving players score.", roomID);
+        Map<Long, ByteBuffer> playersImitations =  this.gameService.getPlayersImitations(roomID);
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/imitations", playersImitations);
+    }
+
 
 }

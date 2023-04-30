@@ -7,6 +7,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.QuestionPacker;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO.QuestionDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameParamDTO;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerImitationDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerScoreBoardDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerStatusDTO;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import java.nio.ByteBuffer;
 import java.util.*;
 
 @Service
@@ -280,6 +282,48 @@ public class GameService {
             result.put(entry.getKey(), entry.getValue());
         }
         return result;
+    }
+
+    /**
+     * Save the player's imitation img stream in a Map <userId, imgBytes>
+     * @param roomID
+     * @param playerImitationDTO
+     * @return
+     */
+    public Map<Long, ByteBuffer> updatePlayerImitation(int roomID, PlayerImitationDTO playerImitationDTO){
+        Map<Long, ByteBuffer> playerImitation = new HashMap<>();
+        Long userId = playerImitationDTO.getUserID();
+        if(userId != null) {
+
+            // before the player save imitation bytes, it will clear the player related map record firstly
+            this.gameManager.removePlayerImitation(roomID,  userId);
+
+            if(playerImitationDTO.getImitationBytes() != null ){
+                this.gameManager.addPlayerImitation(roomID, userId, playerImitationDTO.getImitationBytes());
+                playerImitation =  this.gameManager.getPlayerImitations(roomID);
+                return playerImitation;
+            } else {
+                log.info("Room {}: Player {} has not submitted the imitation record.", roomID, playerImitationDTO.getUserID());
+                return null;
+            }
+        } else{
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Player's imitations in room {} does not exist!" + roomID);
+        }
+
+    }
+
+    /**
+     * 1. Accumulate the player score according to scoreBoard passed
+     * @param roomID
+     * @return
+     */
+    public Map<Long, ByteBuffer> getPlayersImitations(int roomID){
+        Map<Long, ByteBuffer> playersImitations = this.gameManager.getPlayerImitations(roomID);
+        if(playersImitations == null ){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Player's imitations in room {} does not exist!" + roomID);
+        }
+        return playersImitations;
+
     }
 
 
