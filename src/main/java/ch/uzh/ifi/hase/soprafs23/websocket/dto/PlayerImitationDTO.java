@@ -1,15 +1,12 @@
 package ch.uzh.ifi.hase.soprafs23.websocket.dto;
 
-import ch.uzh.ifi.hase.soprafs23.MultipleMode.ScoreBoard;
-
-import java.nio.ByteBuffer;
-
-public class PlayerImitationDTO {
+import java.io.Serializable;
+public class PlayerImitationDTO implements Serializable {
     //playerID will be generated when convert it to player
     private Long userID;
 
-    private String characterId;
-    private ByteBuffer imitationBytes;
+    // private String characterId;
+    private String imitationBytes;
 
     public Long getUserID() {
         return userID;
@@ -20,19 +17,11 @@ public class PlayerImitationDTO {
     }
 
 
-    public String getCharacterId() {
-        return characterId;
-    }
-
-    public void setCharacterId(String characterId) {
-        this.characterId = characterId;
-    }
-
-    public ByteBuffer getImitationBytes() {
+    public String getImitationBytes() {
         return imitationBytes;
     }
 
-    public void setImitationBytes(ByteBuffer imitationBytes) {
+    public void setImitationBytes(String imitationBytes) {
         this.imitationBytes = imitationBytes;
     }
 

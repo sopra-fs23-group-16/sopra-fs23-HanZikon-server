@@ -18,7 +18,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.nio.ByteBuffer;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -226,9 +226,15 @@ public class WebSocketController {
      */
     @MessageMapping("/multi/rooms/{roomID}/players/imitations")
     public void updatePlayerImitation(@DestinationVariable int roomID, PlayerImitationDTO playerImitationDTO) {
-        log.info("Room {} is retrieving players score.", roomID);
-        this.gameService.updatePlayerImitation(roomID, playerImitationDTO);
-        Map<Long, ByteBuffer> playersImitations =  this.gameService.getPlayersImitations(roomID);
+        log.info("Room {} is retrieving player imitation {} .", roomID, playerImitationDTO.getImitationBytes());
+        try {
+            this.gameService.updatePlayerImitation(roomID, playerImitationDTO);
+        }
+        catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        Map<Long, String> playersImitations =  this.gameService.getPlayersImitations(roomID);
+        log.info("Players imitations {} post to the channel imitations.", playersImitations);
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/imitations", playersImitations);
     }
 
@@ -237,8 +243,8 @@ public class WebSocketController {
      */
     @MessageMapping("/multi/rooms/{roomID}/players/records")
     public void getPlayersImitations(@DestinationVariable int roomID) {
-        log.info("Room {} is retrieving players score.", roomID);
-        Map<Long, ByteBuffer> playersImitations =  this.gameService.getPlayersImitations(roomID);
+        log.info("Room {} is retrieving players imitations.", roomID);
+        Map<Long, String> playersImitations =  this.gameService.getPlayersImitations(roomID);
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/imitations", playersImitations);
     }
 

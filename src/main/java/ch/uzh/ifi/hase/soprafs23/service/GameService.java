@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.*;
 
@@ -290,8 +291,8 @@ public class GameService {
      * @param playerImitationDTO
      * @return
      */
-    public Map<Long, ByteBuffer> updatePlayerImitation(int roomID, PlayerImitationDTO playerImitationDTO){
-        Map<Long, ByteBuffer> playerImitation = new HashMap<>();
+    public Map<Long, String> updatePlayerImitation(int roomID, PlayerImitationDTO playerImitationDTO) throws UnsupportedEncodingException {
+        Map<Long, String> playerImitation = new HashMap<>();
         Long userId = playerImitationDTO.getUserID();
         if(userId != null) {
 
@@ -299,8 +300,12 @@ public class GameService {
             this.gameManager.removePlayerImitation(roomID,  userId);
 
             if(playerImitationDTO.getImitationBytes() != null ){
-                this.gameManager.addPlayerImitation(roomID, userId, playerImitationDTO.getImitationBytes());
+                String imgBytes = playerImitationDTO.getImitationBytes();
+                log.info(" Player {} transferred image bytes {}.", playerImitationDTO.getUserID(), imgBytes);
+
+                this.gameManager.addPlayerImitation(roomID, userId, imgBytes);
                 playerImitation =  this.gameManager.getPlayerImitations(roomID);
+                log.info(" Get player {} image bytes {}.", userId, playerImitation.get(userId));
                 return playerImitation;
             } else {
                 log.info("Room {}: Player {} has not submitted the imitation record.", roomID, playerImitationDTO.getUserID());
@@ -317,8 +322,8 @@ public class GameService {
      * @param roomID
      * @return
      */
-    public Map<Long, ByteBuffer> getPlayersImitations(int roomID){
-        Map<Long, ByteBuffer> playersImitations = this.gameManager.getPlayerImitations(roomID);
+    public Map<Long, String> getPlayersImitations(int roomID){
+        Map<Long, String> playersImitations = this.gameManager.getPlayerImitations(roomID);
         if(playersImitations == null ){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Player's imitations in room {} does not exist!" + roomID);
         }
