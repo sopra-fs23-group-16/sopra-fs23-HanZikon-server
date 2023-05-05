@@ -248,5 +248,16 @@ public class WebSocketController {
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/imitations", playersImitations);
     }
 
+    /**
+     * Reset gameBoards after ending rounds
+     */
+    @MessageMapping("/multi/games/{roomID}/rounds/end")
+    public void endRounds(@DestinationVariable int roomID) {
+        log.info("Room {} is ending game rounds.", roomID);
+        this.gameService.endRounds(roomID);
+        // Below is used to print each player's score after reset
+        this.gameService.calculateRanking(roomID);
+
+    }
 
 }

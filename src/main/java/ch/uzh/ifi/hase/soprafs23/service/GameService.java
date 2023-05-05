@@ -334,26 +334,21 @@ public class GameService {
 
 
     /**
-     * When start the next game round, reset all players isReady= false, and reset player's score board
+     * When this rounds end, reseting all players isReady= false, and reset player's score board
      *
      * @param roomID
      * @return
      */
-    public void nextRound(int roomID){
+    public void endRounds(int roomID){
         Room findRoom = this.roomManager.findByRoomID(roomID);
-        Game findGame = this.gameManager.findByRoomID(roomID);
 
         List<Player> roomPlayers = findRoom.getPlayers();
         for(int i=0; i<roomPlayers.size(); i++){
-            roomPlayers.get(i).setReady(false);
+            // roomPlayers.get(i).setReady(false);
             roomPlayers.get(i).getScoreBoard().setVotedScore(0);
             roomPlayers.get(i).getScoreBoard().setSystemScore(0);
-            findRoom.updatePlayer(roomPlayers.get(i));
         }
-        log.info("Reset Room {} for next round: {}  ", roomID, findRoom);
-
-        findGame.refreshPlayers(findRoom);
-        log.info("Reset Game {} for next round: {}  ", roomID, findGame);
+        log.info("Reset room {} for next round: {}  ", roomID, findRoom);
     }
 
     private void endGame(int roomID) {
