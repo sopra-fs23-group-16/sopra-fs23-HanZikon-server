@@ -1,0 +1,136 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > DTOMapper</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ch.uzh.ifi.hase.soprafs23.rest.mapper</a>
+</div>
+
+<h1>Coverage Summary for Class: DTOMapper (ch.uzh.ifi.hase.soprafs23.rest.mapper)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DTOMapper</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ch.uzh.ifi.hase.soprafs23.rest.mapper;
+&nbsp;
+&nbsp;import ch.uzh.ifi.hase.soprafs23.entity.User;
+&nbsp;import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
+&nbsp;import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
+&nbsp;import org.mapstruct.*;
+&nbsp;import org.mapstruct.factory.Mappers;
+&nbsp;
+&nbsp;/**
+&nbsp; * DTOMapper
+&nbsp; * This class is responsible for generating classes that will automatically transform/map the internal representation
+&nbsp; * of an entity (e.g., the User) to the external/API representation (e.g.,
+&nbsp; * UserGetDTO for getting, UserPostDTO for creating) and vice versa.
+&nbsp; * Additional mappers can be defined for new entities.
+&nbsp; * Always created one mapper for getting information (GET) and one mapper for creating information (POST).
+&nbsp; */
+&nbsp;@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+&nbsp;public interface DTOMapper {
+&nbsp;
+<b class="fc">&nbsp;    DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);</b>
+&nbsp;
+&nbsp;    @Mapping(source = &quot;username&quot;, target = &quot;username&quot;)
+&nbsp;    @Mapping(source = &quot;password&quot;, target = &quot;password&quot;)
+&nbsp;    @Mapping(source = &quot;token&quot;, target = &quot;token&quot;)
+&nbsp;    User convertUserPostDTOtoEntity(UserPostDTO userPostDTO);
+&nbsp;
+&nbsp;    @Mapping(source = &quot;id&quot;, target = &quot;id&quot;)
+&nbsp;    @Mapping(source = &quot;username&quot;, target = &quot;username&quot;)
+&nbsp;    @Mapping(source = &quot;password&quot;, target = &quot;password&quot;)
+&nbsp;    @Mapping(source = &quot;status&quot;, target = &quot;status&quot;)
+&nbsp;    @Mapping(source = &quot;token&quot;, target = &quot;token&quot;)
+&nbsp;    UserGetDTO convertEntityToUserGetDTO(User user);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-04-27 20:49</div>
+</div>
+</body>
+</html>

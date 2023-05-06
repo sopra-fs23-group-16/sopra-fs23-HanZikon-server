@@ -43,6 +43,7 @@ public class UserController {
     }
 
     @PostMapping("/users/localUser")
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public UserGetDTO getLocalUser(@RequestBody UserPostDTO userPostDTO) {
         User foundUser = userService.getUserByToken(userPostDTO.getToken());

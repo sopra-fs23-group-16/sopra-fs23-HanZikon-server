@@ -1,0 +1,197 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > User</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ch.uzh.ifi.hase.soprafs23.entity</a>
+</div>
+
+<h1>Coverage Summary for Class: User (ch.uzh.ifi.hase.soprafs23.entity)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">User</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (16/16)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">User$HibernateProxy$a2M1Q1DP</td>
+  </tr>
+  <tr>
+    <td class="name">User$HibernateProxy$CEjSOPGv</td>
+  </tr>
+  <tr>
+    <td class="name">User$HibernateProxy$d6KQAr43</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (16/16)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ch.uzh.ifi.hase.soprafs23.entity;
+&nbsp;
+&nbsp;import javax.persistence.*;
+&nbsp;import java.io.Serializable;
+&nbsp;import java.util.Date;
+&nbsp;
+&nbsp;/**
+&nbsp; * Internal User Representation
+&nbsp; * This class composes the internal representation of the user and defines how
+&nbsp; * the user is stored in the database.
+&nbsp; * Every variable will be mapped into a database field with the @Column
+&nbsp; * annotation
+&nbsp; * - nullable = false -&gt; this cannot be left empty
+&nbsp; * - unique = true -&gt; this value must be unqiue across the database -&gt; composes
+&nbsp; * the primary key
+&nbsp; */
+&nbsp;@Entity
+&nbsp;@Table(name = &quot;USER&quot;)
+<b class="fc">&nbsp;public class User implements Serializable {</b>
+&nbsp;
+&nbsp;    private static final long serialVersionUID = 1L;
+&nbsp;
+&nbsp;    @Id
+&nbsp;    @GeneratedValue
+&nbsp;    private Long id;
+&nbsp;
+&nbsp;    @Column(nullable = false, unique = true)
+&nbsp;    private String username;
+&nbsp;
+&nbsp;    @Column(nullable = false, unique = false)
+&nbsp;    private String password; // &#39;name&#39;
+&nbsp;
+&nbsp;    @Column(nullable = false, unique = true)
+&nbsp;    private String token;
+&nbsp;
+&nbsp;    @Column(nullable = false)
+&nbsp;    private String status;
+&nbsp;
+&nbsp;    public Long getId() {
+<b class="fc">&nbsp;        return id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setId(Long id) {
+<b class="fc">&nbsp;        this.id = id;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public String getUsername() {
+<b class="fc">&nbsp;        return username;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setUsername(String name) {
+<b class="fc">&nbsp;        this.username = name;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public String getPassword() {
+<b class="fc">&nbsp;        return password;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setPassword(String password) {
+<b class="fc">&nbsp;        this.password = password;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public String getToken() {
+<b class="fc">&nbsp;        return token;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setToken(String token) {
+<b class="fc">&nbsp;        this.token = token;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public String getStatus() {
+<b class="fc">&nbsp;        return status;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setStatus(String status) {
+<b class="fc">&nbsp;        this.status = status;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-04-27 20:49</div>
+</div>
+</body>
+</html>

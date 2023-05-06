@@ -1,0 +1,131 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Game</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ch.uzh.ifi.hase.soprafs23.MultipleMode</a>
+</div>
+
+<h1>Coverage Summary for Class: Game (ch.uzh.ifi.hase.soprafs23.MultipleMode)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Game</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ch.uzh.ifi.hase.soprafs23.MultipleMode;
+&nbsp;
+&nbsp;import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerDTO;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.LinkedHashMap;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;public class Game {
+&nbsp;    private int roomID;
+&nbsp;    private LinkedHashMap&lt;Long,Player&gt; players;
+&nbsp;
+<b class="fc">&nbsp;    public Game(Room room){</b>
+<b class="fc">&nbsp;        this.roomID = room.getRoomID();</b>
+<b class="fc">&nbsp;        this.players = room.getPlayersHashmap();</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;    public int getRoomID() {
+<b class="fc">&nbsp;        return roomID;</b>
+&nbsp;    }
+&nbsp;    public List&lt;Player&gt; getPlayers() {
+<b class="fc">&nbsp;        return new ArrayList&lt;&gt;(this.players.values());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void refreshPlayers(Room room){
+<b class="fc">&nbsp;        this.players = room.getPlayersHashmap();</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-04-27 20:49</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,204 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > MultipleChoice</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ch.uzh.ifi.hase.soprafs23.questionGenerator.question.entity</a>
+</div>
+
+<h1>Coverage Summary for Class: MultipleChoice (ch.uzh.ifi.hase.soprafs23.questionGenerator.question.entity)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MultipleChoice</td>
+<td class="coverageStat">
+  <span class="percent">
+    91.7%
+  </span>
+  <span class="absValue">
+    (11/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    70.8%
+  </span>
+  <span class="absValue">
+    (17/24)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">MultipleChoice$HibernateProxy$2M0wZhn9</td>
+  </tr>
+  <tr>
+    <td class="name">MultipleChoice$HibernateProxy$rpkDJFcJ</td>
+  </tr>
+  <tr>
+    <td class="name">MultipleChoice$HibernateProxy$Sb3VF8zo</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    91.7%
+  </span>
+  <span class="absValue">
+    (11/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    70.8%
+  </span>
+  <span class="absValue">
+    (17/24)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ch.uzh.ifi.hase.soprafs23.questionGenerator.question.entity;
+&nbsp;
+&nbsp;import com.opencsv.bean.CsvBindAndSplitByPosition;
+&nbsp;import com.opencsv.bean.CsvBindByPosition;
+&nbsp;
+&nbsp;import javax.persistence.*;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Entity
+&nbsp;@Table(name = &quot;multiple_choice_database&quot;)
+&nbsp;public class MultipleChoice implements Question {
+&nbsp;
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.AUTO)
+&nbsp;    @Column
+&nbsp;    private int id;
+&nbsp;
+&nbsp;    @CsvBindByPosition(position = 1)
+&nbsp;    @Column
+&nbsp;    private String oracleURL;
+&nbsp;
+&nbsp;    @CsvBindAndSplitByPosition(position = 2, elementType = String.class, splitOn = &quot;;&quot;)
+&nbsp;    @ElementCollection
+&nbsp;    private List&lt;String&gt; choices; //Store four candidate chinese characters in the List
+&nbsp;
+&nbsp;    @CsvBindByPosition(position = 3)
+&nbsp;    @Column
+&nbsp;    private int answerIndex; // Store the index of the correct answers
+&nbsp;
+&nbsp;    @CsvBindByPosition(position = 4)
+&nbsp;    @Column
+&nbsp;    private String level; // Level of the game, from 1-10?
+&nbsp;
+<b class="nc">&nbsp;    public MultipleChoice(int id, String oracleURL, List&lt;String&gt; choices, int answerIndex, String level) {</b>
+<b class="nc">&nbsp;        this.id = id;</b>
+<b class="nc">&nbsp;        this.oracleURL = oracleURL;</b>
+<b class="nc">&nbsp;        this.choices = choices;</b>
+<b class="nc">&nbsp;        this.answerIndex = answerIndex;</b>
+<b class="nc">&nbsp;        this.level = level;</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public int getId() {
+<b class="fc">&nbsp;        return id;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setId(int id) {
+<b class="fc">&nbsp;        this.id = id;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public String getOracleURL() {
+<b class="fc">&nbsp;        return oracleURL;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setOracleURL(String oraclePicture) {
+<b class="fc">&nbsp;        this.oracleURL = oraclePicture;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public List&lt;String&gt; getChoices() {
+<b class="fc">&nbsp;        return choices;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setChoices(List&lt;String&gt; choices) {
+<b class="fc">&nbsp;        this.choices = choices;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public int getAnswerIndex() {
+<b class="fc">&nbsp;        return answerIndex;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setAnswerIndex(int answerIndex) {
+<b class="fc">&nbsp;        this.answerIndex = answerIndex;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    public String getLevel() {
+<b class="fc">&nbsp;        return level;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setLevel(String level) {
+<b class="fc">&nbsp;        this.level = level;</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+<b class="fc">&nbsp;    public MultipleChoice() {</b>
+&nbsp;
+<b class="fc">&nbsp;    }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-04-27 20:49</div>
+</div>
+</body>
+</html>
