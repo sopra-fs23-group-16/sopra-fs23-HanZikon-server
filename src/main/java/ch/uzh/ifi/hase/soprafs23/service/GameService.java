@@ -6,10 +6,7 @@ import ch.uzh.ifi.hase.soprafs23.MultipleMode.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.QuestionPacker;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO.QuestionDTO;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameParamDTO;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerImitationDTO;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerScoreBoardDTO;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerStatusDTO;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,7 +15,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
 import java.util.*;
 
 @Service
@@ -329,6 +325,23 @@ public class GameService {
         }
         return playersImitations;
 
+    }
+
+    /**
+     * Accumulate the player votes according to PlayerVote passed
+     * @param roomID
+     * @return
+     */
+    public List<PlayerVoteDTO> updatePlayerVotes (int roomID, PlayerVoteDTO playerVotesDTO) {
+        List<PlayerVoteDTO> playerVotesDTOS = new ArrayList<>();
+
+        if(playerVotesDTO.getUserID() != null){
+            playerVotesDTOS = this.gameManager.calculatePlayerVotes(playerVotesDTO);
+        } else {
+            log.info("Room {}: Invalid player information for calculating player votes.", roomID);
+        }
+
+        return playerVotesDTOS;
     }
 
 

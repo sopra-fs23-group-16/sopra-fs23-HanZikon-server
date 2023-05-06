@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
-import ch.uzh.ifi.hase.soprafs23.MultipleMode.Game;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Player;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
@@ -258,6 +257,16 @@ public class WebSocketController {
         // Below is used to print each player's score after reset
         this.gameService.calculateRanking(roomID);
 
+    }
+
+    /**
+     * Capture the player being voted times and voted score for one round
+     */
+    @MessageMapping("/multi/rooms/{roomID}/players/votes")
+    public void updatePlayerVotes(@DestinationVariable int roomID, PlayerVoteDTO playerVotesDTO) {
+        log.info("Players in room {} are voting for each other.", roomID);
+        List<PlayerVoteDTO> playerVotes = this.gameService.updatePlayerVotes(roomID, playerVotesDTO);
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/players/votes", playerVotes);
     }
 
 }
