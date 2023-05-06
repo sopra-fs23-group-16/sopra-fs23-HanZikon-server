@@ -8,10 +8,7 @@ import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO.HanziDrawingDTO;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO.QuestionDTO;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.UserService;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameParamDTO;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerDTO;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerScoreBoardDTO;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerStatusDTO;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,16 +30,14 @@ import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @ExtendWith(SpringExtension.class)
@@ -464,6 +459,66 @@ class WebSocketControllerTest {
         assertEquals("/topic/multi/rooms/"+room.getRoomID()+"/scores", destinationCaptor.getValue());
         assertEquals(2, sentMap.size());
     }
+
+    @Test
+    void updatePlayerImitationTest() {
+        // test room
+        String roomCode = "TEST01";
+        User gamer = new User();
+        gamer.setUsername("testUser");
+        Player owner = new Player(gamer);
+        GameParamDTO gameParam = new GameParamDTO(1,2,"HanziDrawing");
+        Room room = new Room(roomCode,owner,gameParam);
+
+        Map<Long, String> playersImitations = new HashMap<>();
+        playersImitations.put(gamer.getId(), "XXXBBBMM");
+
+        PlayerImitationDTO playerImitationDTO = new PlayerImitationDTO();
+        playerImitationDTO.setImitationBytes("XXXBBBMM");
+        playerImitationDTO.setUserID(gamer.getId());
+
+        // given
+        given(gameService.getPlayersImitations(Mockito.anyInt())).willReturn(playersImitations);
+        // when
+        webSocketController.updatePlayerImitation(room.getRoomID(), playerImitationDTO);
+        // then
+        ArgumentCaptor<String> destinationCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Map> mapCaptor = ArgumentCaptor.forClass(Map.class);
+        verify(simpMessagingTemplate, times(1)).convertAndSend(destinationCaptor.capture(), mapCaptor.capture());
+        Map sentMap = mapCaptor.getValue();
+        assertEquals("/topic/multi/rooms/"+room.getRoomID()+"/imitations", destinationCaptor.getValue());
+        assertEquals(1, sentMap.size());
+    }
+
+    @Test
+    void getPlayersImitationsTest() {
+        // test room
+        String roomCode = "TEST01";
+        User gamer = new User();
+        gamer.setUsername("testUser");
+        Player owner = new Player(gamer);
+        GameParamDTO gameParam = new GameParamDTO(1,2,"HanziDrawing");
+        Room room = new Room(roomCode,owner,gameParam);
+
+        Map<Long, String> playersImitations = new HashMap<>();
+        playersImitations.put(gamer.getId(), "XXXBBBMM");
+        playersImitations.put(2L, "XXXBBBWW");
+
+        // given
+        given(gameService.getPlayersImitations(Mockito.anyInt())).willReturn(playersImitations);
+        // when
+        webSocketController.getPlayersImitations(room.getRoomID());
+        // then
+        ArgumentCaptor<String> destinationCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Map> mapCaptor = ArgumentCaptor.forClass(Map.class);
+        verify(simpMessagingTemplate, times(1)).convertAndSend(destinationCaptor.capture(), mapCaptor.capture());
+        Map sentMap = mapCaptor.getValue();
+        assertEquals("/topic/multi/rooms/"+room.getRoomID()+"/imitations", destinationCaptor.getValue());
+        assertEquals(2, sentMap.size());
+    }
+
+
+
     @AfterEach
     public void disconnect() throws Exception {
         stompSession.disconnect();
