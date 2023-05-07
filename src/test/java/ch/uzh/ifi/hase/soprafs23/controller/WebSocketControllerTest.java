@@ -516,8 +516,34 @@ class WebSocketControllerTest {
         assertEquals("/topic/multi/rooms/"+room.getRoomID()+"/imitations", destinationCaptor.getValue());
         assertEquals(2, sentMap.size());
     }
+/**
+    @Test
+    void getPlayersVotesTest() {
+        PlayerVoteDTO playerVoteDTO = new PlayerVoteDTO();
+        playerVoteDTO.setUserID(1L);
+        playerVoteDTO.setVotedScore(10);
+        playerVoteDTO.setVotedTimes(1);
+        playerVoteDTO.setRound(1);
 
+        int roomID = 1;
 
+        List<PlayerVoteDTO> playerVotes = new ArrayList<>();
+        playerVotes.add(playerVoteDTO);
+
+        // given
+        given(gameService.updatePlayerVotes(Mockito.anyInt(),playerVoteDTO)).willReturn(playerVotes);
+        // when
+        webSocketController.updatePlayerVotes(roomID, playerVoteDTO);
+        // then
+        ArgumentCaptor<String> destinationCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<ArrayList> listCaptor = ArgumentCaptor.forClass(ArrayList.class);
+        verify(simpMessagingTemplate, times(1)).convertAndSend(destinationCaptor.capture(), listCaptor.capture());
+        ArrayList sentList = listCaptor.getValue();
+        assertEquals("/topic/multi/rooms/1/players/votes", destinationCaptor.getValue());
+        assertEquals(1, sentList.size());
+    }
+
+*/
 
     @AfterEach
     public void disconnect() throws Exception {

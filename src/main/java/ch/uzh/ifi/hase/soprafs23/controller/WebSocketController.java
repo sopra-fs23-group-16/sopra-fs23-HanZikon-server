@@ -225,7 +225,7 @@ public class WebSocketController {
      */
     @MessageMapping("/multi/rooms/{roomID}/players/imitations")
     public void updatePlayerImitation(@DestinationVariable int roomID, PlayerImitationDTO playerImitationDTO) {
-        log.info("Room {} is retrieving player imitation {} .", roomID, playerImitationDTO.getImitationBytes());
+        // log.info("Room {} is retrieving player imitation {} .", roomID, playerImitationDTO.getImitationBytes());
         try {
             this.gameService.updatePlayerImitation(roomID, playerImitationDTO);
         }
@@ -264,7 +264,7 @@ public class WebSocketController {
      */
     @MessageMapping("/multi/rooms/{roomID}/players/votes")
     public void updatePlayerVotes(@DestinationVariable int roomID, PlayerVoteDTO playerVotesDTO) {
-        log.info("Players in room {} are voting for each other.", roomID);
+        log.info("Player {} is receiving votes {} of round {}.", playerVotesDTO.getUserID(),playerVotesDTO.getVotedScore(), playerVotesDTO.getRound());
         List<PlayerVoteDTO> playerVotes = this.gameService.updatePlayerVotes(roomID, playerVotesDTO);
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/players/votes", playerVotes);
     }

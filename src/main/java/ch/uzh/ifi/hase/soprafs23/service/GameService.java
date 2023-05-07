@@ -297,7 +297,7 @@ public class GameService {
 
             if(playerImitationDTO.getImitationBytes() != null ){
                 String imgBytes = playerImitationDTO.getImitationBytes();
-                log.info(" Player {} transferred image bytes {}.", playerImitationDTO.getUserID(), imgBytes);
+                // log.info(" Player {} transferred image bytes {}.", playerImitationDTO.getUserID(), imgBytes);
 
                 this.gameManager.addPlayerImitation(roomID, userId, imgBytes);
                 playerImitation =  this.gameManager.getPlayerImitations(roomID);
@@ -328,7 +328,7 @@ public class GameService {
     }
 
     /**
-     * Accumulate the player votes according to PlayerVote passed
+     * Accumulate the player votes according to PlayerVote passed, it is just for one round
      * @param roomID
      * @return
      */
@@ -336,6 +336,7 @@ public class GameService {
         List<PlayerVoteDTO> playerVotesDTOS = new ArrayList<>();
 
         if(playerVotesDTO.getUserID() != null){
+            log.info("Valid player {} for calculating player votes.", playerVotesDTO.getUserID());
             playerVotesDTOS = this.gameManager.calculatePlayerVotes(playerVotesDTO);
         } else {
             log.info("Room {}: Invalid player information for calculating player votes.", roomID);

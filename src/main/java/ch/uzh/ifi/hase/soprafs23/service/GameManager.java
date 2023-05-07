@@ -62,56 +62,51 @@ public class GameManager {
     }
 
     public List<PlayerVoteDTO> calculatePlayerVotes(PlayerVoteDTO playerVoteDTO) {
-        PlayerVoteDTO playerVoteNew;
-        if(playerVoteDTO.getVotedScore() >=0 && playerVoteDTO.getVotedTimes()>=0 ){
-            if(playerVotes == null && playerVoteDTO.getUserID()!= null){
-                playerVoteNew = addPlayerVote(playerVoteDTO);
-                playerVotes.add(playerVoteNew);
-                log.info("Create a new player vote for player {} with voted time {} and voted score {}!", playerVoteDTO.getUserID(), playerVoteDTO.getVotedTimes(), playerVoteDTO.getVotedScore());
-            } else if(playerVotes != null && playerVoteDTO.getUserID()!= null) {
+        log.info("Into player votes!");
+        boolean isUserPresent = false;
+        if(playerVoteDTO.getVotedScore() >=0 ){
+            log.info("Into player votes condition 1, playerVotes size is {} !", playerVotes.size());
+            if(playerVotes.size() == 0 && playerVoteDTO.getUserID()!= null){
+                log.info("player votes is null!");
+                this.playerVotes.add(playerVoteDTO);
+                log.info("Create a new player votes for player {} with voted time {} and voted score {}!", playerVoteDTO.getUserID(), playerVoteDTO.getVotedTimes(), playerVoteDTO.getVotedScore());
+            } else if(this.playerVotes.size()>0 && playerVoteDTO.getUserID()!= null) {
+                log.info("player votes is not null!");
                 PlayerVoteDTO playerVoteFound;
-                for(int i=0; i< playerVotes.size(); i++){
-                    playerVoteFound = playerVotes.get(i);
-                    if(playerVoteDTO.getUserID() == playerVoteFound.getUserID() ) {
-                        if(playerVoteDTO.getRound() == playerVoteFound.getRound()){
-                            playerVoteFound.setVotedTimes(playerVoteFound.getVotedTimes() + playerVoteDTO.getVotedTimes());
-                            playerVoteFound.setVotedScore(playerVoteFound.getVotedScore() + playerVoteDTO.getVotedScore());
-                            log.info("Accumulate the player {} votes with voted time {} and voted score {}!", playerVoteDTO.getUserID(), playerVoteDTO.getVotedTimes(), playerVoteDTO.getVotedScore());
-                            return playerVotes;
-                        } else {
-                            // new round, reset new votes
-                            playerVotes = new ArrayList<>();
-                            playerVoteNew = addPlayerVote(playerVoteDTO);
-                            playerVotes.add(playerVoteNew);
-                        }
-
+                for(int i=0; i< this.playerVotes.size(); i++){
+                    playerVoteFound = this.playerVotes.get(i);
+                    log.info("player votes playerVotes.get({}) is userID {} voted scores {} voted times {} !", i, playerVoteFound.getUserID(), playerVoteFound.getVotedScore(),playerVoteFound.getRound());
+                    if(playerVoteFound.getUserID().toString().equals(playerVoteDTO.getUserID().toString()) && Integer.toString(playerVoteDTO.getRound()).equals(Integer.toString(playerVoteFound.getRound())) ) {
+                        log.info("player votes and round are matched!");
+                        isUserPresent = true;
+                        playerVoteFound.setVotedTimes(playerVoteFound.getVotedTimes() + playerVoteDTO.getVotedTimes());
+                        playerVoteFound.setVotedScore(playerVoteFound.getVotedScore() + playerVoteDTO.getVotedScore());
+                        log.info("Accumulate the player votes {} with voted time {} and voted score {}!", playerVoteDTO.getUserID(), playerVoteDTO.getVotedTimes(), playerVoteDTO.getVotedScore());
+                    } else if (playerVoteFound.getUserID().toString().equals(playerVoteDTO.getUserID().toString()) &&  !Integer.toString(playerVoteDTO.getRound()).equals(Integer.toString(playerVoteFound.getRound()))){
+                        log.info("player votes exist, player round are not matched!");
+                        isUserPresent = true;
+                        // next round, reset new votes
+                        this.playerVotes = new ArrayList<>();
+                        this.playerVotes.add(playerVoteDTO);
+                        log.info("New round {} of player votes {} with voted time {} and voted score {}!", this.playerVotes.get(0).getRound(), this.playerVotes.get(0).getUserID(), this.playerVotes.get(0).getVotedTimes(), this.playerVotes.get(0).getVotedScore());
                     }
                 }
 
-                playerVoteNew = addPlayerVote(playerVoteDTO);
-                playerVotes.add(playerVoteNew);
-                log.info("Add a new player vote for player {} with voted time {} and voted score {}!", playerVoteDTO.getUserID(), playerVoteDTO.getVotedTimes(), playerVoteDTO.getVotedScore());
+                if(isUserPresent == false){
+                    log.info("player is not matched!");
+                    this.playerVotes.add(playerVoteDTO);
+                    log.info("Add a new player votes for player {} with voted time {} and voted score {}!", playerVoteDTO.getUserID(), playerVoteDTO.getVotedTimes(), playerVoteDTO.getVotedScore());
+                }
 
             }
 
         } else {
-            log.info("There is no player's votes yet!");
+            log.info("There is no player votes yet!");
         }
-        return playerVotes;
+        return this.playerVotes;
 
     }
 
-    public PlayerVoteDTO addPlayerVote(PlayerVoteDTO playerVoteDTO) {
-        PlayerVoteDTO playerVote = new PlayerVoteDTO();
-        if(playerVoteDTO != null){
-            playerVote.setVotedScore(playerVoteDTO.getVotedScore());
-            playerVote.setVotedTimes(playerVoteDTO.getVotedTimes());
-            playerVote.setRound(playerVoteDTO.getRound());
-            playerVote.setUserID(playerVoteDTO.getUserID());
-        }
 
-        return playerVote;
-
-    }
 
 }

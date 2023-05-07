@@ -1,8 +1,10 @@
 package ch.uzh.ifi.hase.soprafs23.websocket.dto;
 
 public class PlayerVoteDTO {
+
     //playerID will be generated when convert it to player
-    private Long userID;
+    private Long fromPlayer;
+    private Long userID; // being voted user
     private int round;
     private int votedTimes; // the player is being voted times
     private int votedScore;
@@ -37,6 +39,14 @@ public class PlayerVoteDTO {
 
     public void setVotedScore(int votedScore) {
         this.votedScore = votedScore;
+    }
+
+    public Long getFromPlayer() {
+        return fromPlayer;
+    }
+
+    public void setFromPlayer(Long fromPlayer) {
+        this.fromPlayer = fromPlayer;
     }
 
 }
