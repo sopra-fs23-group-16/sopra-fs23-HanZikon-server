@@ -36,6 +36,9 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String status;
 
+    @Column(nullable = true)
+    private String icon;
+
     public Long getId() {
         return id;
     }
@@ -74,5 +77,14 @@ public class User implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

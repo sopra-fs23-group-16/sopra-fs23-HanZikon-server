@@ -7,8 +7,8 @@ public class UserPostDTO {
     private String username;
     private String password; // 'name'
     private String status;
-
     private String token;
+    private String icon;
 
     public String getUsername() {
         return username;
@@ -40,5 +40,13 @@ public class UserPostDTO {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }
