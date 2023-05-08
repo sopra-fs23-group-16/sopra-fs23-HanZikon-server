@@ -290,36 +290,6 @@ public class GameService {
      * @param playerImitationDTO
      * @return
      */
-    public Map<Long, String> updatePlayerImitationB(int roomID, PlayerImitationDTO playerImitationDTO) throws UnsupportedEncodingException {
-        Map<Long, String> playerImitation = new HashMap<>();
-        Long userId = playerImitationDTO.getUserID();
-        Room findRoom = this.roomManager.findByRoomID(roomID);
-        Player updatePlayer = findRoom.findPlayerByUserID(userId);
-
-        if(userId != null) {
-
-            // before the player save imitation bytes, it will clear the player related map record firstly
-            this.gameManager.removePlayerImitationB(roomID,  userId);
-
-            if(playerImitationDTO.getImitationBytes() != null && updatePlayer != null){
-                String imgBytes = playerImitationDTO.getImitationBytes();
-                log.info(" Player {} transferred image bytes {}.", playerImitationDTO.getUserID(), imgBytes);
-
-                this.gameManager.addPlayerImitationB(roomID, userId, imgBytes);
-                // playerImitation =  this.gameManager.getPlayerImitations(roomID);
-                playerImitation =  getPlayerImitationsT2(roomID);
-                log.info(" Get player {} image bytes {}.", userId, playerImitation.get(userId));
-                return playerImitation;
-            } else {
-                log.info("Room {}: Player {} has not submitted the imitation record.", roomID, playerImitationDTO.getUserID());
-                return null;
-            }
-        } else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Player's imitations in room {} does not exist!" + roomID);
-        }
-
-    }
-
     public Map<Long, String> updatePlayerImitation(int roomID, PlayerImitationDTO playerImitationDTO) throws UnsupportedEncodingException {
         Map<Long, String> playerImitation = new HashMap<>();
         Long userId = playerImitationDTO.getUserID();
@@ -349,15 +319,6 @@ public class GameService {
      * @param roomID
      * @return
      */
-    public Map<Long, String> getPlayersImitationsB(int roomID){
-        Map<Long, String> playersImitations = this.gameManager.getPlayerImitationsB(roomID);
-        if(playersImitations == null ){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Player's imitations in room {} does not exist!" + roomID);
-        }
-        return playersImitations;
-
-    }
-
     public Map<Long, String> getPlayersImitations(int roomID){
         Map<Long, String> playersImitationsMap = new HashMap<>();
         List<Player> Players = findGamePlayersByRoomID(roomID);
@@ -381,33 +342,6 @@ public class GameService {
 
         return playersImitationsMap;
 
-    }
-
-    public Map<Long, String>  getPlayerImitationsT2(int roomID) {
-        Map<Long, String> playerImitationReturned = new HashMap<>();
-        Map<Long, String> playersImitations = this.gameManager.getPlayerImitationsB(roomID);
-        List<Player> Players = findGamePlayersByRoomID(roomID);
-        log.info("Retrieve the Players size:  " + Players.size());
-        log.info("Retrieve the playersImitations size:  " + playersImitations.size());
-
-
-        if (playersImitations != null && Players.size()>0) {
-            for (Map.Entry<Long, String> entry : playersImitations.entrySet()) {
-                Long key = entry.getKey();
-                String value = entry.getValue();
-                for(int i= 0; i< Players.size(); i++){
-                    Long playerID = Players.get(i).getUserID();
-                    if((key.toString()).equals(playerID.toString())){
-                        playerImitationReturned.put(key,value);
-                        System.out.println("Retrieve the map of player bytes 3:  " + key + " => " + value);
-                    }
-                }
-            }
-        }else {
-            log.info("There is no player's imitations yet!");
-        }
-
-        return playerImitationReturned;
     }
 
 
