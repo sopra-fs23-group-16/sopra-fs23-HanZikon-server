@@ -13,9 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GameManager {
     private ConcurrentHashMap<Integer, Game> roomIDs;
 
-    private ConcurrentHashMap<Long, String> playerImitation =  new ConcurrentHashMap<>();
-    private ConcurrentHashMap<Integer, Map<Long, String>> gameImitations = new ConcurrentHashMap<>();
-
     private ConcurrentHashMap<Long, PlayerImitationDTO> gameImitationsMap = new ConcurrentHashMap<>();
 
     Logger log = LoggerFactory.getLogger(GameManager.class);
@@ -37,30 +34,6 @@ public class GameManager {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This room does not exist!");
         }
         return game;
-    }
-
-    public void addPlayerImitationB(int roomID, Long userId, String imitationBytes) {
-        playerImitation.put(userId, imitationBytes);
-        gameImitations.put(roomID, playerImitation);
-        log.info("Add the player imitation in game manager {}", playerImitation.get(userId));
-    }
-
-    public void removePlayerImitationB(int roomID, Long userId) {
-        Map<Long, String> playersImitations = getPlayerImitationsB(roomID);
-        if((playersImitations != null) && (playersImitations.get(userId) != null)){
-            playersImitations.remove(playersImitations.get(userId));
-        }
-    }
-
-
-    public Map<Long, String>  getPlayerImitationsB(int roomID) {
-        Map<Long, String> playersImitations = gameImitations.get(roomID);
-
-        if (playersImitations == null) {
-            log.info("There is no player's imitations yet!");
-        }
-
-        return playersImitations;
     }
 
     public void addPlayerImitation(PlayerImitationDTO playerImitationDTO) {
