@@ -170,6 +170,7 @@ class GameServiceIntegrationTest {
 
         ScoreBoard scoreBoard = new ScoreBoard();
         scoreBoard.setSystemScore(10);
+        scoreBoard.setVotedScore(20);
         PlayerScoreBoardDTO playerScoreBoardDTO = new PlayerScoreBoardDTO();
         playerScoreBoardDTO.setScoreBoard(scoreBoard);
         playerScoreBoardDTO.setUserID(this.testPlayer.getUserID());
@@ -177,6 +178,8 @@ class GameServiceIntegrationTest {
         this.gameService.updatePlayerScore(this.testRoom.getRoomID(), playerScoreBoardDTO);
 
         assertEquals(10,this.gameService.findRoomByID(this.testRoom.getRoomID()).findPlayerByUserID(this.testPlayer.getUserID()).getScoreBoard().getSystemScore());
+        assertEquals(20,this.gameService.findRoomByID(this.testRoom.getRoomID()).findPlayerByUserID(this.testPlayer.getUserID()).getScoreBoard().getVotedScore());
+        assertEquals(15,this.gameService.findRoomByID(this.testRoom.getRoomID()).findPlayerByUserID(this.testPlayer.getUserID()).getScoreBoard().getWeightedScore());
     }
 
     @Test
@@ -199,7 +202,8 @@ class GameServiceIntegrationTest {
         playerStatusDTO.setWriting(false);
 
         ScoreBoard scoreBoard = new ScoreBoard();
-        scoreBoard.setSystemScore(10);
+        scoreBoard.setSystemScore(20);
+        scoreBoard.setVotedScore(10);
         PlayerScoreBoardDTO playerScoreBoardDTO = new PlayerScoreBoardDTO();
         playerScoreBoardDTO.setScoreBoard(scoreBoard);
         playerScoreBoardDTO.setUserID(this.testPlayer.getUserID());
@@ -209,12 +213,14 @@ class GameServiceIntegrationTest {
         playerScoreBoardDTO.setUserID(this.testPlayer2.getUserID());
         this.gameService.updatePlayerScore(this.testRoom.getRoomID(), playerScoreBoardDTO);
 
-        scoreBoard.setSystemScore(20);
+        scoreBoard.setSystemScore(10);
+        scoreBoard.setVotedScore(30);
         playerScoreBoardDTO.setScoreBoard(scoreBoard);
         playerScoreBoardDTO.setUserID(this.testPlayer3.getUserID());
         this.gameService.updatePlayerScore(this.testRoom.getRoomID(), playerScoreBoardDTO);
 
         assertEquals(testPlayer3.getPlayerName(),this.gameService.calculateRanking(this.testRoom.getRoomID()).entrySet().iterator().next().getKey());
+        assertEquals(20,this.gameService.calculateRanking(this.testRoom.getRoomID()).entrySet().iterator().next().getValue());
     }
 
     @Test
