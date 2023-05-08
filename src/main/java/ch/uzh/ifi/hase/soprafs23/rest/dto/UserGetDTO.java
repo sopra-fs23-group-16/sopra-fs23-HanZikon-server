@@ -8,8 +8,8 @@ public class UserGetDTO {
     private String username;
     private String password; // 'name'
     private String status;
-
     private String token;
+    private String icon;
 
     public Long getId() {
         return id;
@@ -49,5 +49,13 @@ public class UserGetDTO {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

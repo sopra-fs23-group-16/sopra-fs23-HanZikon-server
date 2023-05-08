@@ -217,4 +217,32 @@ class GameServiceIntegrationTest {
         assertEquals(testPlayer3.getPlayerName(),this.gameService.calculateRanking(this.testRoom.getRoomID()).entrySet().iterator().next().getKey());
     }
 
+    @Test
+    void endRounds_withSuccess() {
+        this.testPlayer = mockTestPlayer("1","testOwner");
+        this.testRoom = this.gameService.createRoom(this.testPlayer,
+                new GameParamDTO(1,3,"Mixed"));
+
+        this.testRoom.addPlayer(mockTestPlayer("2","player1"));
+        this.testRoom.addPlayer(mockTestPlayer("3","player2"));
+
+        this.gameService.createGame(this.testRoom.getRoomID(),new QuestionPacker(service));
+
+        PlayerStatusDTO playerStatusDTO = new PlayerStatusDTO();
+        playerStatusDTO.setUserID(Long.parseLong("2"));
+        playerStatusDTO.setReady(true);
+        playerStatusDTO.setWriting(false);
+
+        ScoreBoard scoreBoard = new ScoreBoard();
+        scoreBoard.setSystemScore(10);
+        PlayerScoreBoardDTO playerScoreBoardDTO = new PlayerScoreBoardDTO();
+        playerScoreBoardDTO.setScoreBoard(scoreBoard);
+        playerScoreBoardDTO.setUserID(this.testPlayer.getUserID());
+
+        this.gameService.updatePlayerScore(this.testRoom.getRoomID(), playerScoreBoardDTO);
+        this.gameService.endRounds(this.testRoom.getRoomID());
+
+        assertEquals(0,this.gameService.findRoomByID(this.testRoom.getRoomID()).findPlayerByUserID(this.testPlayer.getUserID()).getScoreBoard().getSystemScore());
+    }
+
 }
