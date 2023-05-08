@@ -18,7 +18,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
 import java.util.*;
 
 @Service
@@ -291,21 +290,49 @@ public class GameService {
      * @param playerImitationDTO
      * @return
      */
-    public Map<Long, String> updatePlayerImitation(int roomID, PlayerImitationDTO playerImitationDTO) throws UnsupportedEncodingException {
+    public Map<Long, String> updatePlayerImitationB(int roomID, PlayerImitationDTO playerImitationDTO) throws UnsupportedEncodingException {
         Map<Long, String> playerImitation = new HashMap<>();
         Long userId = playerImitationDTO.getUserID();
+        Room findRoom = this.roomManager.findByRoomID(roomID);
+        Player updatePlayer = findRoom.findPlayerByUserID(userId);
+
         if(userId != null) {
 
             // before the player save imitation bytes, it will clear the player related map record firstly
-            this.gameManager.removePlayerImitation(roomID,  userId);
+            this.gameManager.removePlayerImitationB(roomID,  userId);
 
-            if(playerImitationDTO.getImitationBytes() != null ){
+            if(playerImitationDTO.getImitationBytes() != null && updatePlayer != null){
                 String imgBytes = playerImitationDTO.getImitationBytes();
                 log.info(" Player {} transferred image bytes {}.", playerImitationDTO.getUserID(), imgBytes);
 
-                this.gameManager.addPlayerImitation(roomID, userId, imgBytes);
-                playerImitation =  this.gameManager.getPlayerImitations(roomID);
+                this.gameManager.addPlayerImitationB(roomID, userId, imgBytes);
+                // playerImitation =  this.gameManager.getPlayerImitations(roomID);
+                playerImitation =  getPlayerImitationsT2(roomID);
                 log.info(" Get player {} image bytes {}.", userId, playerImitation.get(userId));
+                return playerImitation;
+            } else {
+                log.info("Room {}: Player {} has not submitted the imitation record.", roomID, playerImitationDTO.getUserID());
+                return null;
+            }
+        } else{
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Player's imitations in room {} does not exist!" + roomID);
+        }
+
+    }
+
+    public Map<Long, String> updatePlayerImitation(int roomID, PlayerImitationDTO playerImitationDTO) throws UnsupportedEncodingException {
+        Map<Long, String> playerImitation = new HashMap<>();
+        Long userId = playerImitationDTO.getUserID();
+
+        if(userId != null) {
+
+            // before the player save imitation bytes, it will clear the player related map record firstly
+            this.gameManager.removePlayerImitation(userId);
+
+            if(playerImitationDTO.getImitationBytes() != null){
+
+                this.gameManager.addPlayerImitation(playerImitationDTO);
+                playerImitation =  getPlayersImitations(roomID);
                 return playerImitation;
             } else {
                 log.info("Room {}: Player {} has not submitted the imitation record.", roomID, playerImitationDTO.getUserID());
@@ -322,13 +349,65 @@ public class GameService {
      * @param roomID
      * @return
      */
-    public Map<Long, String> getPlayersImitations(int roomID){
-        Map<Long, String> playersImitations = this.gameManager.getPlayerImitations(roomID);
+    public Map<Long, String> getPlayersImitationsB(int roomID){
+        Map<Long, String> playersImitations = this.gameManager.getPlayerImitationsB(roomID);
         if(playersImitations == null ){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Player's imitations in room {} does not exist!" + roomID);
         }
         return playersImitations;
 
+    }
+
+    public Map<Long, String> getPlayersImitations(int roomID){
+        Map<Long, String> playersImitationsMap = new HashMap<>();
+        List<Player> Players = findGamePlayersByRoomID(roomID);
+        log.info("getPlayersImitationsT1: Room {} has {} players.", roomID, Players.size());
+
+        PlayerImitationDTO playerImitation = new PlayerImitationDTO();
+        Long playerID;
+
+        if (Players.size()>0) {
+            for(int i= 0; i< Players.size(); i++){
+                playerID = Players.get(i).getUserID();
+                if(playerID >0){
+                    playerImitation = this.gameManager.findImgByUserID(playerID);
+                    playersImitationsMap.put(playerID,playerImitation.getImitationBytes());
+                }
+
+            }
+        }else {
+            log.info("There is no player's imitations yet!");
+        }
+
+        return playersImitationsMap;
+
+    }
+
+    public Map<Long, String>  getPlayerImitationsT2(int roomID) {
+        Map<Long, String> playerImitationReturned = new HashMap<>();
+        Map<Long, String> playersImitations = this.gameManager.getPlayerImitationsB(roomID);
+        List<Player> Players = findGamePlayersByRoomID(roomID);
+        log.info("Retrieve the Players size:  " + Players.size());
+        log.info("Retrieve the playersImitations size:  " + playersImitations.size());
+
+
+        if (playersImitations != null && Players.size()>0) {
+            for (Map.Entry<Long, String> entry : playersImitations.entrySet()) {
+                Long key = entry.getKey();
+                String value = entry.getValue();
+                for(int i= 0; i< Players.size(); i++){
+                    Long playerID = Players.get(i).getUserID();
+                    if((key.toString()).equals(playerID.toString())){
+                        playerImitationReturned.put(key,value);
+                        System.out.println("Retrieve the map of player bytes 3:  " + key + " => " + value);
+                    }
+                }
+            }
+        }else {
+            log.info("There is no player's imitations yet!");
+        }
+
+        return playerImitationReturned;
     }
 
 
