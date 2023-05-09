@@ -189,7 +189,6 @@ public class WebSocketController {
 
     /**
      * Accumulate player scoreBoard (includes system score and votedScore) after each question and share ranking
-     * After 1 pack (10 questions) finished, save the game record of each player(user) into DB
      *
      *  playerDTO.userId are required for searching
      *
