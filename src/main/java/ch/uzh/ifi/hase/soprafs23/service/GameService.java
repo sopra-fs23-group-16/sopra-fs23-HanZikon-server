@@ -67,7 +67,7 @@ public class GameService {
     }
 
     private String generateRoomCode(){
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        String characters = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz023456789";
         int length = 6;
         Random random = new Random();
         StringBuilder sb = new StringBuilder(length);
@@ -137,7 +137,6 @@ public class GameService {
                 return false;
             }
         }
-
         return true;
     }
 
