@@ -15,12 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.LinkedHashMap;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -191,7 +189,6 @@ public class WebSocketController {
 
     /**
      * Accumulate player scoreBoard (includes system score and votedScore) after each question and share ranking
-     * After 1 pack (10 questions) finished, save the game record of each player(user) into DB
      *
      *  playerDTO.userId are required for searching
      *
@@ -221,6 +218,45 @@ public class WebSocketController {
         log.info("Room {} is retrieving players score.", roomID);
         Map<String, Integer> playerRank =  this.gameService.calculateRanking(roomID);
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/scores", playerRank);
+    }
+
+    /**
+     * Process the imitation picture of each player
+     */
+    @MessageMapping("/multi/rooms/{roomID}/players/imitations")
+    public void updatePlayerImitation(@DestinationVariable int roomID, PlayerImitationDTO playerImitationDTO) {
+        log.info("Room {} is retrieving player imitation {} .", roomID, playerImitationDTO.getImitationBytes());
+        try {
+            this.gameService.updatePlayerImitation(roomID, playerImitationDTO);
+        }
+        catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        Map<Long, String> playersImitations =  this.gameService.getPlayersImitations(roomID);
+        log.info("Players imitations {} post to the channel imitations.", playersImitations);
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/imitations", playersImitations);
+    }
+
+    /**
+     * API to broadcast the imitations of players
+     */
+    @MessageMapping("/multi/rooms/{roomID}/players/records")
+    public void getPlayersImitations(@DestinationVariable int roomID) {
+        log.info("Room {} is retrieving players imitations.", roomID);
+        Map<Long, String> playersImitations =  this.gameService.getPlayersImitations(roomID);
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/imitations", playersImitations);
+    }
+
+    /**
+     * Reset gameBoards after ending rounds
+     */
+    @MessageMapping("/multi/games/{roomID}/rounds/end")
+    public void endRounds(@DestinationVariable int roomID) {
+        log.info("Room {} is ending game rounds.", roomID);
+        this.gameService.endRounds(roomID);
+        // Below is used to print each player's score after reset
+        this.gameService.calculateRanking(roomID);
+
     }
 
 }

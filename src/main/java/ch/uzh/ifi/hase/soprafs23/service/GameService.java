@@ -7,6 +7,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.QuestionPacker;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO.QuestionDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameParamDTO;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerImitationDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerScoreBoardDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerStatusDTO;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 @Service
@@ -64,7 +66,7 @@ public class GameService {
     }
 
     private String generateRoomCode(){
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        String characters = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz023456789";
         int length = 6;
         Random random = new Random();
         StringBuilder sb = new StringBuilder(length);
@@ -134,7 +136,6 @@ public class GameService {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -282,29 +283,84 @@ public class GameService {
         return result;
     }
 
+    /**
+     * Save the player's imitation img stream in a Map <userId, imgBytes>
+     * @param roomID
+     * @param playerImitationDTO
+     * @return
+     */
+    public Map<Long, String> updatePlayerImitation(int roomID, PlayerImitationDTO playerImitationDTO) throws UnsupportedEncodingException {
+        Map<Long, String> playerImitation = new HashMap<>();
+        Long userId = playerImitationDTO.getUserID();
+
+        if(userId != null) {
+
+            // before the player save imitation bytes, it will clear the player related map record firstly
+            this.gameManager.removePlayerImitation(userId);
+
+            if(playerImitationDTO.getImitationBytes() != null){
+
+                this.gameManager.addPlayerImitation(playerImitationDTO);
+                playerImitation =  getPlayersImitations(roomID);
+                return playerImitation;
+            } else {
+                log.info("Room {}: Player {} has not submitted the imitation record.", roomID, playerImitationDTO.getUserID());
+                return null;
+            }
+        } else{
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Player's imitations in room {} does not exist!" + roomID);
+        }
+
+    }
+
+    /**
+     * 1. Accumulate the player score according to scoreBoard passed
+     * @param roomID
+     * @return
+     */
+    public Map<Long, String> getPlayersImitations(int roomID){
+        Map<Long, String> playersImitationsMap = new HashMap<>();
+        List<Player> Players = findGamePlayersByRoomID(roomID);
+        log.info("getPlayersImitationsT1: Room {} has {} players.", roomID, Players.size());
+
+        PlayerImitationDTO playerImitation = new PlayerImitationDTO();
+        Long playerID;
+
+        if (Players.size()>0) {
+            for(int i= 0; i< Players.size(); i++){
+                playerID = Players.get(i).getUserID();
+                if(playerID >0){
+                    playerImitation = this.gameManager.findImgByUserID(playerID);
+                    playersImitationsMap.put(playerID,playerImitation.getImitationBytes());
+                }
+
+            }
+        }else {
+            log.info("There is no player's imitations yet!");
+        }
+
+        return playersImitationsMap;
+
+    }
+
 
 
     /**
-     * When start the next game round, reset all players isReady= false, and reset player's score board
+     * When this rounds end, reseting all players isReady= false, and reset player's score board
      *
      * @param roomID
      * @return
      */
-    public void nextRound(int roomID){
+    public void endRounds(int roomID){
         Room findRoom = this.roomManager.findByRoomID(roomID);
-        Game findGame = this.gameManager.findByRoomID(roomID);
 
         List<Player> roomPlayers = findRoom.getPlayers();
         for(int i=0; i<roomPlayers.size(); i++){
-            roomPlayers.get(i).setReady(false);
+            // roomPlayers.get(i).setReady(false);
             roomPlayers.get(i).getScoreBoard().setVotedScore(0);
             roomPlayers.get(i).getScoreBoard().setSystemScore(0);
-            findRoom.updatePlayer(roomPlayers.get(i));
         }
-        log.info("Reset Room {} for next round: {}  ", roomID, findRoom);
-
-        findGame.refreshPlayers(findRoom);
-        log.info("Reset Game {} for next round: {}  ", roomID, findGame);
+        log.info("Reset room {} for next round: {}  ", roomID, findRoom);
     }
 
     private void endGame(int roomID) {
