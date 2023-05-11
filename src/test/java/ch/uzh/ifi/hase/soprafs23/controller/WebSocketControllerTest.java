@@ -477,15 +477,18 @@ class WebSocketControllerTest {
         playerImitationDTO.setImitationBytes("XXXBBBMM");
         playerImitationDTO.setUserID(gamer.getId());
 
+        List<PlayerImitationDTO> playersImitationList = new ArrayList<>();
+        playersImitationList.add(playerImitationDTO);
+
         // given
-        given(gameService.getPlayersImitations(Mockito.anyInt())).willReturn(playersImitations);
+        given(gameService.getPlayersImitations(Mockito.anyInt())).willReturn(playersImitationList);
         // when
         webSocketController.updatePlayerImitation(room.getRoomID(), playerImitationDTO);
         // then
         ArgumentCaptor<String> destinationCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<Map> mapCaptor = ArgumentCaptor.forClass(Map.class);
+        ArgumentCaptor<List> mapCaptor = ArgumentCaptor.forClass(ArrayList.class);
         verify(simpMessagingTemplate, times(1)).convertAndSend(destinationCaptor.capture(), mapCaptor.capture());
-        Map sentMap = mapCaptor.getValue();
+        List sentMap = mapCaptor.getValue();
         assertEquals("/topic/multi/rooms/"+room.getRoomID()+"/imitations", destinationCaptor.getValue());
         assertEquals(1, sentMap.size());
     }
@@ -504,15 +507,27 @@ class WebSocketControllerTest {
         playersImitations.put(gamer.getId(), "XXXBBBMM");
         playersImitations.put(2L, "XXXBBBWW");
 
+        PlayerImitationDTO playerImitationDTO1 = new PlayerImitationDTO();
+        playerImitationDTO1.setUserID(gamer.getId());
+        playerImitationDTO1.setImitationBytes("XXXBBBMM");
+
+        PlayerImitationDTO playerImitationDTO2 = new PlayerImitationDTO();
+        playerImitationDTO1.setUserID(gamer.getId());
+        playerImitationDTO1.setImitationBytes("XXXBBBWW");
+
+        List<PlayerImitationDTO> playersImitationList = new ArrayList<>();
+        playersImitationList.add(playerImitationDTO1);
+        playersImitationList.add(playerImitationDTO2);
+
         // given
-        given(gameService.getPlayersImitations(Mockito.anyInt())).willReturn(playersImitations);
+        given(gameService.getPlayersImitations(Mockito.anyInt())).willReturn(playersImitationList);
         // when
         webSocketController.getPlayersImitations(room.getRoomID());
         // then
         ArgumentCaptor<String> destinationCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<Map> mapCaptor = ArgumentCaptor.forClass(Map.class);
+        ArgumentCaptor<List> mapCaptor = ArgumentCaptor.forClass(ArrayList.class);
         verify(simpMessagingTemplate, times(1)).convertAndSend(destinationCaptor.capture(), mapCaptor.capture());
-        Map sentMap = mapCaptor.getValue();
+        List sentMap = mapCaptor.getValue();
         assertEquals("/topic/multi/rooms/"+room.getRoomID()+"/imitations", destinationCaptor.getValue());
         assertEquals(2, sentMap.size());
     }

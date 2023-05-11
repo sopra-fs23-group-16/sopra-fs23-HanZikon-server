@@ -289,8 +289,9 @@ public class GameService {
      * @param playerImitationDTO
      * @return
      */
-    public Map<Long, String> updatePlayerImitation(int roomID, PlayerImitationDTO playerImitationDTO) throws UnsupportedEncodingException {
+    public List<PlayerImitationDTO> updatePlayerImitation(int roomID, PlayerImitationDTO playerImitationDTO) throws UnsupportedEncodingException {
         Map<Long, String> playerImitation = new HashMap<>();
+        List<PlayerImitationDTO> playerImitationList = new ArrayList<>();
         Long userId = playerImitationDTO.getUserID();
 
         if(userId != null) {
@@ -301,8 +302,8 @@ public class GameService {
             if(playerImitationDTO.getImitationBytes() != null){
 
                 this.gameManager.addPlayerImitation(playerImitationDTO);
-                playerImitation =  getPlayersImitations(roomID);
-                return playerImitation;
+                playerImitationList =  getPlayersImitations(roomID);
+                return playerImitationList;
             } else {
                 log.info("Room {}: Player {} has not submitted the imitation record.", roomID, playerImitationDTO.getUserID());
                 return null;
@@ -318,8 +319,9 @@ public class GameService {
      * @param roomID
      * @return
      */
-    public Map<Long, String> getPlayersImitations(int roomID){
+    public List<PlayerImitationDTO> getPlayersImitations(int roomID){
         Map<Long, String> playersImitationsMap = new HashMap<>();
+        List<PlayerImitationDTO> playersImitationsList = new ArrayList<>();
         List<Player> Players = findGamePlayersByRoomID(roomID);
         log.info("getPlayersImitationsT1: Room {} has {} players.", roomID, Players.size());
 
@@ -331,7 +333,9 @@ public class GameService {
                 playerID = Players.get(i).getUserID();
                 if(playerID >0){
                     playerImitation = this.gameManager.findImgByUserID(playerID);
+                    playerImitation.setUsername(Players.get(i).getPlayerName());
                     playersImitationsMap.put(playerID,playerImitation.getImitationBytes());
+                    playersImitationsList.add(playerImitation);
                 }
 
             }
@@ -339,7 +343,7 @@ public class GameService {
             log.info("There is no player's imitations yet!");
         }
 
-        return playersImitationsMap;
+        return playersImitationsList;
 
     }
 
