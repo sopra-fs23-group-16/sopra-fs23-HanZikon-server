@@ -372,7 +372,7 @@ public class GameService {
         log.info("Reset room {} for next round: {}  ", roomID, findRoom);
     }
 
-    private void endGame(int roomID) {
+    public void endGame(int roomID) {
         Room findRoom = this.roomManager.findByRoomID(roomID);
         Game findGame = this.gameManager.findByRoomID(roomID);
         this.roomManager.removeRoom(findRoom);

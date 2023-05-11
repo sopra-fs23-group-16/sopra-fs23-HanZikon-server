@@ -258,6 +258,8 @@ public class WebSocketController {
         // Below is used to print each player's score after reset
         this.gameService.calculateRanking(roomID);
 
+        this.gameService.endGame(roomID);
+
     }
 
 }
