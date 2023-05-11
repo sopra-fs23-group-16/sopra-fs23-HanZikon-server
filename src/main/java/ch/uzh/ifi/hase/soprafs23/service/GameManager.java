@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GameManager {
     private ConcurrentHashMap<Integer, Game> roomIDs;
 
-    private ConcurrentHashMap<Long, PlayerImitationDTO> gameImitationsMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, PlayerImitationDTO> gameImitationsMap = new ConcurrentHashMap<>();
 
     Logger log = LoggerFactory.getLogger(GameManager.class);
 
@@ -37,25 +37,26 @@ public class GameManager {
     }
 
     public void addPlayerImitation(PlayerImitationDTO playerImitationDTO) {
-        gameImitationsMap.put(playerImitationDTO.getUserID(), playerImitationDTO);
+        String userRoundID = playerImitationDTO.getRound() + "R" +playerImitationDTO.getUserID();
+        gameImitationsMap.put(userRoundID, playerImitationDTO);
 
         // This is just for log testing
         if(gameImitationsMap.size() != 0) {
-            for (Map.Entry<Long, PlayerImitationDTO> entry : gameImitationsMap.entrySet()) {
-                Long key = entry.getKey();
+            for (Map.Entry<String, PlayerImitationDTO> entry : gameImitationsMap.entrySet()) {
+                String key = entry.getKey();
                 PlayerImitationDTO value = entry.getValue();
-                log.info("Retrieve the map<roomID, List> of player bytes 1: " + key + " => " + value);
+                log.info("Retrieve the map<userRoundID, List> of player bytes 1: " + key + " => " + value);
             }
         }
 
     }
 
-    public void removePlayerImitation(Long userId) {
-        gameImitationsMap.remove(userId);
+    public void removePlayerImitation(String userRoundID) {
+        gameImitationsMap.remove(userRoundID);
     }
 
-    public PlayerImitationDTO findImgByUserID(Long userID) {
-        PlayerImitationDTO playerImitation = gameImitationsMap.get(userID);
+    public PlayerImitationDTO findImgByUserID(String userRoundID) {
+        PlayerImitationDTO playerImitation = gameImitationsMap.get(userRoundID);
         if (playerImitation == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This room does not exist!");
         }

@@ -233,7 +233,7 @@ public class WebSocketController {
             throw new RuntimeException(e);
         }
         // Map<Long, String> playersImitations =  this.gameService.getPlayersImitations(roomID);
-        List<PlayerImitationDTO> playersImitations =  this.gameService.getPlayersImitations(roomID);
+        List<PlayerImitationDTO> playersImitations =  this.gameService.getPlayersImitations(roomID,playerImitationDTO);
         log.info("Players imitations {} post to the channel imitations.", playersImitations);
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/imitations", playersImitations);
     }
@@ -242,9 +242,9 @@ public class WebSocketController {
      * API to broadcast the imitations of players
      */
     @MessageMapping("/multi/rooms/{roomID}/players/records")
-    public void getPlayersImitations(@DestinationVariable int roomID) {
+    public void getPlayersImitations(@DestinationVariable int roomID, PlayerImitationDTO playerImitationDTO) {
         log.info("Room {} is retrieving players imitations.", roomID);
-        List<PlayerImitationDTO> playersImitations =  this.gameService.getPlayersImitations(roomID);
+        List<PlayerImitationDTO> playersImitations =  this.gameService.getPlayersImitations(roomID, playerImitationDTO);
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/imitations", playersImitations);
     }
 

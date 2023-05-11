@@ -293,16 +293,19 @@ public class GameService {
         Map<Long, String> playerImitation = new HashMap<>();
         List<PlayerImitationDTO> playerImitationList = new ArrayList<>();
         Long userId = playerImitationDTO.getUserID();
+        int round = playerImitationDTO.getRound();
 
-        if(userId != null) {
+        if(userId != null && round >= 0) {
+            String userRoundID = round + "R" + userId;
+            log.info("Room {}: user round id is {}.", roomID, userRoundID);
 
             // before the player save imitation bytes, it will clear the player related map record firstly
-            this.gameManager.removePlayerImitation(userId);
+            this.gameManager.removePlayerImitation(userRoundID);
 
             if(playerImitationDTO.getImitationBytes() != null){
 
                 this.gameManager.addPlayerImitation(playerImitationDTO);
-                playerImitationList =  getPlayersImitations(roomID);
+                playerImitationList =  getPlayersImitations(roomID, playerImitationDTO);
                 return playerImitationList;
             } else {
                 log.info("Room {}: Player {} has not submitted the imitation record.", roomID, playerImitationDTO.getUserID());
@@ -319,7 +322,7 @@ public class GameService {
      * @param roomID
      * @return
      */
-    public List<PlayerImitationDTO> getPlayersImitations(int roomID){
+    public List<PlayerImitationDTO> getPlayersImitations(int roomID, PlayerImitationDTO playerImitationDTO){
         Map<Long, String> playersImitationsMap = new HashMap<>();
         List<PlayerImitationDTO> playersImitationsList = new ArrayList<>();
         List<Player> Players = findGamePlayersByRoomID(roomID);
@@ -327,12 +330,14 @@ public class GameService {
 
         PlayerImitationDTO playerImitation = new PlayerImitationDTO();
         Long playerID;
+        int round = playerImitationDTO.getRound();
 
         if (Players.size()>0) {
             for(int i= 0; i< Players.size(); i++){
                 playerID = Players.get(i).getUserID();
                 if(playerID >0){
-                    playerImitation = this.gameManager.findImgByUserID(playerID);
+                    String userRoundID = round+ "R"+playerID;
+                    playerImitation = this.gameManager.findImgByUserID(userRoundID);
                     playerImitation.setUsername(Players.get(i).getPlayerName());
                     playersImitationsMap.put(playerID,playerImitation.getImitationBytes());
                     playersImitationsList.add(playerImitation);

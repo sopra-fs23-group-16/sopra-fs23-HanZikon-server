@@ -474,6 +474,7 @@ class WebSocketControllerTest {
         playersImitations.put(gamer.getId(), "XXXBBBMM");
 
         PlayerImitationDTO playerImitationDTO = new PlayerImitationDTO();
+        playerImitationDTO.setRound(1);
         playerImitationDTO.setImitationBytes("XXXBBBMM");
         playerImitationDTO.setUserID(gamer.getId());
 
@@ -481,7 +482,7 @@ class WebSocketControllerTest {
         playersImitationList.add(playerImitationDTO);
 
         // given
-        given(gameService.getPlayersImitations(Mockito.anyInt())).willReturn(playersImitationList);
+        given(gameService.getPlayersImitations(room.getRoomID(),playerImitationDTO)).willReturn(playersImitationList);
         // when
         webSocketController.updatePlayerImitation(room.getRoomID(), playerImitationDTO);
         // then
@@ -509,20 +510,22 @@ class WebSocketControllerTest {
 
         PlayerImitationDTO playerImitationDTO1 = new PlayerImitationDTO();
         playerImitationDTO1.setUserID(gamer.getId());
+        playerImitationDTO1.setRound(1);
         playerImitationDTO1.setImitationBytes("XXXBBBMM");
 
         PlayerImitationDTO playerImitationDTO2 = new PlayerImitationDTO();
-        playerImitationDTO1.setUserID(gamer.getId());
-        playerImitationDTO1.setImitationBytes("XXXBBBWW");
+        playerImitationDTO2.setUserID(2L);
+        playerImitationDTO2.setRound(1);
+        playerImitationDTO2.setImitationBytes("XXXBBBWW");
 
         List<PlayerImitationDTO> playersImitationList = new ArrayList<>();
         playersImitationList.add(playerImitationDTO1);
         playersImitationList.add(playerImitationDTO2);
 
         // given
-        given(gameService.getPlayersImitations(Mockito.anyInt())).willReturn(playersImitationList);
+        given(gameService.getPlayersImitations(room.getRoomID(),playerImitationDTO1)).willReturn(playersImitationList);
         // when
-        webSocketController.getPlayersImitations(room.getRoomID());
+        webSocketController.getPlayersImitations(room.getRoomID(),playerImitationDTO1);
         // then
         ArgumentCaptor<String> destinationCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<List> mapCaptor = ArgumentCaptor.forClass(ArrayList.class);
