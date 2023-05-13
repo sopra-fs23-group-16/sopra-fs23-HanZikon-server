@@ -67,7 +67,7 @@ public class GameService {
 
     private String generateRoomCode(){
         String characters = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz023456789";
-        int length = 6;
+        int length = 4;  // 4-digit roomcode
         Random random = new Random();
         StringBuilder sb = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
