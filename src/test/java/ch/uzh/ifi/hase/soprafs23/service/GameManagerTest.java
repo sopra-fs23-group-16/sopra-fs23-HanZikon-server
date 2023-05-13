@@ -43,7 +43,7 @@ public class GameManagerTest {
         List<Player> players = new ArrayList<>();
         players.add(testPlayer1);
 
-        GameParamDTO gameParam = new GameParamDTO(1, 3,"Mixed");
+        GameParamDTO gameParam = new GameParamDTO(1, 3,"Mixed",10);
 
         int roomIdTest = 2;
         String roomCodeTest = "TEST01";

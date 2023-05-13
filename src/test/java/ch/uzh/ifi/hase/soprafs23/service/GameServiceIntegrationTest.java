@@ -76,9 +76,9 @@ class GameServiceIntegrationTest {
     @Test
     void createRoom_and_successroomcode() {
         this.testPlayer = mockTestPlayer("1","testUser1");
-        this.testRoom = this.gameService.createRoom(this.testPlayer, new GameParamDTO(1,2,"Mixed"));
+        this.testRoom = this.gameService.createRoom(this.testPlayer, new GameParamDTO(1,2,"Mixed",10));
 
-        assertEquals(6,this.testRoom.getRoomCode().length());
+        assertEquals(4,this.testRoom.getRoomCode().length());
         assertTrue(this.testRoom.getRoomCode() instanceof String);
         assertTrue(this.testRoom instanceof Room);
         assertEquals(Long.parseLong("1"),this.testRoom.getOwner().getUserID());
@@ -86,7 +86,7 @@ class GameServiceIntegrationTest {
 
     @Test
     void createGame() {
-        this.testRoom = this.gameService.createRoom(this.testPlayer, new GameParamDTO(1,2,"Mixed"));
+        this.testRoom = this.gameService.createRoom(this.testPlayer, new GameParamDTO(1,2,"Mixed",10));
         assertTrue(this.gameService.createGame(this.testRoom.getRoomID(),new QuestionPacker(service)) instanceof java.util.List);
     }
 
@@ -94,7 +94,7 @@ class GameServiceIntegrationTest {
     void update_PlayerReadyStatus_withSuccess(){
         this.testPlayer = mockTestPlayer("1","testOwner");
         this.testRoom = this.gameService.createRoom(this.testPlayer,
-                new GameParamDTO(1,3,"Mixed"));
+                new GameParamDTO(1,3,"Mixed",10));
         this.testRoom.addPlayer(mockTestPlayer("2","player1"));
         this.testRoom.addPlayer(mockTestPlayer("3","player2"));
 
@@ -120,7 +120,7 @@ class GameServiceIntegrationTest {
     void update_PlayerWritingStatus_withSuccess() {
         this.testPlayer = mockTestPlayer("1","testOwner");
         this.testRoom = this.gameService.createRoom(this.testPlayer,
-                new GameParamDTO(1,3,"Mixed"));
+                new GameParamDTO(1,3,"Mixed",10));
 
         this.testRoom.addPlayer(mockTestPlayer("2","player1"));
         this.testRoom.addPlayer(mockTestPlayer("3","player2"));
@@ -156,7 +156,7 @@ class GameServiceIntegrationTest {
     void update_PlayerScore_withSuccess() {
         this.testPlayer = mockTestPlayer("1","testOwner");
         this.testRoom = this.gameService.createRoom(this.testPlayer,
-                new GameParamDTO(1,3,"Mixed"));
+                new GameParamDTO(1,3,"Mixed",10));
 
         this.testRoom.addPlayer(mockTestPlayer("2","player1"));
         this.testRoom.addPlayer(mockTestPlayer("3","player2"));
@@ -186,7 +186,7 @@ class GameServiceIntegrationTest {
     void calculateRanking_withSuccess() {
         this.testPlayer = mockTestPlayer("1","testOwner");
         this.testRoom = this.gameService.createRoom(this.testPlayer,
-                new GameParamDTO(1,3,"Mixed"));
+                new GameParamDTO(1,3,"Mixed",10));
 
         this.testPlayer2 = mockTestPlayer("2","player2");
         this.testPlayer3 = mockTestPlayer("3","player3");
@@ -227,7 +227,7 @@ class GameServiceIntegrationTest {
     void endRounds_withSuccess() {
         this.testPlayer = mockTestPlayer("1","testOwner");
         this.testRoom = this.gameService.createRoom(this.testPlayer,
-                new GameParamDTO(1,3,"Mixed"));
+                new GameParamDTO(1,3,"Mixed",10));
 
         this.testRoom.addPlayer(mockTestPlayer("2","player1"));
         this.testRoom.addPlayer(mockTestPlayer("3","player2"));

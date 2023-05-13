@@ -96,7 +96,7 @@ class WebSocketControllerTest {
         gamer.setUsername("testUser");
         Player owner = new Player(gamer);
         // test gameParam
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         // test room
         Room room = new Room(roomCode,owner,gameParam);
 
@@ -141,7 +141,7 @@ class WebSocketControllerTest {
         gamer.setUsername("testUser");
         Player owner = new Player(gamer);
         // test gameParam
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         // test room
         Room room = new Room(roomCode,owner,gameParam);
         // given
@@ -187,7 +187,7 @@ class WebSocketControllerTest {
         players.put(ownerID,owner);
         players.put(playerID,player);
         // test gameParam
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         // test room
         Room room = new Room(roomCode,owner,gameParam);
         //given
@@ -231,7 +231,7 @@ class WebSocketControllerTest {
         LinkedHashMap<Long,Player> players = new LinkedHashMap<>();
         players.put(ownerID,owner);
         // test gameParam
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         // test room
         Room room = new Room(roomCode,owner,gameParam);
         room.addPlayer(player);
@@ -262,7 +262,7 @@ class WebSocketControllerTest {
         gamer.setUsername("testUser");
         Player owner = new Player(gamer);
         // test gameParam
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         // test room
         Room room = new Room(roomCode,owner,gameParam);
         // test questionList
@@ -301,7 +301,7 @@ class WebSocketControllerTest {
         Player player = new Player(gamer2);
         player.setReady(true);
         // test gameParam
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         // test room
         Room room = new Room(roomCode,owner,gameParam);
         room.addPlayer(player);
@@ -340,7 +340,7 @@ class WebSocketControllerTest {
         Player player = new Player(gamer2);
         player.setWriting(false);
         // test gameParam
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         // test room
         Room room = new Room(roomCode,owner,gameParam);
         room.addPlayer(player);
@@ -380,7 +380,7 @@ class WebSocketControllerTest {
         Player player = new Player(gamer2);
         player.setWriting(false);
         // test gameParam
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         // test room
         Room room = new Room(roomCode,owner,gameParam);
         room.addPlayer(player);
@@ -412,7 +412,7 @@ class WebSocketControllerTest {
         gamer.setId(userID);
         gamer.setUsername("testUser");
         Player owner = new Player(gamer);
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         Room room = new Room(roomCode,owner,gameParam);
         // test PlayerScoreBoardDTO
         ScoreBoard scoreBoard = new ScoreBoard();
@@ -440,7 +440,7 @@ class WebSocketControllerTest {
         User gamer = new User();
         gamer.setUsername("testUser");
         Player owner = new Player(gamer);
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         Room room = new Room(roomCode,owner,gameParam);
         // playerScores
         LinkedHashMap<String, Integer> playerScores = new LinkedHashMap<>();
@@ -467,7 +467,7 @@ class WebSocketControllerTest {
         User gamer = new User();
         gamer.setUsername("testUser");
         Player owner = new Player(gamer);
-        GameParamDTO gameParam = new GameParamDTO(1,2,"HanziDrawing");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"HanziDrawing",10);
         Room room = new Room(roomCode,owner,gameParam);
 
         Map<Long, String> playersImitations = new HashMap<>();
@@ -501,7 +501,7 @@ class WebSocketControllerTest {
         User gamer = new User();
         gamer.setUsername("testUser");
         Player owner = new Player(gamer);
-        GameParamDTO gameParam = new GameParamDTO(1,2,"HanziDrawing");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"HanziDrawing",10);
         Room room = new Room(roomCode,owner,gameParam);
 
         Map<Long, String> playersImitations = new HashMap<>();
