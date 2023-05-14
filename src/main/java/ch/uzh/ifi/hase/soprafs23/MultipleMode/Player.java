@@ -17,11 +17,13 @@ public class Player {
     private boolean isWriting;  //upon submission: false
 
     private ScoreBoard scoreBoard;
+    private String icon;
 
     public Player(User gamer){
         this.playerID = instanceID++;
         this.userID = gamer.getId();//registered user: userID(1,2,3,……); unregistered user: userID(0001,0002,0003,……)
         this.playerName = gamer.getUsername();
+        this.icon = gamer.getIcon();
         /**
          * default isReady = false
          */
@@ -68,5 +70,9 @@ public class Player {
 
     public void setScoreBoard(ScoreBoard scoreBoard) {
         this.scoreBoard = scoreBoard;
+    }
+
+    public String getIcon() {
+        return icon;
     }
 }

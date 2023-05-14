@@ -67,7 +67,7 @@ public class GameService {
 
     private String generateRoomCode(){
         String characters = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz023456789";
-        int length = 6;
+        int length = 4;  // 4-digit roomcode
         Random random = new Random();
         StringBuilder sb = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
@@ -289,20 +289,24 @@ public class GameService {
      * @param playerImitationDTO
      * @return
      */
-    public Map<Long, String> updatePlayerImitation(int roomID, PlayerImitationDTO playerImitationDTO) throws UnsupportedEncodingException {
+    public List<PlayerImitationDTO> updatePlayerImitation(int roomID, PlayerImitationDTO playerImitationDTO) throws UnsupportedEncodingException {
         Map<Long, String> playerImitation = new HashMap<>();
+        List<PlayerImitationDTO> playerImitationList = new ArrayList<>();
         Long userId = playerImitationDTO.getUserID();
+        int round = playerImitationDTO.getRound();
 
-        if(userId != null) {
+        if(userId != null && round >= 0) {
+            String userRoundID = round + "R" + userId;
+            log.info("Room {}: user round id is {}.", roomID, userRoundID);
 
             // before the player save imitation bytes, it will clear the player related map record firstly
-            this.gameManager.removePlayerImitation(userId);
+            this.gameManager.removePlayerImitation(userRoundID);
 
             if(playerImitationDTO.getImitationBytes() != null){
 
                 this.gameManager.addPlayerImitation(playerImitationDTO);
-                playerImitation =  getPlayersImitations(roomID);
-                return playerImitation;
+                playerImitationList =  getPlayersImitations(roomID, playerImitationDTO);
+                return playerImitationList;
             } else {
                 log.info("Room {}: Player {} has not submitted the imitation record.", roomID, playerImitationDTO.getUserID());
                 return null;
@@ -318,20 +322,25 @@ public class GameService {
      * @param roomID
      * @return
      */
-    public Map<Long, String> getPlayersImitations(int roomID){
+    public List<PlayerImitationDTO> getPlayersImitations(int roomID, PlayerImitationDTO playerImitationDTO){
         Map<Long, String> playersImitationsMap = new HashMap<>();
+        List<PlayerImitationDTO> playersImitationsList = new ArrayList<>();
         List<Player> Players = findGamePlayersByRoomID(roomID);
         log.info("getPlayersImitationsT1: Room {} has {} players.", roomID, Players.size());
 
         PlayerImitationDTO playerImitation = new PlayerImitationDTO();
         Long playerID;
+        int round = playerImitationDTO.getRound();
 
         if (Players.size()>0) {
             for(int i= 0; i< Players.size(); i++){
                 playerID = Players.get(i).getUserID();
                 if(playerID >0){
-                    playerImitation = this.gameManager.findImgByUserID(playerID);
+                    String userRoundID = round+ "R"+playerID;
+                    playerImitation = this.gameManager.findImgByUserID(userRoundID);
+                    playerImitation.setUsername(Players.get(i).getPlayerName());
                     playersImitationsMap.put(playerID,playerImitation.getImitationBytes());
+                    playersImitationsList.add(playerImitation);
                 }
 
             }
@@ -339,7 +348,7 @@ public class GameService {
             log.info("There is no player's imitations yet!");
         }
 
-        return playersImitationsMap;
+        return playersImitationsList;
 
     }
 
@@ -363,7 +372,7 @@ public class GameService {
         log.info("Reset room {} for next round: {}  ", roomID, findRoom);
     }
 
-    private void endGame(int roomID) {
+    public void endGame(int roomID) {
         Room findRoom = this.roomManager.findByRoomID(roomID);
         Game findGame = this.gameManager.findByRoomID(roomID);
         this.roomManager.removeRoom(findRoom);

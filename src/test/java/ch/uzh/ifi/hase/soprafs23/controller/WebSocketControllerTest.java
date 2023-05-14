@@ -96,7 +96,7 @@ class WebSocketControllerTest {
         gamer.setUsername("testUser");
         Player owner = new Player(gamer);
         // test gameParam
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         // test room
         Room room = new Room(roomCode,owner,gameParam);
 
@@ -141,7 +141,7 @@ class WebSocketControllerTest {
         gamer.setUsername("testUser");
         Player owner = new Player(gamer);
         // test gameParam
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         // test room
         Room room = new Room(roomCode,owner,gameParam);
         // given
@@ -187,7 +187,7 @@ class WebSocketControllerTest {
         players.put(ownerID,owner);
         players.put(playerID,player);
         // test gameParam
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         // test room
         Room room = new Room(roomCode,owner,gameParam);
         //given
@@ -231,7 +231,7 @@ class WebSocketControllerTest {
         LinkedHashMap<Long,Player> players = new LinkedHashMap<>();
         players.put(ownerID,owner);
         // test gameParam
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         // test room
         Room room = new Room(roomCode,owner,gameParam);
         room.addPlayer(player);
@@ -262,7 +262,7 @@ class WebSocketControllerTest {
         gamer.setUsername("testUser");
         Player owner = new Player(gamer);
         // test gameParam
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         // test room
         Room room = new Room(roomCode,owner,gameParam);
         // test questionList
@@ -301,7 +301,7 @@ class WebSocketControllerTest {
         Player player = new Player(gamer2);
         player.setReady(true);
         // test gameParam
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         // test room
         Room room = new Room(roomCode,owner,gameParam);
         room.addPlayer(player);
@@ -340,7 +340,7 @@ class WebSocketControllerTest {
         Player player = new Player(gamer2);
         player.setWriting(false);
         // test gameParam
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         // test room
         Room room = new Room(roomCode,owner,gameParam);
         room.addPlayer(player);
@@ -380,7 +380,7 @@ class WebSocketControllerTest {
         Player player = new Player(gamer2);
         player.setWriting(false);
         // test gameParam
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         // test room
         Room room = new Room(roomCode,owner,gameParam);
         room.addPlayer(player);
@@ -412,7 +412,7 @@ class WebSocketControllerTest {
         gamer.setId(userID);
         gamer.setUsername("testUser");
         Player owner = new Player(gamer);
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         Room room = new Room(roomCode,owner,gameParam);
         // test PlayerScoreBoardDTO
         ScoreBoard scoreBoard = new ScoreBoard();
@@ -440,7 +440,7 @@ class WebSocketControllerTest {
         User gamer = new User();
         gamer.setUsername("testUser");
         Player owner = new Player(gamer);
-        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"MultipleChoice",10);
         Room room = new Room(roomCode,owner,gameParam);
         // playerScores
         LinkedHashMap<String, Integer> playerScores = new LinkedHashMap<>();
@@ -467,25 +467,29 @@ class WebSocketControllerTest {
         User gamer = new User();
         gamer.setUsername("testUser");
         Player owner = new Player(gamer);
-        GameParamDTO gameParam = new GameParamDTO(1,2,"HanziDrawing");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"HanziDrawing",10);
         Room room = new Room(roomCode,owner,gameParam);
 
         Map<Long, String> playersImitations = new HashMap<>();
         playersImitations.put(gamer.getId(), "XXXBBBMM");
 
         PlayerImitationDTO playerImitationDTO = new PlayerImitationDTO();
+        playerImitationDTO.setRound(1);
         playerImitationDTO.setImitationBytes("XXXBBBMM");
         playerImitationDTO.setUserID(gamer.getId());
 
+        List<PlayerImitationDTO> playersImitationList = new ArrayList<>();
+        playersImitationList.add(playerImitationDTO);
+
         // given
-        given(gameService.getPlayersImitations(Mockito.anyInt())).willReturn(playersImitations);
+        given(gameService.getPlayersImitations(room.getRoomID(),playerImitationDTO)).willReturn(playersImitationList);
         // when
         webSocketController.updatePlayerImitation(room.getRoomID(), playerImitationDTO);
         // then
         ArgumentCaptor<String> destinationCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<Map> mapCaptor = ArgumentCaptor.forClass(Map.class);
+        ArgumentCaptor<List> mapCaptor = ArgumentCaptor.forClass(ArrayList.class);
         verify(simpMessagingTemplate, times(1)).convertAndSend(destinationCaptor.capture(), mapCaptor.capture());
-        Map sentMap = mapCaptor.getValue();
+        List sentMap = mapCaptor.getValue();
         assertEquals("/topic/multi/rooms/"+room.getRoomID()+"/imitations", destinationCaptor.getValue());
         assertEquals(1, sentMap.size());
     }
@@ -497,22 +501,36 @@ class WebSocketControllerTest {
         User gamer = new User();
         gamer.setUsername("testUser");
         Player owner = new Player(gamer);
-        GameParamDTO gameParam = new GameParamDTO(1,2,"HanziDrawing");
+        GameParamDTO gameParam = new GameParamDTO(1,2,"HanziDrawing",10);
         Room room = new Room(roomCode,owner,gameParam);
 
         Map<Long, String> playersImitations = new HashMap<>();
         playersImitations.put(gamer.getId(), "XXXBBBMM");
         playersImitations.put(2L, "XXXBBBWW");
 
+        PlayerImitationDTO playerImitationDTO1 = new PlayerImitationDTO();
+        playerImitationDTO1.setUserID(gamer.getId());
+        playerImitationDTO1.setRound(1);
+        playerImitationDTO1.setImitationBytes("XXXBBBMM");
+
+        PlayerImitationDTO playerImitationDTO2 = new PlayerImitationDTO();
+        playerImitationDTO2.setUserID(2L);
+        playerImitationDTO2.setRound(1);
+        playerImitationDTO2.setImitationBytes("XXXBBBWW");
+
+        List<PlayerImitationDTO> playersImitationList = new ArrayList<>();
+        playersImitationList.add(playerImitationDTO1);
+        playersImitationList.add(playerImitationDTO2);
+
         // given
-        given(gameService.getPlayersImitations(Mockito.anyInt())).willReturn(playersImitations);
+        given(gameService.getPlayersImitations(room.getRoomID(),playerImitationDTO1)).willReturn(playersImitationList);
         // when
-        webSocketController.getPlayersImitations(room.getRoomID());
+        webSocketController.getPlayersImitations(room.getRoomID(),playerImitationDTO1);
         // then
         ArgumentCaptor<String> destinationCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<Map> mapCaptor = ArgumentCaptor.forClass(Map.class);
+        ArgumentCaptor<List> mapCaptor = ArgumentCaptor.forClass(ArrayList.class);
         verify(simpMessagingTemplate, times(1)).convertAndSend(destinationCaptor.capture(), mapCaptor.capture());
-        Map sentMap = mapCaptor.getValue();
+        List sentMap = mapCaptor.getValue();
         assertEquals("/topic/multi/rooms/"+room.getRoomID()+"/imitations", destinationCaptor.getValue());
         assertEquals(2, sentMap.size());
     }

@@ -71,6 +71,7 @@ public class WebSocketController {
         Player owner = gameService.createPlayer(gamer);
         Room newRoom = gameService.createRoom(owner, gameParam);
         log.info("new room created: " + newRoom.getRoomCode());
+        log.info("new room with questions number: " + gameParam.getNumQuestion());
         this.simpMessagingTemplate.convertAndSend("/topic/multi/create/"+userID,newRoom);
         log.info("msg sent");
     }
@@ -232,7 +233,8 @@ public class WebSocketController {
         catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
-        Map<Long, String> playersImitations =  this.gameService.getPlayersImitations(roomID);
+        // Map<Long, String> playersImitations =  this.gameService.getPlayersImitations(roomID);
+        List<PlayerImitationDTO> playersImitations =  this.gameService.getPlayersImitations(roomID,playerImitationDTO);
         log.info("Players imitations {} post to the channel imitations.", playersImitations);
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/imitations", playersImitations);
     }
@@ -241,9 +243,9 @@ public class WebSocketController {
      * API to broadcast the imitations of players
      */
     @MessageMapping("/multi/rooms/{roomID}/players/records")
-    public void getPlayersImitations(@DestinationVariable int roomID) {
+    public void getPlayersImitations(@DestinationVariable int roomID, PlayerImitationDTO playerImitationDTO) {
         log.info("Room {} is retrieving players imitations.", roomID);
-        Map<Long, String> playersImitations =  this.gameService.getPlayersImitations(roomID);
+        List<PlayerImitationDTO> playersImitations =  this.gameService.getPlayersImitations(roomID, playerImitationDTO);
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/imitations", playersImitations);
     }
 
@@ -256,6 +258,8 @@ public class WebSocketController {
         this.gameService.endRounds(roomID);
         // Below is used to print each player's score after reset
         this.gameService.calculateRanking(roomID);
+
+        this.gameService.endGame(roomID);
 
     }
 
