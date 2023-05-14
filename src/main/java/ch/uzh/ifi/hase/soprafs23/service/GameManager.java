@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Game;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerImitationDTO;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerVoteDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -9,11 +10,14 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class GameManager {
     private ConcurrentHashMap<Integer, Game> roomIDs;
 
     private ConcurrentHashMap<String, PlayerImitationDTO> gameImitationsMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, PlayerVoteDTO> gameVotesMap = new ConcurrentHashMap<>();
+    List<PlayerVoteDTO> playerVotes = new ArrayList<>();
 
     Logger log = LoggerFactory.getLogger(GameManager.class);
 
@@ -61,6 +65,34 @@ public class GameManager {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This room does not exist!");
         }
         return playerImitation;
+    }
+
+    public void addPlayerVotes(int roomID, PlayerVoteDTO playerVotesDTO) {
+        String userVoteRoundID = roomID + "RO" + playerVotesDTO.getRound() + "R" +playerVotesDTO.getUserID() + "T" +playerVotesDTO.getFromUserID() + "F";
+        gameVotesMap.put(userVoteRoundID, playerVotesDTO);
+
+        // This is just for log testing
+        if(gameVotesMap.size() != 0) {
+            for (Map.Entry<String, PlayerVoteDTO> entry : gameVotesMap.entrySet()) {
+                String key = entry.getKey();
+                PlayerVoteDTO value = entry.getValue();
+                log.info("Retrieve the map<userVoteRoundID, List> of player votes 1: " + key + " => " + value);
+            }
+        }
+
+    }
+
+    public boolean checkPlayerVotes(String userVoteRoundID){
+        boolean isVoted = false;
+        PlayerVoteDTO playerVote = gameVotesMap.get(userVoteRoundID);
+        if (playerVote != null) {
+            isVoted = true;
+            log.info("Player is already voted. " );
+        } else {
+            isVoted = false;
+            log.info("Player is note voted yet. " );
+        }
+        return isVoted;
     }
 
 }
