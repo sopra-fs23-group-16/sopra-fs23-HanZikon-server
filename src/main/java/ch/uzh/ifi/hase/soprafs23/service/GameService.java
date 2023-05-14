@@ -457,9 +457,9 @@ public class GameService {
     }
 
     public void endGame(int roomID) {
-        Room findRoom = this.roomManager.findByRoomID(roomID);
+        // Room findRoom = this.roomManager.findByRoomID(roomID);
         Game findGame = this.gameManager.findByRoomID(roomID);
-        this.roomManager.removeRoom(findRoom);
+        // this.roomManager.removeRoom(findRoom);
         this.gameManager.removeGame(findGame);
     }
 
