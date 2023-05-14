@@ -3,13 +3,11 @@ package ch.uzh.ifi.hase.soprafs23.service;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Game;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Player;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Room;
+import ch.uzh.ifi.hase.soprafs23.MultipleMode.ScoreBoard;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.QuestionPacker;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO.QuestionDTO;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameParamDTO;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerImitationDTO;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerScoreBoardDTO;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerStatusDTO;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -352,6 +350,92 @@ public class GameService {
 
     }
 
+    /**
+     * Accumulate the player votes according to PlayerVote passed
+     * @param roomID
+     * @return
+     */
+    public List<PlayerVoteDTO> updatePlayerVotes (int roomID, PlayerVoteDTO playerVotesDTO) {
+        List<PlayerVoteDTO> playerVotesList = new ArrayList<>();
+
+        Long userId = playerVotesDTO.getUserID();
+        Long fromUserId = playerVotesDTO.getFromUserID();
+        int round = playerVotesDTO.getRound();
+        if(userId != null && fromUserId !=null && round >= 0) {
+            String userVoteRoundID = roomID + "RO" + round + "R" + userId + "T" +fromUserId + "F";
+            log.info("Room {}: user voted round id is {}.", roomID, userVoteRoundID);
+
+            boolean isVoted = this.gameManager.checkPlayerVotes(userVoteRoundID);
+            if(isVoted == true){
+                log.info("Room {}: The voted score from player {} to player {} is already accumulated this round {}.", roomID,fromUserId, userId);
+            } else {
+                this.gameManager.addPlayerVotes(roomID,playerVotesDTO);
+                playerVotesList = calculatePlayersVotes(roomID, playerVotesDTO);
+
+                addPlayerVotedScore(roomID,playerVotesDTO);
+
+                return playerVotesList;
+            }
+        } else{
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Player's imitations in room {} does not exist!" + roomID);
+        }
+
+        return playerVotesList;
+    }
+
+    public void addPlayerVotedScore(int roomID, PlayerVoteDTO playerVotesDTO){
+        PlayerScoreBoardDTO playerScoreBoardDTO = new PlayerScoreBoardDTO();
+        ScoreBoard scoreBoard = new ScoreBoard();
+        scoreBoard.setVotedScore(10);
+        playerScoreBoardDTO.setUserID(playerVotesDTO.getUserID());
+        playerScoreBoardDTO.setScoreBoard(scoreBoard);
+        log.info("Player votes: Add Player votedScore {} !" + playerScoreBoardDTO.getScoreBoard().getVotedScore());
+        updatePlayerScore(roomID, playerScoreBoardDTO);
+    }
+
+    /**
+     * Calculate the player votedScore in this round this room
+     * @param roomID
+     * @param playerVotesDTO
+     * @return
+     */
+    public List<PlayerVoteDTO> calculatePlayersVotes(int roomID, PlayerVoteDTO playerVotesDTO){
+        List<PlayerVoteDTO> playerVotesList = new ArrayList<>();
+        List<Player> Players = findGamePlayersByRoomID(roomID);
+
+        int round = playerVotesDTO.getRound();
+        if (Players.size()>0 && round>0) {
+            int votedTimes = 0;
+            for(int i= 0; i< Players.size(); i++){
+                PlayerVoteDTO playerVotes = new PlayerVoteDTO();
+                Player toPlayer = Players.get(i);
+                if(toPlayer != null) {
+                    for(int j= 0; j< Players.size(); j++){
+                        Player fromPlayer = Players.get(j);
+                        String userRoundID = roomID + "RO"+ round+ "R"+toPlayer.getUserID() +"T"+ fromPlayer.getUserID()+ "F";
+                        boolean isVoted = this.gameManager.checkPlayerVotes(userRoundID);
+                        if(isVoted == true){
+                            votedTimes ++;
+                        }
+                    }
+
+                    playerVotes.setUserID(toPlayer.getUserID());
+                    playerVotes.setUserName(toPlayer.getPlayerName());
+                    playerVotes.setRound(round);
+                    playerVotes.setVotedTimes(votedTimes);
+
+                    log.info("Player votes: Player ID {} name {} round {} votedTimes {} !" , playerVotes.getUserID(),playerVotes.getUserName(), playerVotes.getRound());
+
+                }
+                playerVotesList.add(playerVotes);
+            }
+
+        }else {
+            log.info("Player votes: There is no player's in this room!");
+        }
+
+        return playerVotesList;
+    }
 
 
     /**
