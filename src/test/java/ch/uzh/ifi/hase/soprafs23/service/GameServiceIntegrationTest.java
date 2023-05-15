@@ -179,7 +179,7 @@ class GameServiceIntegrationTest {
 
         assertEquals(10,this.gameService.findRoomByID(this.testRoom.getRoomID()).findPlayerByUserID(this.testPlayer.getUserID()).getScoreBoard().getSystemScore());
         assertEquals(20,this.gameService.findRoomByID(this.testRoom.getRoomID()).findPlayerByUserID(this.testPlayer.getUserID()).getScoreBoard().getVotedScore());
-        assertEquals(15,this.gameService.findRoomByID(this.testRoom.getRoomID()).findPlayerByUserID(this.testPlayer.getUserID()).getScoreBoard().getWeightedScore());
+        assertEquals(30,this.gameService.findRoomByID(this.testRoom.getRoomID()).findPlayerByUserID(this.testPlayer.getUserID()).getScoreBoard().getWeightedScore());
     }
 
     @Test
@@ -220,7 +220,7 @@ class GameServiceIntegrationTest {
         this.gameService.updatePlayerScore(this.testRoom.getRoomID(), playerScoreBoardDTO);
 
         assertEquals(testPlayer3.getPlayerName(),this.gameService.calculateRanking(this.testRoom.getRoomID()).entrySet().iterator().next().getKey());
-        assertEquals(20,this.gameService.calculateRanking(this.testRoom.getRoomID()).entrySet().iterator().next().getValue());
+        assertEquals(40,this.gameService.calculateRanking(this.testRoom.getRoomID()).entrySet().iterator().next().getValue());
     }
 
     @Test
