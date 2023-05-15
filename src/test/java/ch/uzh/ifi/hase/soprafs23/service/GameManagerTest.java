@@ -5,6 +5,8 @@ import ch.uzh.ifi.hase.soprafs23.MultipleMode.Player;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameParamDTO;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerImitationDTO;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerVoteDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -26,10 +28,18 @@ public class GameManagerTest {
 
     @InjectMocks
     private ConcurrentHashMap<Integer, Game> roomIDs;
+    @InjectMocks
+    private ConcurrentHashMap<String, PlayerImitationDTO> gameImitationsMap;
+    @InjectMocks
+    private ConcurrentHashMap<String, PlayerVoteDTO> gameVotesMap;
     @MockBean
     private Room room;
     @MockBean
     private Game game;
+    @MockBean
+    private PlayerImitationDTO playerImitationDTO;
+    @MockBean
+    private PlayerVoteDTO playerVoteDTO;
 
 
     @BeforeEach
@@ -52,6 +62,18 @@ public class GameManagerTest {
         game = new Game(room);
         gameManager = new GameManager();
         roomIDs = new ConcurrentHashMap<>();
+        playerImitationDTO = new PlayerImitationDTO();
+        playerImitationDTO.setRound(1);
+        playerImitationDTO.setUserID(204L);
+        playerImitationDTO.setImitationBytes("XXXBBC");
+        gameImitationsMap = new ConcurrentHashMap<>();
+
+        playerVoteDTO = new PlayerVoteDTO();
+        playerVoteDTO.setVotedTimes(1);
+        playerVoteDTO.setFromUserID(203L);
+        playerVoteDTO.setUserID(203L);
+        gameVotesMap = new ConcurrentHashMap<>();
+
     }
 
     @Test
@@ -65,6 +87,34 @@ public class GameManagerTest {
     public void removeGameTest() {
         gameManager.removeGame(game);
         assertThrows(ResponseStatusException.class, () -> gameManager.findByRoomID(2));
+
+    }
+
+    @Test
+    public void addPlayerImitationTest() {
+        // given -> a first game has already been created
+        gameManager.addPlayerImitation(playerImitationDTO);
+        assertEquals(playerImitationDTO, gameManager.findImgByUserID("1R204"));
+    }
+
+    @Test
+    public void removePlayerImitationTest() {
+        gameManager.removePlayerImitation("1R204");
+        assertThrows(ResponseStatusException.class, () -> gameManager.findImgByUserID("1R204"));
+
+    }
+
+    @Test
+    public void addPlayerVotesTest() {
+        // given -> a first game has already been created
+        gameManager.addPlayerVotes(1,playerVoteDTO);
+        assertEquals(true, gameManager.checkPlayerVotes("1RO0R203T203F"));
+    }
+
+    @Test
+    public void checkPlayerVotes() {
+        gameManager.checkPlayerVotes("1R204");
+        assertEquals(false, gameManager.checkPlayerVotes("1R204"));
 
     }
 
