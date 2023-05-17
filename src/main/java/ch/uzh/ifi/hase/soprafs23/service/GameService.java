@@ -464,4 +464,8 @@ public class GameService {
     }
 
 
+    public void closeRoom(int roomID) {
+        Room findRoom = this.roomManager.findByRoomID(roomID);
+        findRoom.close();
+    }
 }
