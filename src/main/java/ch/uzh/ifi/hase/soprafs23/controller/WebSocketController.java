@@ -274,4 +274,11 @@ public class WebSocketController {
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/players/votes", playerVotes);
     }
 
+    @MessageMapping("/multi/rooms/{roomID}/players/voteTimes")
+    public void getPlayerVoteTimes(@DestinationVariable int roomID, PlayerVoteDTO playerVotesDTO) {
+        log.info("Players in room {} are voting for each other.", roomID);
+        List<PlayerVoteDTO> playerVotes = this.gameService.calculatePlayersVotes(roomID, playerVotesDTO);
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/players/votes", playerVotes);
+    }
+
 }
