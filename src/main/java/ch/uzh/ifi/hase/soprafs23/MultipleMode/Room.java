@@ -98,4 +98,8 @@ public class Room {
         isOpen = false;
     }
 
+    public void open() {
+        isOpen = true;
+    }
+
 }

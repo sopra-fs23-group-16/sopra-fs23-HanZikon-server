@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * User Service
@@ -27,6 +26,7 @@ public class UserService {
     private final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
 
+
     @Autowired
     public UserService(@Qualifier("userRepository") UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -39,7 +39,10 @@ public class UserService {
     public User createUser(User newUser) {
         newUser.setToken(UUID.randomUUID().toString());
         newUser.setStatus(UserStatus.OFFLINE.getStatus());
+        String randomIcon = generateRandomIcon();
+        newUser.setIcon(randomIcon); // set default icon
         checkIfUserExists(newUser);
+
         // saves the given entity but data is only persisted in the database once
         // flush() is called
         newUser = userRepository.save(newUser);
@@ -47,6 +50,16 @@ public class UserService {
 
         log.debug("Created Information for User: {}", newUser);
         return newUser;
+    }
+
+    public String generateRandomIcon(){
+        String[] valuesArray = {"dog", "cat", "seelion", "cattle", "owl"};
+
+        Random random = new Random();
+        int randomIndex = random.nextInt(valuesArray.length);
+        String randomValue = valuesArray[randomIndex];
+
+        return randomValue;
     }
 
     /**

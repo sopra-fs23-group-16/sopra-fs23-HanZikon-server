@@ -118,6 +118,9 @@ public class WebSocketController {
         Room foundRoom = this.gameService.findRoomByID(roomID);
         Player player = foundRoom.findPlayerByUserID(playerDTO.getUserID());
         foundRoom.removePlayer(player);
+        if(!foundRoom.checkIsFull()){
+            this.gameService.openRoom(foundRoom.getRoomID());
+        }
         log.info("dropped from the room: " + roomID);
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+foundRoom.getRoomID()+"/drop",foundRoom);
     }
