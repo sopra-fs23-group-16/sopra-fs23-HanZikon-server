@@ -133,6 +133,7 @@ public class UserController {
 
         String baseErrorMessage1 = "The %s provided is not found!";
         String baseErrorMessage2 = "The %s provided is already exist!";
+        String defaultIcon = "dog";
         if (userExist==null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(baseErrorMessage1, "user"));
         }
@@ -149,6 +150,12 @@ public class UserController {
 
         if (userInput.getPassword() != null) {
             userExist.setPassword(userInput.getPassword());
+        }
+
+        if (userInput.getIcon() != null) {
+            userExist.setIcon(userInput.getIcon());
+        } else {
+            userExist.setIcon(defaultIcon);
         }
 
         userService.setting(userExist);

@@ -11,10 +11,7 @@ import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.CSVService;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.DTO.QuestionDTO;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.repository.ChoiceQuestionRepository;
 import ch.uzh.ifi.hase.soprafs23.questionGenerator.question.repository.DrawingQuestionRepository;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.GameParamDTO;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerDTO;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerScoreBoardDTO;
-import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerStatusDTO;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -179,7 +176,7 @@ class GameServiceIntegrationTest {
 
         assertEquals(10,this.gameService.findRoomByID(this.testRoom.getRoomID()).findPlayerByUserID(this.testPlayer.getUserID()).getScoreBoard().getSystemScore());
         assertEquals(20,this.gameService.findRoomByID(this.testRoom.getRoomID()).findPlayerByUserID(this.testPlayer.getUserID()).getScoreBoard().getVotedScore());
-        assertEquals(15,this.gameService.findRoomByID(this.testRoom.getRoomID()).findPlayerByUserID(this.testPlayer.getUserID()).getScoreBoard().getWeightedScore());
+        assertEquals(30,this.gameService.findRoomByID(this.testRoom.getRoomID()).findPlayerByUserID(this.testPlayer.getUserID()).getScoreBoard().getWeightedScore());
     }
 
     @Test
@@ -220,7 +217,7 @@ class GameServiceIntegrationTest {
         this.gameService.updatePlayerScore(this.testRoom.getRoomID(), playerScoreBoardDTO);
 
         assertEquals(testPlayer3.getPlayerName(),this.gameService.calculateRanking(this.testRoom.getRoomID()).entrySet().iterator().next().getKey());
-        assertEquals(20,this.gameService.calculateRanking(this.testRoom.getRoomID()).entrySet().iterator().next().getValue());
+        assertEquals(40,this.gameService.calculateRanking(this.testRoom.getRoomID()).entrySet().iterator().next().getValue());
     }
 
     @Test
@@ -249,6 +246,29 @@ class GameServiceIntegrationTest {
         this.gameService.endRounds(this.testRoom.getRoomID());
 
         assertEquals(0,this.gameService.findRoomByID(this.testRoom.getRoomID()).findPlayerByUserID(this.testPlayer.getUserID()).getScoreBoard().getSystemScore());
+    }
+
+    @Test
+    void update_PlayerVotes_withSuccess() {
+        this.testPlayer = mockTestPlayer("1","testOwner");
+        this.testRoom = this.gameService.createRoom(this.testPlayer,
+                new GameParamDTO(1,3,"Mixed",10));
+
+        this.testRoom.addPlayer(mockTestPlayer("2","player1"));
+        this.testRoom.addPlayer(mockTestPlayer("3","player2"));
+
+        this.gameService.createGame(this.testRoom.getRoomID(),new QuestionPacker(service));
+
+        PlayerVoteDTO playerVoteDTO = new PlayerVoteDTO();
+        playerVoteDTO.setUserID(this.testPlayer.getUserID());
+        playerVoteDTO.setVotedTimes(1);
+        playerVoteDTO.setFromUserID(this.testPlayer.getUserID());
+        playerVoteDTO.setRound(1);
+
+        this.gameService.updatePlayerVotes(this.testRoom.getRoomID(), playerVoteDTO);
+
+        assertTrue(this.gameService.updatePlayerVotes(this.testRoom.getRoomID(), playerVoteDTO) instanceof java.util.List);
+        assertEquals(10,this.gameService.findRoomByID(this.testRoom.getRoomID()).findPlayerByUserID(this.testPlayer.getUserID()).getScoreBoard().getVotedScore());
     }
 
 }

@@ -461,7 +461,7 @@ class WebSocketControllerTest {
     }
 
     @Test
-    void updatePlayerImitationTest() {
+    void updatePlayerImitation_withsuccess() {
         // test room
         String roomCode = "TEST01";
         User gamer = new User();
@@ -495,7 +495,7 @@ class WebSocketControllerTest {
     }
 
     @Test
-    void getPlayersImitationsTest() {
+    void getPlayersImitations_withsuccess() {
         // test room
         String roomCode = "TEST01";
         User gamer = new User();
@@ -535,6 +535,51 @@ class WebSocketControllerTest {
         assertEquals(2, sentMap.size());
     }
 
+    @Test
+    void updatePlayerVotes_withsuccess() {
+        // test room
+        String roomCode = "TEST01";
+        User gamer = new User();
+        gamer.setId(1L);
+        gamer.setUsername("testUser");
+        Player owner = new Player(gamer);
+        GameParamDTO gameParam = new GameParamDTO(1,2,"HanziDrawing",10);
+        Room room = new Room(roomCode,owner,gameParam);
+
+        User gamer2 = new User();
+        gamer2.setId(2L);
+        Player player2 = new Player(gamer2);
+        gamer.setUsername("testUser2");
+        room.addPlayer(player2);
+
+        PlayerVoteDTO playerVoteDTO = new PlayerVoteDTO();
+        playerVoteDTO.setRound(1);
+        playerVoteDTO.setUserID(gamer.getId());
+        playerVoteDTO.setFromUserID(gamer.getId());
+        playerVoteDTO.setVotedTimes(1);
+
+        PlayerVoteDTO playerVoteDTO2 = new PlayerVoteDTO();
+        playerVoteDTO2.setRound(1);
+        playerVoteDTO2.setUserID(gamer2.getId());
+        playerVoteDTO2.setFromUserID(gamer2.getId());
+        playerVoteDTO2.setVotedTimes(1);
+
+        List<PlayerVoteDTO> playersVotesList = new ArrayList<>();
+        playersVotesList.add(playerVoteDTO);
+        playersVotesList.add(playerVoteDTO2);
+
+        // given
+        given(gameService.updatePlayerVotes(room.getRoomID(),playerVoteDTO)).willReturn(playersVotesList);
+        // when
+        webSocketController.updatePlayerVotes(room.getRoomID(), playerVoteDTO);
+        // then
+        ArgumentCaptor<String> destinationCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<List> ListCaptor = ArgumentCaptor.forClass(ArrayList.class);
+        verify(simpMessagingTemplate, times(1)).convertAndSend(destinationCaptor.capture(), ListCaptor.capture());
+        List sentList = ListCaptor.getValue();
+        assertEquals("/topic/multi/rooms/"+room.getRoomID()+"/players/votes", destinationCaptor.getValue());
+        assertEquals(2, sentList.size());
+    }
 
 
     @AfterEach

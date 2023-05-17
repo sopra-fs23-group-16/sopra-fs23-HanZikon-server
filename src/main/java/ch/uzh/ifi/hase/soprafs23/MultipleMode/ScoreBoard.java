@@ -11,8 +11,6 @@ public class ScoreBoard {
     private int votedScore;  // This votedScore should be already averaged by scores given by others in the front end
     private int systemScore;
 
-    private double systemScorePercentage = 0.5;
-
     public ScoreBoard(){
         this.votedScore = 0;
         this.systemScore = 0;
@@ -41,7 +39,7 @@ public class ScoreBoard {
         } else if (this.votedScore ==0 ){
             wightedScore = this.systemScore;
         } else if(this.systemScore != 0 && this.votedScore !=0) {
-            wightedScore = (int) ((systemScore* systemScorePercentage) + votedScore*(1-systemScorePercentage));
+            wightedScore = systemScore + votedScore;
         }
         return wightedScore;
     }

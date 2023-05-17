@@ -457,11 +457,25 @@ public class GameService {
     }
 
     public void endGame(int roomID) {
-        Room findRoom = this.roomManager.findByRoomID(roomID);
+        // Room findRoom = this.roomManager.findByRoomID(roomID);
         Game findGame = this.gameManager.findByRoomID(roomID);
-        this.roomManager.removeRoom(findRoom);
+        // this.roomManager.removeRoom(findRoom);
         this.gameManager.removeGame(findGame);
     }
 
 
+    public void closeRoom(int roomID) {
+        Room findRoom = this.roomManager.findByRoomID(roomID);
+        findRoom.close();
+    }
+
+    public Room fakeRoom(){
+        User user = new User();
+        user.setId(9999L);
+        user.setUsername("fake");
+        Player player = new Player(user);
+        GameParamDTO gameParam = new GameParamDTO(1,1,"fake",1);
+        Room fakeRoom = new Room("fake",player,gameParam);
+        return fakeRoom;
+    }
 }
