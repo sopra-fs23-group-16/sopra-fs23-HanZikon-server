@@ -27,17 +27,17 @@ public class RoomManager {
 
     public Room findByRoomCode(String roomCode){
         Room room = roomCodes.get(roomCode);
-        if (room == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This room does not exist!");
-        }
+//        if (room == null) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This room does not exist!");
+//        }
         return room;
     }
 
     public Room findByRoomID(int roomID) {
         Room room = roomIDs.get(roomID);
-        if (room == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This room does not exist!");
-        }
+//        if (room == null) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This room does not exist!");
+//        }
         return room;
     }
 }
