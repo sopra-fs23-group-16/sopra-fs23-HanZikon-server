@@ -134,6 +134,8 @@ public class WebSocketController {
     public void createGame(@DestinationVariable int roomID) throws Exception {
         log.info("request to create game: " + roomID);
         List<QuestionDTO> questionList = gameService.createGame(roomID,new QuestionPacker(csvService));
+        //can not add players after game started
+        gameService.closeRoom(roomID);
         log.info("new game created");
         this.simpMessagingTemplate.convertAndSend("/topic/multi/games/"+roomID+"/questions",questionList);
     }
