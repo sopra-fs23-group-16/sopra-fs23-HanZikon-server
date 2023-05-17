@@ -37,9 +37,9 @@ class QuestionPackerTest {
         this.questionPacker = new QuestionPacker(service);
         ArrayList<QuestionDTO> resultList = new ArrayList<>();
 
-        assertEquals(10,questionPacker.getQuestionList(new GameParamDTO(1,2,"Mixed")).size());
-        assertEquals(10,questionPacker.getQuestionList(new GameParamDTO(2,2,"HanziDrawing")).size());
-        assertEquals(10,questionPacker.getQuestionList(new GameParamDTO(3,2,"MultipleChoice")).size());
+        assertEquals(10,questionPacker.getQuestionList(new GameParamDTO(1,2,"Mixed",10)).size());
+        assertEquals(10,questionPacker.getQuestionList(new GameParamDTO(2,2,"HanziDrawing",10)).size());
+        assertEquals(10,questionPacker.getQuestionList(new GameParamDTO(3,2,"MultipleChoice",10)).size());
 
     }
 }

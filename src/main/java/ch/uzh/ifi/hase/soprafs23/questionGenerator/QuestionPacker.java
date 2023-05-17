@@ -16,7 +16,7 @@ public class QuestionPacker {
     }
 
     public List<QuestionDTO> getQuestionList(GameParamDTO gameParam){
-        return service.fetchQuestionSet(Integer.toString(gameParam.getLevel()),gameParam.getQuestionType(),10);
+        return service.fetchQuestionSet(Integer.toString(gameParam.getLevel()),gameParam.getQuestionType(), gameParam.getNumQuestion());
     }
 
 }

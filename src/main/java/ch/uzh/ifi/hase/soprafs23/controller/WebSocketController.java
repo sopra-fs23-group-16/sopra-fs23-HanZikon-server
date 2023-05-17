@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
-import ch.uzh.ifi.hase.soprafs23.MultipleMode.Game;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Player;
 import ch.uzh.ifi.hase.soprafs23.MultipleMode.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
@@ -71,6 +70,7 @@ public class WebSocketController {
         Player owner = gameService.createPlayer(gamer);
         Room newRoom = gameService.createRoom(owner, gameParam);
         log.info("new room created: " + newRoom.getRoomCode());
+        log.info("new room with questions number: " + gameParam.getNumQuestion());
         this.simpMessagingTemplate.convertAndSend("/topic/multi/create/"+userID,newRoom);
         log.info("msg sent");
     }
@@ -90,26 +90,26 @@ public class WebSocketController {
     public void joinRoom(@DestinationVariable String roomCode, PlayerDTO playerDTO) throws Exception {
         log.info("request to join Room: " + roomCode);
         Room foundRoom = this.gameService.findRoomByCode(roomCode);
-        // check if client is registered
-        User gamer;
-//        if (
-//        this.userService.checkIfUserIDExists(playerDTO.getUserID());
-//        ){
-        gamer = userService.getUserById(playerDTO.getUserID());
-//        } else {
-//            gamer = new User();
-//            gamer.setId(playerDTO.getUserID());
-//            gamer.setUsername(playerDTO.getUserName());
-//        }
-        Player player = gameService.createPlayer(gamer);
-        if(!foundRoom.checkIsFull()) {
-            foundRoom.addPlayer(player);
+        // if the roomCode is invalid, return a fake room
+        if(foundRoom==null){
+            foundRoom = this.gameService.fakeRoom();
+            this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomCode+"/join",foundRoom);
+        }else{
+            User gamer;
+            gamer = userService.getUserById(playerDTO.getUserID());
+            Player player = gameService.createPlayer(gamer);
+            if(foundRoom.isOpen()) {
+                foundRoom.addPlayer(player);
+                if(foundRoom.checkIsFull()){
+                    this.gameService.closeRoom(foundRoom.getRoomID());
+                }
+            }
+            log.info(player.getPlayerName()+" joined the room: " + foundRoom.getRoomID());
+            log.info("room contains " + foundRoom.getPlayers().size() + " players.");
+            this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomCode+"/join",foundRoom);
+            /**need to be corrected as user private channel*/
+            this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+foundRoom.getRoomID()+"/info",foundRoom);
         }
-        log.info(player.getPlayerName()+" joined the room: " + foundRoom.getRoomID());
-        log.info("room contains " + foundRoom.getPlayers().size() + " players.");
-        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomCode+"/join",foundRoom);
-        /**need to be corrected as user private channel*/
-        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+foundRoom.getRoomID()+"/info",foundRoom);
     }
 
     @MessageMapping("/multi/rooms/{roomID}/drop")
@@ -262,6 +262,16 @@ public class WebSocketController {
 
         this.gameService.endGame(roomID);
 
+    }
+
+    /**
+     * Capture the player being voted times and voted score for one round
+     */
+    @MessageMapping("/multi/rooms/{roomID}/players/votes")
+    public void updatePlayerVotes(@DestinationVariable int roomID, PlayerVoteDTO playerVotesDTO) {
+        log.info("Players in room {} are voting for each other.", roomID);
+        List<PlayerVoteDTO> playerVotes = this.gameService.updatePlayerVotes(roomID, playerVotesDTO);
+        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/players/votes", playerVotes);
     }
 
 }

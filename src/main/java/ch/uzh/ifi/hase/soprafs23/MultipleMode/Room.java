@@ -61,14 +61,8 @@ public class Room {
     }
 
     public void addPlayer(Player player) {
-        //when not full or game started
-        if(this.isOpen){
-            this.players.put(player.getUserID(),player);
-        }
-        //close when it is full
-        if(this.players.size()==this.gameParam.getNumPlayers()){
-            this.close();
-        }
+        //when not full nor game started
+        this.players.put(player.getUserID(),player);
     }
 
     public void removePlayer(Player player){
