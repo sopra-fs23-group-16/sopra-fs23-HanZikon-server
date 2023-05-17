@@ -469,6 +469,11 @@ public class GameService {
         findRoom.close();
     }
 
+    public void openRoom(int roomID) {
+        Room findRoom = this.roomManager.findByRoomID(roomID);
+        findRoom.open();
+    }
+
     public Room fakeRoom(){
         User user = new User();
         user.setId(9999L);
