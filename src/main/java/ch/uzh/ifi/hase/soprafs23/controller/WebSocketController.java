@@ -98,8 +98,11 @@ public class WebSocketController {
             User gamer;
             gamer = userService.getUserById(playerDTO.getUserID());
             Player player = gameService.createPlayer(gamer);
-            if(!foundRoom.checkIsFull()) {
+            if(foundRoom.isOpen()) {
                 foundRoom.addPlayer(player);
+                if(foundRoom.checkIsFull()){
+                    this.gameService.closeRoom(foundRoom.getRoomID());
+                }
             }
             log.info(player.getPlayerName()+" joined the room: " + foundRoom.getRoomID());
             log.info("room contains " + foundRoom.getPlayers().size() + " players.");

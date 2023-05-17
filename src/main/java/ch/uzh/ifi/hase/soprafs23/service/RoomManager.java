@@ -35,9 +35,9 @@ public class RoomManager {
 
     public Room findByRoomID(int roomID) {
         Room room = roomIDs.get(roomID);
-//        if (room == null) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This room does not exist!");
-//        }
+        if (room == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This room does not exist!");
+        }
         return room;
     }
 }
