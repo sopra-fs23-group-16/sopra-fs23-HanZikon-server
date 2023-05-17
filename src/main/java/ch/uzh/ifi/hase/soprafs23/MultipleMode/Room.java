@@ -16,6 +16,9 @@ public class Room {
     private final String roomCode;
     private Player owner;
     private LinkedHashMap<Long,Player> players = new LinkedHashMap<>();
+
+    private boolean isOpen;
+
     private GameParamDTO gameParam;
     /**
      * client can subscribe '/room/{roomID}'
@@ -28,8 +31,9 @@ public class Room {
         this.roomCode = roomCode;
         this.owner = owner;
         this.owner.setReady(true);
-        this.addPlayer(owner);
         this.gameParam = gameParam;
+        this.isOpen = true;
+        this.addPlayer(owner);
     }
 
     public int getRoomID() {
@@ -57,6 +61,7 @@ public class Room {
     }
 
     public void addPlayer(Player player) {
+        //when not full nor game started
         this.players.put(player.getUserID(),player);
     }
 
@@ -83,6 +88,14 @@ public class Room {
 
     public Player getOwner() {
         return owner;
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public void close() {
+        isOpen = false;
     }
 
 }

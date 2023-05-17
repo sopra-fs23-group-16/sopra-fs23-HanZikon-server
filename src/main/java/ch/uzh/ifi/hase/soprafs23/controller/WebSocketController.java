@@ -90,26 +90,26 @@ public class WebSocketController {
     public void joinRoom(@DestinationVariable String roomCode, PlayerDTO playerDTO) throws Exception {
         log.info("request to join Room: " + roomCode);
         Room foundRoom = this.gameService.findRoomByCode(roomCode);
-        // check if client is registered
-        User gamer;
-//        if (
-//        this.userService.checkIfUserIDExists(playerDTO.getUserID());
-//        ){
-        gamer = userService.getUserById(playerDTO.getUserID());
-//        } else {
-//            gamer = new User();
-//            gamer.setId(playerDTO.getUserID());
-//            gamer.setUsername(playerDTO.getUserName());
-//        }
-        Player player = gameService.createPlayer(gamer);
-        if(!foundRoom.checkIsFull()) {
-            foundRoom.addPlayer(player);
+        // if the roomCode is invalid, return a fake room
+        if(foundRoom==null){
+            foundRoom = this.gameService.fakeRoom();
+            this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomCode+"/join",foundRoom);
+        }else{
+            User gamer;
+            gamer = userService.getUserById(playerDTO.getUserID());
+            Player player = gameService.createPlayer(gamer);
+            if(foundRoom.isOpen()) {
+                foundRoom.addPlayer(player);
+                if(foundRoom.checkIsFull()){
+                    this.gameService.closeRoom(foundRoom.getRoomID());
+                }
+            }
+            log.info(player.getPlayerName()+" joined the room: " + foundRoom.getRoomID());
+            log.info("room contains " + foundRoom.getPlayers().size() + " players.");
+            this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomCode+"/join",foundRoom);
+            /**need to be corrected as user private channel*/
+            this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+foundRoom.getRoomID()+"/info",foundRoom);
         }
-        log.info(player.getPlayerName()+" joined the room: " + foundRoom.getRoomID());
-        log.info("room contains " + foundRoom.getPlayers().size() + " players.");
-        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomCode+"/join",foundRoom);
-        /**need to be corrected as user private channel*/
-        this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+foundRoom.getRoomID()+"/info",foundRoom);
     }
 
     @MessageMapping("/multi/rooms/{roomID}/drop")
@@ -134,6 +134,8 @@ public class WebSocketController {
     public void createGame(@DestinationVariable int roomID) throws Exception {
         log.info("request to create game: " + roomID);
         List<QuestionDTO> questionList = gameService.createGame(roomID,new QuestionPacker(csvService));
+        //can not add players after game started
+        gameService.closeRoom(roomID);
         log.info("new game created");
         this.simpMessagingTemplate.convertAndSend("/topic/multi/games/"+roomID+"/questions",questionList);
     }
