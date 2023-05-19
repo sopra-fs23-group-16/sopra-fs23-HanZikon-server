@@ -93,8 +93,8 @@ public class GameManagerTest {
     @Test
     public void addPlayerImitationTest() {
         // given -> a first game has already been created
-        gameManager.addPlayerImitation(playerImitationDTO);
-        assertEquals(playerImitationDTO, gameManager.findImgByUserID("1R204"));
+        gameManager.addPlayerImitation(1,playerImitationDTO);
+        assertEquals(playerImitationDTO, gameManager.findImgByUserID("1RO1R204"));
     }
 
     @Test

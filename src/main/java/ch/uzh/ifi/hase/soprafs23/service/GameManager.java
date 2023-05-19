@@ -10,14 +10,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 public class GameManager {
     private ConcurrentHashMap<Integer, Game> roomIDs;
-
     private ConcurrentHashMap<String, PlayerImitationDTO> gameImitationsMap = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, PlayerVoteDTO> gameVotesMap = new ConcurrentHashMap<>();
-    List<PlayerVoteDTO> playerVotes = new ArrayList<>();
 
     Logger log = LoggerFactory.getLogger(GameManager.class);
 
@@ -40,8 +37,8 @@ public class GameManager {
         return game;
     }
 
-    public void addPlayerImitation(PlayerImitationDTO playerImitationDTO) {
-        String userRoundID = playerImitationDTO.getRound() + "R" +playerImitationDTO.getUserID();
+    public void addPlayerImitation(int roomID, PlayerImitationDTO playerImitationDTO) {
+        String userRoundID = roomID + "RO" + playerImitationDTO.getRound() + "R" +playerImitationDTO.getUserID();
         gameImitationsMap.put(userRoundID, playerImitationDTO);
 
         // This is just for log testing

@@ -237,7 +237,6 @@ public class WebSocketController {
         catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
-        // Map<Long, String> playersImitations =  this.gameService.getPlayersImitations(roomID);
         List<PlayerImitationDTO> playersImitations =  this.gameService.getPlayersImitations(roomID,playerImitationDTO);
         log.info("Players imitations {} post to the channel imitations.", playersImitations);
         this.simpMessagingTemplate.convertAndSend("/topic/multi/rooms/"+roomID+"/imitations", playersImitations);
