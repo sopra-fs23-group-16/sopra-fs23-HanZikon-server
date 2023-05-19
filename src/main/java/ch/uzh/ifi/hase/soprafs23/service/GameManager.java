@@ -56,6 +56,19 @@ public class GameManager {
         gameImitationsMap.remove(userRoundID);
     }
 
+    public void removeRoomPlayerImitation(int roomID){
+        String partialRoomID = roomID + "RO";
+        Iterator<Map.Entry<String, PlayerImitationDTO>> iterator = gameImitationsMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, PlayerImitationDTO> entry = iterator.next();
+            String key = entry.getKey();
+
+            if (key.contains(partialRoomID)) {
+                iterator.remove();
+            }
+        }
+    }
+
     public PlayerImitationDTO findImgByUserID(String userRoundID) {
         PlayerImitationDTO playerImitation = gameImitationsMap.get(userRoundID);
         if (playerImitation == null) {
@@ -90,6 +103,20 @@ public class GameManager {
             log.info("Player is note voted yet. " );
         }
         return isVoted;
+    }
+
+    public void removeRoomPlayerVotes(int roomID){
+        String partialRoomID = roomID + "RO";
+
+        Iterator<Map.Entry<String, PlayerVoteDTO>> iterator = gameVotesMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, PlayerVoteDTO> entry = iterator.next();
+            String key = entry.getKey();
+
+            if (key.contains(partialRoomID)) {
+                iterator.remove();
+            }
+        }
     }
 
 }

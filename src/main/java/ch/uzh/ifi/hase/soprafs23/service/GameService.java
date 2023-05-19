@@ -461,6 +461,9 @@ public class GameService {
         Game findGame = this.gameManager.findByRoomID(roomID);
         // this.roomManager.removeRoom(findRoom);
         this.gameManager.removeGame(findGame);
+
+        this.gameManager.removeRoomPlayerVotes(roomID);
+        this.gameManager.removeRoomPlayerImitation(roomID);
     }
 
 

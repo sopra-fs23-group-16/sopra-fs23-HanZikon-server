@@ -260,8 +260,7 @@ public class WebSocketController {
         log.info("Room {} is ending game rounds.", roomID);
         this.gameService.endRounds(roomID);
         // Below is used to print each player's score after reset
-        this.gameService.calculateRanking(roomID);
-
+        // this.gameService.calculateRanking(roomID);
         this.gameService.endGame(roomID);
 
     }
