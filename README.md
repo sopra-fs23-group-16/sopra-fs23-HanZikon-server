@@ -1,4 +1,16 @@
-# SoPra RESTful Service Template FS23
+<h1 align="center">
+  <img alt="cgapp logo" src="Images/welcome.png" width="224px"/><br/>
+  HanziKon
+</h1>
+<p align="center">Create a new production-ready project with <b>backend</b> (Golang), <b>frontend</b> (JavaScript, TypeScript)<br/>and <b>deploy automation</b> (Ansible, Docker) by running one CLI command.<br/><br/>Focus on <b>writing</b> code and <b>thinking</b> of business-logic! The CLI will take care of the rest.</p>
+
+<p align="center"><a href="http://sopra-fs23-group-16-client.appspot.com/welcome" 
+target="_blank"><img src="Images/gameRule.png" alt="go version" /></a>&nbsp;<a href="https://gocover.io/github.com/create-go-app/cli/pkg/cgapp" target="_blank"><img src="https://img.shields.io/badge/Go_Cover-88.3%25-success?style=for-the-badge&logo=none" alt="go cover" /></a>&nbsp;<a href="https://goreportcard.com/report/github.com/create-go-app/cli" target="_blank"><img src="https://img.shields.io/badge/Go_report-A+-success?style=for-the-badge&logo=none" alt="go report" /></a>&nbsp;<img src="https://img.shields.io/badge/license-apache_2.0-red?style=for-the-badge&logo=none" alt="license" /></p>
+
+# HanziKon
+
+HanZikon Chinese character writing APP has a writing module, in which the player would draw or paint the Chinese Character with short-term memory. Generally, there would be 30 seconds for players to learn the shape and structure of the Chinese character, then 60 seconds for players to reproduce it. There would be three game modes with different levels (eg, 1 -10 from easy to hard ), players are free to choose the mode and level they prefer.
+The aim of this application is getting to know Chinese characters in an interesting way. Or one can just simply take it as a game to practice your memory or painting skills with fun.
 
 ## Getting started with Spring Boot
 -   Documentation: https://docs.spring.io/spring-boot/docs/current/reference/html/index.html
@@ -84,3 +96,27 @@ To configure a debugger for SpringBoot's Tomcat servlet (i.e. the process you st
 
 ## Testing
 Have a look here: https://www.baeldung.com/spring-boot-testing
+
+## Contributing
+
+Please read [CONTRIBUTING.md](https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/blob/main/contributions.md) for details on our code of conduct, and the process for submitting pull requests to us.
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
+## Acknowledgments
+
+If you want to say **thank you** or/and support active development of `HanziKon`:
+
+- Add a [GitHub Star](https://github.com/sopra-fs23-group-16) to the project.
+
+Together, we can make this project **better** every day! 😘
+* Hat tip to anyone whose code was used
+* Inspiration
+* etc
+
