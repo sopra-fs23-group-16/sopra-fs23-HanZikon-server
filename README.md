@@ -5,7 +5,10 @@
 
 # HanziKon
 <p align="center">
-HanZikon Chinese character writing APP has a writing module, in which the player would draw or paint the Chinese Character with short-term memory. Generally, there would be 30 seconds for players to learn the shape and structure of the Chinese character, then 60 seconds for players to reproduce it. There would be three game modes with different levels (eg, 1 -10 from easy to hard ), players are free to choose the mode and level they prefer.
+Hanzi (Chinese pinyin) means Chinese character. 
+HanZikon is a Chinese character learning and writing APP. It has three game modes, Riddle of Oracle Script, Hanzi Imitation and Mixed Mode, 
+In Riddle of Oracle Script mode, player needs to choose the right chinese character of current age based on the oracle bone script dated back to 1500BC. 
+in Hanzi Imitation mode, player would draw or paint the Chinese Character with short-term memory. Generally, there would be 15- 30 seconds for players to learn the shape and structure of the Chinese character, then 15 seconds for players to reproduce it. There would be three game modes with different levels (eg, 1 -5 from easy to hard ), players are free to choose the mode and level they prefer.
 The aim of this application is getting to know Chinese characters in an interesting way. Or one can just simply take it as a game to practice your memory or painting skills with fun.
 </p>
 
