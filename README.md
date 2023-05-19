@@ -1,16 +1,18 @@
 <h1 align="center">
-  <img alt="cgapp logo" src="https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/blob/main/src/main/resources/Images/welcome.png" width="224px"/><br/>
+  <img alt="hanzikon logo" src="https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/blob/main/src/main/resources/Images/welcome.png" /><br/>
   HanziKon
 </h1>
+
+# HanziKon
 <p align="center">
 HanZikon Chinese character writing APP has a writing module, in which the player would draw or paint the Chinese Character with short-term memory. Generally, there would be 30 seconds for players to learn the shape and structure of the Chinese character, then 60 seconds for players to reproduce it. There would be three game modes with different levels (eg, 1 -10 from easy to hard ), players are free to choose the mode and level they prefer.
 The aim of this application is getting to know Chinese characters in an interesting way. Or one can just simply take it as a game to practice your memory or painting skills with fun.
 </p>
 
-<p align="center"><a href="http://sopra-fs23-group-16-client.appspot.com/welcome" 
-target="_blank"><img src="https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/blob/main/src/main/resources/Images/gameRule.png" alt="go version" /></a>&nbsp;</p>
+# Game Rule
 
-# HanziKon
+<p align="center"><a href="http://sopra-fs23-group-16-client.appspot.com/welcome" 
+target="_blank"><img src="https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/blob/main/src/main/resources/Images/gameRule.png" alt="hanzikon gameRule" /></a>&nbsp;</p>
 
 ## Getting started with Spring Boot
 -   Documentation: https://docs.spring.io/spring-boot/docs/current/reference/html/index.html
@@ -100,10 +102,6 @@ Have a look here: https://www.baeldung.com/spring-boot-testing
 ## Contributing
 
 Please read [CONTRIBUTING.md](https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/blob/main/contributions.md) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
 
 ## License
 
