@@ -294,7 +294,7 @@ public class GameService {
         int round = playerImitationDTO.getRound();
 
         if(userId != null && round >= 0) {
-            String userRoundID = round + "R" + userId;
+            String userRoundID = roomID + "RO" + round + "R" + userId;
             log.info("Room {}: user round id is {}.", roomID, userRoundID);
 
             // before the player save imitation bytes, it will clear the player related map record firstly
@@ -302,7 +302,7 @@ public class GameService {
 
             if(playerImitationDTO.getImitationBytes() != null){
 
-                this.gameManager.addPlayerImitation(playerImitationDTO);
+                this.gameManager.addPlayerImitation(roomID, playerImitationDTO);
                 playerImitationList =  getPlayersImitations(roomID, playerImitationDTO);
                 return playerImitationList;
             } else {
@@ -316,7 +316,7 @@ public class GameService {
     }
 
     /**
-     * 1. Accumulate the player score according to scoreBoard passed
+     * Retrieve player's imitations according to roomId and round
      * @param roomID
      * @return
      */
@@ -334,7 +334,7 @@ public class GameService {
             for(int i= 0; i< Players.size(); i++){
                 playerID = Players.get(i).getUserID();
                 if(playerID >0){
-                    String userRoundID = round+ "R"+playerID;
+                    String userRoundID = roomID + "RO" + round+ "R"+playerID;
                     playerImitation = this.gameManager.findImgByUserID(userRoundID);
                     playerImitation.setUsername(Players.get(i).getPlayerName());
                     playersImitationsMap.put(playerID,playerImitation.getImitationBytes());
@@ -405,10 +405,10 @@ public class GameService {
 
         int round = playerVotesDTO.getRound();
         if (Players.size()>0 && round>0) {
-            int votedTimes = 0;
             for(int i= 0; i< Players.size(); i++){
                 PlayerVoteDTO playerVotes = new PlayerVoteDTO();
                 Player toPlayer = Players.get(i);
+                int votedTimes = 0;
                 if(toPlayer != null) {
                     for(int j= 0; j< Players.size(); j++){
                         Player fromPlayer = Players.get(j);
@@ -461,6 +461,9 @@ public class GameService {
         Game findGame = this.gameManager.findByRoomID(roomID);
         // this.roomManager.removeRoom(findRoom);
         this.gameManager.removeGame(findGame);
+
+        this.gameManager.removeRoomPlayerVotes(roomID);
+        this.gameManager.removeRoomPlayerImitation(roomID);
     }
 
 

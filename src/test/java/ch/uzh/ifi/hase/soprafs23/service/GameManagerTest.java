@@ -93,15 +93,21 @@ public class GameManagerTest {
     @Test
     public void addPlayerImitationTest() {
         // given -> a first game has already been created
-        gameManager.addPlayerImitation(playerImitationDTO);
-        assertEquals(playerImitationDTO, gameManager.findImgByUserID("1R204"));
+        gameManager.addPlayerImitation(1,playerImitationDTO);
+        assertEquals(playerImitationDTO, gameManager.findImgByUserID("1RO1R204"));
     }
 
     @Test
     public void removePlayerImitationTest() {
         gameManager.removePlayerImitation("1R204");
         assertThrows(ResponseStatusException.class, () -> gameManager.findImgByUserID("1R204"));
+    }
 
+    @Test
+    public void removeRoomPlayerImitationTest() {
+        gameManager.addPlayerImitation(1,playerImitationDTO);
+        gameManager.removeRoomPlayerImitation(1);
+        assertThrows(ResponseStatusException.class, () -> gameManager.findImgByUserID("1RO1R204"));
     }
 
     @Test
@@ -116,6 +122,13 @@ public class GameManagerTest {
         gameManager.checkPlayerVotes("1R204");
         assertEquals(false, gameManager.checkPlayerVotes("1R204"));
 
+    }
+
+    @Test
+    public void removeRoomPlayerVotesTest() {
+        gameManager.addPlayerVotes(1,playerVoteDTO);
+        gameManager.removeRoomPlayerVotes(1);
+        assertEquals(false, gameManager.checkPlayerVotes("1RO0R203T203F"));
     }
 
 }

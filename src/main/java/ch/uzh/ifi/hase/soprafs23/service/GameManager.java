@@ -10,14 +10,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 public class GameManager {
     private ConcurrentHashMap<Integer, Game> roomIDs;
-
     private ConcurrentHashMap<String, PlayerImitationDTO> gameImitationsMap = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, PlayerVoteDTO> gameVotesMap = new ConcurrentHashMap<>();
-    List<PlayerVoteDTO> playerVotes = new ArrayList<>();
 
     Logger log = LoggerFactory.getLogger(GameManager.class);
 
@@ -40,8 +37,8 @@ public class GameManager {
         return game;
     }
 
-    public void addPlayerImitation(PlayerImitationDTO playerImitationDTO) {
-        String userRoundID = playerImitationDTO.getRound() + "R" +playerImitationDTO.getUserID();
+    public void addPlayerImitation(int roomID, PlayerImitationDTO playerImitationDTO) {
+        String userRoundID = roomID + "RO" + playerImitationDTO.getRound() + "R" +playerImitationDTO.getUserID();
         gameImitationsMap.put(userRoundID, playerImitationDTO);
 
         // This is just for log testing
@@ -57,6 +54,19 @@ public class GameManager {
 
     public void removePlayerImitation(String userRoundID) {
         gameImitationsMap.remove(userRoundID);
+    }
+
+    public void removeRoomPlayerImitation(int roomID){
+        String partialRoomID = roomID + "RO";
+        Iterator<Map.Entry<String, PlayerImitationDTO>> iterator = gameImitationsMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, PlayerImitationDTO> entry = iterator.next();
+            String key = entry.getKey();
+
+            if (key.contains(partialRoomID)) {
+                iterator.remove();
+            }
+        }
     }
 
     public PlayerImitationDTO findImgByUserID(String userRoundID) {
@@ -93,6 +103,20 @@ public class GameManager {
             log.info("Player is note voted yet. " );
         }
         return isVoted;
+    }
+
+    public void removeRoomPlayerVotes(int roomID){
+        String partialRoomID = roomID + "RO";
+
+        Iterator<Map.Entry<String, PlayerVoteDTO>> iterator = gameVotesMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, PlayerVoteDTO> entry = iterator.next();
+            String key = entry.getKey();
+
+            if (key.contains(partialRoomID)) {
+                iterator.remove();
+            }
+        }
     }
 
 }
