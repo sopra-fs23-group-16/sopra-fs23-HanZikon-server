@@ -53,7 +53,7 @@ public class UserService {
     }
 
     public String generateRandomIcon(){
-        String[] valuesArray = {"dog", "cat", "seelion", "cattle", "owl"};
+        String[] valuesArray = {"dog", "cat", "seelion", "cattle", "owl", "dogandmice", "seelionface", "panda", "alpaca", "chimpanzee"};
 
         Random random = new Random();
         int randomIndex = random.nextInt(valuesArray.length);
