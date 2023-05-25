@@ -13,11 +13,6 @@ It has three game modes, Riddle of Oracle Script, Hanzi Imitation and Bit of Bot
 
 The aim of this application is getting to know Chinese characters in an interesting way. Or one can just simply take it as a game to practice your memory or painting skills with fun.
 
-### Game Rule
-
-<p align="center"><a href="http://sopra-fs23-group-16-client.appspot.com/welcome" 
-target="_blank"><img src="https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/blob/main/src/main/resources/Images/gameRule.png" alt="hanzikon gameRule" /></a>&nbsp;</p>
-
 ## Technologies
 
 - [Springboot](https://spring.io/projects/spring-boot) - Framework for creating Java applications
