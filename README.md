@@ -22,6 +22,8 @@ The aim of this application is getting to know Chinese characters in an interest
 - [RESTful](https://restfulapi.net/) - Web services for user control
 - [Websocket](https://spring.io/guides/gs/messaging-stomp-websocket/) -  Real-time bidirectional communication between client and server
 - [Mockito](https://site.mockito.org/) - Java framework for unit test
+- [OpenCSV](https://opencsv.sourceforge.net/) - An easy-to-use CSV parser library for Java
+- [Google Translation API](https://cloud.google.com/translate) - Provide multi-linguial support
 
 ## High-level Components
 
