@@ -23,13 +23,12 @@ The aim of this application is getting to know Chinese characters in an interest
 - [Websocket](https://spring.io/guides/gs/messaging-stomp-websocket/) -  Real-time bidirectional communication between client and server
 - [Mockito](https://site.mockito.org/) - Java framework for unit test
 - [OpenCSV](https://opencsv.sourceforge.net/) - An easy-to-use CSV parser library for Java
-- [Google Translation API](https://cloud.google.com/translate) - Provide multi-linguial support
 
 ## High-level Components
 
 ### Player
 
-The [Player](https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs23/MultipleMode/Player.java) class represents real-time users in a game. A player instance is initialized with essentail corresponding user information form the User class, such as userID, playerName and icon. It also serves to manage other properties in the game process, like isReady and isWriting, which represent the player status, and scorboard, which stores updated total score.
+The [Player](https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs23/MultipleMode/Player.java) class represents real-time users in a game. A player instance is initialized with essential corresponding user information form the User class, such as userID, playerName and icon. It also serves to manage other properties in the game process, like isReady and isWriting, which represent the player status, and scoreboard, which stores updated total score.
 
 ### Room 
 
@@ -55,7 +54,7 @@ Download your IDE of choice (e.g., [IntelliJ](https://www.jetbrains.com/idea/dow
 ### IntelliJ
 1. File -> Open... -> SoPra server template
 2. Accept to import the project as a `gradle project`
-3. To build right click the `build.gradle` file and choose `Run Build`
+3. To build right-click the `build.gradle` file and choose `Run Build`
 
 ### VS Code
 The following extensions can help you get started more easily:
@@ -130,9 +129,27 @@ Have a look here: https://www.baeldung.com/spring-boot-testing
 
 - You may add or run the project test cases under folder src/test https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/tree/main/src/test/java/ch/uzh/ifi/hase/soprafs23
 
-## Contributing
+## Contribution
 
 Please read [CONTRIBUTIONS.md](https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/blob/main/contributions.md) for details on our code of conduct, and the process for submitting pull requests to us.
+
+## Roadmap
+
+### Tourist Mode
+
+Our application currently only supports registered users. However, the separation of Player class and User allows further introducing a guest mode. By implementing a guest mode, users who haven't registered or logged in can still access and enjoy certain features of the application.
+
+### Single-player Mode
+
+Single-player mode can be designed as a limited feature to registered users by offering graded difficulty levels that allow them to progress through different stages and unlock new challenges. Additionally, the system can provide a way for guests to track and improve their performance by refreshing their records.
+
+### Game History
+
+For registered users, they can have access to advanced features that allow them to record both single-player game progress and multiplayer game records.
+
+### Mobile Adaptability
+
+Our application currently only caters to PC and tablet devices, and there is room for improvement in terms of the layout and scaling of the UI for mobile devices.
 
 ## License
 
