@@ -2,7 +2,8 @@
   <img alt="hanzikon logo" src="https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/blob/main/src/main/resources/Images/welcome.png" /><br/>
 </h1>
 
-# HanziKon
+## Introduction
+
 Hanzi (Chinese pinyin) means Chinese character. HanZikon is a Chinese character learning and writing APP.
 
 It has three game modes, Riddle of Oracle Script, Hanzi Imitation and Bit of Both Mode.
@@ -12,11 +13,38 @@ It has three game modes, Riddle of Oracle Script, Hanzi Imitation and Bit of Bot
 
 The aim of this application is getting to know Chinese characters in an interesting way. Or one can just simply take it as a game to practice your memory or painting skills with fun.
 
-
-# Game Rule
+### Game Rule
 
 <p align="center"><a href="http://sopra-fs23-group-16-client.appspot.com/welcome" 
 target="_blank"><img src="https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/blob/main/src/main/resources/Images/gameRule.png" alt="hanzikon gameRule" /></a>&nbsp;</p>
+
+## Technologies
+
+- [Springboot](https://spring.io/projects/spring-boot) - Framework for creating Java applications
+- [Gradle](https://gradle.org/) - Build automation tool
+- [Google Cloud](https://cloud.google.com/appengine/docs/flexible) - Deployment
+- [JPA](https://www.oracle.com/java/technologies/persistence-jsp.html) - Database for user management
+- [RESTful](https://restfulapi.net/) - Web services for user control
+- [Websocket](https://spring.io/guides/gs/messaging-stomp-websocket/) -  Real-time bidirectional communication between client and server
+- [Mockito](https://site.mockito.org/) - Java framework for unit test
+
+## High-level Components
+
+### Player
+
+The [Player](https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs23/MultipleMode/Player.java) class represents real-time users in a game. A player instance is initialized with essentail corresponding user information form the User class, such as userID, playerName and icon. It also serves to manage other properties in the game process, like isReady and isWriting, which represent the player status, and scorboard, which stores updated total score.
+
+### Room 
+
+The [Room](https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs23/MultipleMode/Room.java) class is mainly responsible for player management. It has unique roomID and roomCode which allow it to be reached by the roomManager to manage the players accordingly.
+
+### QuestionPacker
+
+The [QuestionPacker](https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs23/questionGenerator/QuestionPacker.java) class collaborates with the rest classes in the QuestionGenerator package. It gets the question resources originally form csv files which are built and maintained by us. In the very beginning of a new game, it generates a whole QuestionList in JSON format, which will be passed to the frontend by the websocketController class.
+
+### WebsocketController
+
+The [WebsocketController](https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs23/controller/WebSocketController.java) class plays a crucial role in multiplayer games. It enables the rapid transmission of game state updates, such as player status, actions, and scores, ensuring that all players receive the latest data simultaneously. This synchronous communication ensures a smooth and immersive gaming experience.
 
 ## Getting started with Spring Boot
 -   Documentation: https://docs.spring.io/spring-boot/docs/current/reference/html/index.html
