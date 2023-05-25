@@ -107,7 +107,7 @@ Have a look here: https://www.baeldung.com/spring-boot-testing
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/blob/main/contributions.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTIONS.md](https://github.com/sopra-fs23-group-16/sopra-fs23-HanZikon-server/blob/main/contributions.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## License
 
